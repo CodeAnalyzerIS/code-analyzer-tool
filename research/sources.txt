@@ -3,9 +3,8 @@ https://www.sonarsource.com/
 https://sonarcloud.io/
 
 
-static analysis:
+static analysis/ Roslyn:
 https://learn.microsoft.com/en-us/dotnet/csharp/roslyn-sdk/ 
-
-Roslyn:
 https://www.youtube.com/watch?v=V4zqk4-LL1M 
 https://www.youtube.com/watch?v=w9T8pSVcX3Q 
+https://github.com/dotnet/roslyn/blob/main/docs/analyzers/Analyzer%20Actions%20Semantics.md
