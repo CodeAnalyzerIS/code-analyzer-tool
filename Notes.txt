@@ -1,1 +1,8 @@
 Focus/ selling point tegenover SonarQube: laagdrempelig, easy to configure, user-friendly.
+
+CodeMetrix bekijken om complexiteitscore na te kijken. Regels baseren op literatuur?
+
+Kijken wat de trigger is (wanneer wordt de analyse uitgevoerd).
+
+Voor frontend -> React (iets gekend) want analyzer aspect is al veel nieuw.
+	-> Frontend is niet de focus van het project.
