@@ -5,3 +5,7 @@ https://sonarcloud.io/
 
 static analysis:
 https://learn.microsoft.com/en-us/dotnet/csharp/roslyn-sdk/ 
+
+Roslyn:
+https://www.youtube.com/watch?v=V4zqk4-LL1M 
+https://www.youtube.com/watch?v=w9T8pSVcX3Q 
