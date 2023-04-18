@@ -1,0 +1,7 @@
+SonarQube:
+https://www.sonarsource.com/
+https://sonarcloud.io/
+
+
+static analysis:
+https://learn.microsoft.com/en-us/dotnet/csharp/roslyn-sdk/ 
