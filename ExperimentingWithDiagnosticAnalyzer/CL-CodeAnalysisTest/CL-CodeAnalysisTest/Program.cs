@@ -25,7 +25,8 @@ namespace CL_CodeAnalysisTest
                 // Print message for WorkspaceFailed event to help diagnosing project load failures.
                 workspace.WorkspaceFailed += (o, e) => Console.WriteLine(e.Diagnostic.Message);
 
-                var solutionPath = @"C:\Users\AlexanderW\source\repos\TestToAnalyse\TestToAnalyse.sln";
+                //Need to change to make it not hardcoded.
+                var solutionPath = @"C:\Users\AlexanderW\Documents\csharp_code_analyzer\ExperimentingWithDiagnosticAnalyzer\TestToAnalyse\TestToAnalyse.sln";
                 Console.WriteLine($@"Loading solution '{solutionPath}'");
 
                 // Attach progress reporter so we print projects as they are loaded.
@@ -33,20 +34,23 @@ namespace CL_CodeAnalysisTest
                 Console.WriteLine($@"Finished loading solution '{solutionPath}'");
 
                 //Maybe replace with Projects to loop over all projects, since you can now only work with solutions containing one project
-                Project currProject = solution.Projects.Single();
+                var currProject = solution.Projects;
 
-                var compilation = await currProject.GetCompilationAsync();
-                DiagnosticAnalyzer braceAnalyzer = new BraceAnalyzer();
-                var diagnosticResults = compilation.WithAnalyzers(ImmutableArray.Create(braceAnalyzer))
-                    .GetAnalyzerDiagnosticsAsync().Result;
+                foreach (var project in currProject)
+                {
+                    var compilation = await project.GetCompilationAsync();
+                    DiagnosticAnalyzer braceAnalyzer = new BraceAnalyzer();
+                    var diagnosticResults = compilation.WithAnalyzers(ImmutableArray.Create(braceAnalyzer, new TestMethodWithoutAssertionAnalyzer()))
+                        .GetAnalyzerDiagnosticsAsync().Result;
                 
-                Console.WriteLine($@"Diagnostics found: {diagnosticResults.Length}");
-                if (!diagnosticResults.IsEmpty)
-                    foreach (var diagnostic in diagnosticResults)
-                    {
-                        Console.WriteLine(diagnostic.ToString());
-                    }
-                
+                    Console.WriteLine($@"Diagnostics found: {diagnosticResults.Length}");
+                    if (!diagnosticResults.IsEmpty)
+                        foreach (var diagnostic in diagnosticResults)
+                        {
+                            Console.WriteLine(diagnostic.ToString());
+                        }
+                }
+
 
                 // StringBuilder warnings = new StringBuilder();
                 //
