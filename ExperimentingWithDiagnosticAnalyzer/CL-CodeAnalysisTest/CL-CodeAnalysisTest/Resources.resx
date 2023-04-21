@@ -27,4 +27,13 @@
     <data name="AnalyzerTitle" xml:space="preserve">
         <value>Enclose statement with curly braces</value>
     </data>
+    <data name="NoAssertionDescription" xml:space="preserve">
+        <value>Test method should contain at least one assertion</value>
+    </data>
+    <data name="NoAssertionTitle" xml:space="preserve">
+        <value>Test method should contain at least one assertion</value>
+    </data>
+    <data name="NoAssertionMessageFormat" xml:space="preserve">
+        <value>Test method '{0}' does not contain any assertions</value>
+    </data>
 </root>

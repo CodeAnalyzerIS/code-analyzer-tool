@@ -85,5 +85,32 @@ namespace CL_CodeAnalysisTest {
                 return ResourceManager.GetString("AnalyzerTitle", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Test method should contain at least one assertion.
+        /// </summary>
+        internal static string NoAssertionDescription {
+            get {
+                return ResourceManager.GetString("NoAssertionDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Test method &apos;{0}&apos; does not contain any assertions.
+        /// </summary>
+        internal static string NoAssertionMessageFormat {
+            get {
+                return ResourceManager.GetString("NoAssertionMessageFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Test method should contain at least one assertion.
+        /// </summary>
+        internal static string NoAssertionTitle {
+            get {
+                return ResourceManager.GetString("NoAssertionTitle", resourceCulture);
+            }
+        }
     }
 }
