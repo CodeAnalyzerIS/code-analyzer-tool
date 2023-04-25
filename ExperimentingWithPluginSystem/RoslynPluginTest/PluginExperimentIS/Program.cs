@@ -16,34 +16,37 @@ public class Program
         {
             // Print message for WorkspaceFailed event to help diagnosing project load failures.
             workspace.WorkspaceFailed += (o, e) => Console.WriteLine(e.Diagnostic.Message);
-
-            //todo not hardcoded.
-            var solutionPath =
-                @"C:\Users\MichelM\RiderProjects\RoslynPluginTest\RoslynPluginTest.sln";
-            Console.WriteLine($@"Loading solution '{solutionPath}'");
-
-            // Attach progress reporter so we print projects as they are loaded.
-            var solution = await workspace.OpenSolutionAsync(solutionPath, new ConsoleProgressReporter());
-            Console.WriteLine($@"Finished loading solution '{solutionPath}'");
             
-            var projects = solution.Projects;
-
-            foreach (var project in projects)
+            var workingDirectory = Directory.GetCurrentDirectory();
+            var solutionPaths = Directory.GetFiles(workingDirectory, "*.sln", SearchOption.AllDirectories);
+            foreach (var solutionPath in solutionPaths)
             {
-                var compilation = await project.GetCompilationAsync();
-                if (compilation == null) throw new NullReferenceException("Compilation was null");
-                // todo not hardcoded path
-                var analyzers = LoadPluginAnalyzers(@"C:\Users\MichelM\RiderProjects\RoslynPluginTest\RoslynPluginTest\plugins");
+                Console.WriteLine($@"Loading solution '{solutionPath}'");
 
-                var diagnosticResults = compilation.WithAnalyzers(analyzers)
-                    .GetAnalyzerDiagnosticsAsync().Result;
+                // Attach progress reporter so we print projects as they are loaded.
+                var solution = await workspace.OpenSolutionAsync(solutionPath, new ConsoleProgressReporter());
+                Console.WriteLine($@"Finished loading solution '{solutionPath}'");
 
-                Console.WriteLine($@"Diagnostics found: {diagnosticResults.Length}");
-                if (!diagnosticResults.IsEmpty)
-                    foreach (var diagnostic in diagnosticResults)
-                    {
-                        Console.WriteLine(diagnostic.ToString());
-                    }
+                var projects = solution.Projects;
+
+                foreach (var project in projects)
+                {
+                    var compilation = await project.GetCompilationAsync();
+                    if (compilation == null) throw new NullReferenceException("Compilation was null");
+     
+                    var pluginFolder = Path.Combine(AppContext.BaseDirectory, "lib");
+                    var analyzers = LoadPluginAnalyzers(pluginFolder);
+
+                    var diagnosticResults = compilation.WithAnalyzers(analyzers)
+                        .GetAnalyzerDiagnosticsAsync().Result;
+
+                    Console.WriteLine($@"Diagnostics found: {diagnosticResults.Length}");
+                    if (!diagnosticResults.IsEmpty)
+                        foreach (var diagnostic in diagnosticResults)
+                        {
+                            Console.WriteLine(diagnostic.ToString());
+                        }
+                }
             }
         }
     }
