@@ -24,59 +24,35 @@ namespace CL_CodeAnalysisTest
             {
                 // Print message for WorkspaceFailed event to help diagnosing project load failures.
                 workspace.WorkspaceFailed += (o, e) => Console.WriteLine(e.Diagnostic.Message);
-
-                //Need to change to make it not hardcoded.
-                var solutionPath = @"C:\Users\AlexanderW\Documents\csharp_code_analyzer\ExperimentingWithDiagnosticAnalyzer\TestToAnalyse\TestToAnalyse.sln";
-                Console.WriteLine($@"Loading solution '{solutionPath}'");
-
-                // Attach progress reporter so we print projects as they are loaded.
-                var solution = await workspace.OpenSolutionAsync(solutionPath, new ConsoleProgressReporter());
-                Console.WriteLine($@"Finished loading solution '{solutionPath}'");
-
-                //Maybe replace with Projects to loop over all projects, since you can now only work with solutions containing one project
-                var currProject = solution.Projects;
-
-                foreach (var project in currProject)
-                {
-                    var compilation = await project.GetCompilationAsync();
-                    DiagnosticAnalyzer braceAnalyzer = new BraceAnalyzer();
-                    var diagnosticResults = compilation.WithAnalyzers(ImmutableArray.Create(braceAnalyzer, new TestMethodWithoutAssertionAnalyzer()))
-                        .GetAnalyzerDiagnosticsAsync().Result;
                 
-                    Console.WriteLine($@"Diagnostics found: {diagnosticResults.Length}");
-                    if (!diagnosticResults.IsEmpty)
-                        foreach (var diagnostic in diagnosticResults)
-                        {
-                            Console.WriteLine(diagnostic.ToString());
-                        }
+                var workingDirectory = Environment.CurrentDirectory;
+                Console.WriteLine("******************************\ncsharp_analyzer_IS\n******************************");
+
+                var solutions = Directory.GetFiles(workingDirectory, "*.sln", SearchOption.AllDirectories);
+                foreach (var solutionPath in solutions)
+                {
+                    Console.WriteLine($@"Loading solution '{solutionPath}'");
+                    var solution = await workspace.OpenSolutionAsync(solutionPath, new ConsoleProgressReporter());
+                    Console.WriteLine($@"Finished loading solution '{solutionPath}'");
+
+                    var solutionProjects = solution.Projects;
+
+                    foreach (var project in solutionProjects)
+                    {
+                        Console.WriteLine($@"Analyzing project: {project}");
+                        var compilation = await project.GetCompilationAsync();
+                        DiagnosticAnalyzer braceAnalyzer = new BraceAnalyzer();
+                        var diagnosticResults = compilation.WithAnalyzers(ImmutableArray.Create(braceAnalyzer, new TestMethodWithoutAssertionAnalyzer()))
+                            .GetAnalyzerDiagnosticsAsync().Result;
+                
+                        Console.WriteLine($@"Diagnostics found: {diagnosticResults.Length}");
+                        if (!diagnosticResults.IsEmpty)
+                            foreach (var diagnostic in diagnosticResults)
+                            {
+                                Console.WriteLine(diagnostic.ToString());
+                            }
+                    }
                 }
-
-
-                // StringBuilder warnings = new StringBuilder();
-                //
-                // foreach (var document in currProject.Documents)
-                // {
-                //     var tree = document.GetSyntaxTreeAsync().Result;
-                //     var ifStatementNodes = tree?.GetRoot().DescendantNodesAndSelf()
-                //         .Where(x => x.IsKind(SyntaxKind.IfStatement));
-                //
-                //     if (ifStatementNodes != null)
-                //         foreach (var node in ifStatementNodes)
-                //         {
-                //             var ifStatement = node as IfStatementSyntax;
-                //
-                //             if (ifStatement?.Statement is BlockSyntax blockSyntax && !blockSyntax.Statements.Any())
-                //             {
-                //                 warnings.Append($"Empty if block is found in file" +
-                //                                 $" {document.FilePath} at line" +
-                //                                 $" {ifStatement.GetLocation().GetLineSpan().StartLinePosition.Line + 1}" +
-                //                                 $" \n");
-                //             }
-                //         }
-                // }
-                //
-                // if (warnings.Length != 0)
-                //     Console.WriteLine(warnings.ToString());
             }
         }
 
