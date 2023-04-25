@@ -1,0 +1,16 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RoslynPluginTest", "RoslynPluginTest\RoslynPluginTest.csproj", "{36E704D7-7DA6-49E8-B584-1F2619D2DEBF}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{36E704D7-7DA6-49E8-B584-1F2619D2DEBF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{36E704D7-7DA6-49E8-B584-1F2619D2DEBF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{36E704D7-7DA6-49E8-B584-1F2619D2DEBF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{36E704D7-7DA6-49E8-B584-1F2619D2DEBF}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
