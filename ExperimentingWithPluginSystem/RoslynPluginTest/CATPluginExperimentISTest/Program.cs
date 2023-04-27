@@ -12,14 +12,13 @@ public class Program
     static async Task Main()
     {
         MSBuildLocator.RegisterDefaults();
-
+        
         using (var workspace = MSBuildWorkspace.Create())
         {
             // Print message for WorkspaceFailed event to help diagnosing project load failures.
             workspace.WorkspaceFailed += (o, e) => Console.WriteLine(e.Diagnostic.Message);
             
             var workingDirectory = Directory.GetCurrentDirectory();
-            Console.WriteLine(workingDirectory);
             var solutionPaths = Directory.GetFiles(workingDirectory, "*.sln", SearchOption.AllDirectories);
             foreach (var solutionPath in solutionPaths)
             {
@@ -55,7 +54,6 @@ public class Program
 
     private static ImmutableArray<DiagnosticAnalyzer> LoadRules(string workingDir) {
         var roslynRules = Path.Combine(workingDir, "CAT/Roslyn/");
-        Console.WriteLine(roslynRules);
         var externalRules = Directory.GetFiles(roslynRules, "*.dll");
         var result = new List<DiagnosticAnalyzer>();
         foreach (var rulePath in externalRules)
