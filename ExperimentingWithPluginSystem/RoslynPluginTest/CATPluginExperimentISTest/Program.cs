@@ -3,6 +3,7 @@ using System.Reflection;
 using Microsoft.Build.Locator;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.CodeAnalysis.MSBuild;
+using RoslynPluginTest.rules;
 
 namespace RoslynPluginTest;
 
@@ -18,6 +19,7 @@ public class Program
             workspace.WorkspaceFailed += (o, e) => Console.WriteLine(e.Diagnostic.Message);
             
             var workingDirectory = Directory.GetCurrentDirectory();
+            Console.WriteLine(workingDirectory);
             var solutionPaths = Directory.GetFiles(workingDirectory, "*.sln", SearchOption.AllDirectories);
             foreach (var solutionPath in solutionPaths)
             {
@@ -34,8 +36,8 @@ public class Program
                     var compilation = await project.GetCompilationAsync();
                     if (compilation == null) throw new NullReferenceException("Compilation was null");
      
-                    var pluginFolder = Path.Combine(AppContext.BaseDirectory, "lib");
-                    var analyzers = LoadPluginAnalyzers(pluginFolder);
+                    // var pluginFolder = Path.Combine(AppContext.BaseDirectory, "lib");
+                    var analyzers = LoadRules(workingDirectory);
 
                     var diagnosticResults = compilation.WithAnalyzers(analyzers)
                         .GetAnalyzerDiagnosticsAsync().Result;
@@ -51,13 +53,14 @@ public class Program
         }
     }
 
-    private static ImmutableArray<DiagnosticAnalyzer> LoadPluginAnalyzers(string path)
-    {
-        var assembliesPaths = Directory.GetFiles(path, "*.dll");
+    private static ImmutableArray<DiagnosticAnalyzer> LoadRules(string workingDir) {
+        var roslynRules = Path.Combine(workingDir, "CAT/Roslyn/");
+        Console.WriteLine(roslynRules);
+        var externalRules = Directory.GetFiles(roslynRules, "*.dll");
         var result = new List<DiagnosticAnalyzer>();
-        foreach (var assemblyPath in assembliesPaths)
+        foreach (var rulePath in externalRules)
         {
-            var assembly = Assembly.LoadFrom(assemblyPath);
+            var assembly = Assembly.LoadFrom(rulePath);
             var analyzers = assembly.GetExportedTypes()
                 .Where(type => typeof(DiagnosticAnalyzer).IsAssignableFrom(type) && !type.IsAbstract)
                 .Select(type => Activator.CreateInstance(type) as DiagnosticAnalyzer).ToList();
@@ -65,6 +68,7 @@ public class Program
             if (analyzers.Any())
                 result.AddRange(analyzers.Where(analyzer => analyzer != null)!);
         }
+        result.Add(new TestMethodWithoutAssertionAnalyzer());
 
         return result.ToImmutableArray();
     }

@@ -18,8 +18,22 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Folder Include="nupkg\" />
-        <Content Include="plugs\**" Pack="true" PackagePath="tools\net7.0\any\lib\" />
+      <EmbeddedResource Update="Resources.resx">
+        <Generator>ResXFileCodeGenerator</Generator>
+        <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
     </ItemGroup>
+
+    <ItemGroup>
+      <Compile Update="Resources.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>Resources.resx</DependentUpon>
+      </Compile>
+    </ItemGroup>
+
+<!--    <ItemGroup>-->
+<!--        <Content Include="rules\**" Pack="true" PackagePath="tools\net7.0\any\lib\" />-->
+<!--    </ItemGroup>-->
 
 </Project>
