@@ -19,6 +19,7 @@ public static class RuleLoader
 
     private static IEnumerable<DiagnosticAnalyzer> LoadExternalRules(string workingDir)
     {
+        //TODO: Make configurable with config file
         var externalRules = Path.Combine(workingDir, "CAT/Roslyn/rules");
         var rules = Array.Empty<string>();
         var result = new List<DiagnosticAnalyzer>();
