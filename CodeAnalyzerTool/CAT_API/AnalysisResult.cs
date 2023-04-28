@@ -1,10 +1,12 @@
 ﻿namespace CAT_API;
 
-
-public class AnalysisResult {
-    public string RuleId { get; set; }
-    public Location location { get; set; }
+public class AnalysisResult
+{
+    public Rule Rule { get; set; }
     public string PluginId { get; set; }
-    // What (programming) language the analyzer is analysing (i.e. c#)
-    public string AnalysisTarget { get; set; }
+    public string Message { get; set; }
+    // What (programming) language the analyzer is analysing (i.e. c#, markdown, etc.)
+    public string TargetLanguage { get; set; }
+    public Location Location { get; set; }
+    public Severity Severity { get; set; }
 }
