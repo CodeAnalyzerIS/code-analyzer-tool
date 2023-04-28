@@ -3,10 +3,10 @@ using Microsoft.CodeAnalysis.MSBuild;
 
 namespace RoslynPlugin;
 
-public class RoslynMain
+public static class RoslynMain
 {
     //This main method will be called in the analyzerToolProgram
-    public async Task Main() {
+    public static async Task Analyze() {
         MSBuildLocator.RegisterDefaults();
 
         using var workspace = MSBuildWorkspace.Create();
