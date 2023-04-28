@@ -6,6 +6,8 @@ namespace CodeAnalyzerTool;
 public class Program {
     static async Task Main()
     {
-        await RoslynMain.Analyze();
+        var roslyn = new RoslynMain();
+        var result = await roslyn.Analyze();
+        Console.WriteLine(result);
     }
 }
