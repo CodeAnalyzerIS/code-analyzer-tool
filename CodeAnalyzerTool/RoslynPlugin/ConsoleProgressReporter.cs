@@ -2,6 +2,7 @@
 
 namespace RoslynPlugin;
 
+//This class shows loading progress in the console
 public class ConsoleProgressReporter : IProgress<ProjectLoadProgress> {
     public void Report(ProjectLoadProgress loadProgress) {
         var projectDisplay = Path.GetFileName(loadProgress.FilePath);
