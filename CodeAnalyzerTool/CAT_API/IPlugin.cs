@@ -2,5 +2,5 @@
 
 public interface IPlugin
 {
-    public AnalysisResult Analyze();
+    public Task<IEnumerable<AnalysisResult>> Analyze();
 }
