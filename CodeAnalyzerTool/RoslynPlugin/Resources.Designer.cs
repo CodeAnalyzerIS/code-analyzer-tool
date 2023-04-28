@@ -7,7 +7,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace PluginTest2 {
+namespace RoslynPlugin {
     using System;
     
     
@@ -38,7 +38,7 @@ namespace PluginTest2 {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("PluginTest2.Resources", typeof(Resources).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("RoslynPlugin.Resources", typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -60,29 +60,29 @@ namespace PluginTest2 {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Enclose statement with curly braces.
+        ///   Looks up a localized string similar to Test method should contain at least one assertion..
         /// </summary>
-        internal static string BraceAnalyzerDescription {
+        internal static string NoAssertionDescription {
             get {
-                return ResourceManager.GetString("BraceAnalyzerDescription", resourceCulture);
+                return ResourceManager.GetString("NoAssertionDescription", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &apos;{&apos; brace expected.
+        ///   Looks up a localized string similar to Test method &apos;{0}&apos; does not contain any assertions.
         /// </summary>
-        internal static string BraceAnalyzerMessageFormat {
+        internal static string NoAssertionMessageFormat {
             get {
-                return ResourceManager.GetString("BraceAnalyzerMessageFormat", resourceCulture);
+                return ResourceManager.GetString("NoAssertionMessageFormat", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Enclose statement with curly braces.
+        ///   Looks up a localized string similar to Test method should contain at least one assertion.
         /// </summary>
-        internal static string BraceAnalyzerTitle {
+        internal static string NoAssertionTitle {
             get {
-                return ResourceManager.GetString("BraceAnalyzerTitle", resourceCulture);
+                return ResourceManager.GetString("NoAssertionTitle", resourceCulture);
             }
         }
     }
