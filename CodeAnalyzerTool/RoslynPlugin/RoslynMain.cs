@@ -5,6 +5,7 @@ namespace RoslynPlugin;
 
 public class RoslynMain
 {
+    //This main method will be called in the analyzerToolProgram
     public async Task Main() {
         MSBuildLocator.RegisterDefaults();
 
