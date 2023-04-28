@@ -7,7 +7,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace PluginTest2 {
+namespace BraceAnalyzerPlugin {
     using System;
     
     
@@ -38,7 +38,7 @@ namespace PluginTest2 {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("PluginTest2.Resources", typeof(Resources).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("BraceAnalyzerPlugin.Resources", typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -60,7 +60,7 @@ namespace PluginTest2 {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Enclose statement with curly braces.
+        ///   Looks up a localized string similar to Enclose statement with curly braces..
         /// </summary>
         internal static string BraceAnalyzerDescription {
             get {
