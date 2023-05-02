@@ -2,6 +2,7 @@
 
 public class AnalysisResult
 {
+    public int Id { get; set; }
     public Rule Rule { get; set; }
     public string PluginId { get; set; }
     public string Message { get; set; }
