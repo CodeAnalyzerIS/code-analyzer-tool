@@ -6,12 +6,8 @@ namespace CodeAnalyzerTool;
 public class Program {
     static async Task Main()
     {
-        Console.WriteLine(@"Read jsonConfig");
-        dynamic jsonObject = await ConfigReader.ReadAsync();
-        Console.WriteLine(@"After reading");
-        Console.WriteLine(jsonObject?.ToString());
-        // Console.WriteLine(jsonObject?.api_url);
-        // Console.WriteLine(jsonObject?.pluginsPath);
-        await RoslynMain.Analyze();
+        var roslyn = new RoslynMain();
+        var result = await roslyn.Analyze();
+        // todo pass result to backend API (C.A.S.)
     }
 }

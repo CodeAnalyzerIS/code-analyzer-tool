@@ -1,28 +1,37 @@
-﻿using Microsoft.CodeAnalysis;
+﻿using System.Collections.Immutable;
+using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.CodeAnalysis.MSBuild;
+// todo remove Console.WriteLines (and removeReSharper ignore)
+// ReSharper disable LocalizableElement
 
 namespace RoslynPlugin; 
 
 public static class Analyzer {
-    public static async Task StartAnalysis(MSBuildWorkspace workspace) {
+    internal static async Task<ImmutableArray<Diagnostic>> StartAnalysis(MSBuildWorkspace workspace) {
         var workingDirectory = Directory.GetCurrentDirectory();
         var solutionPaths = Directory.GetFiles(workingDirectory, "*.sln", SearchOption.AllDirectories);
+        var diagnosticResults = new List<Diagnostic>();
+        
         foreach (var solutionPath in solutionPaths) {
-            Console.WriteLine($@"Loading Solution '{solutionPath}'");
+            Console.WriteLine($"Loading Solution '{solutionPath}'");
 
             var solution = await workspace.OpenSolutionAsync(solutionPath, new ConsoleProgressReporter());
-            Console.WriteLine($@"Finished loading solution '{solutionPath}'");
+            Console.WriteLine($"Finished loading solution '{solutionPath}'");
 
             var projects = solution.Projects;
-
+            
             foreach (var project in projects) {
-                await AnalyseProject(project, workingDirectory);
+                var diagnostics = await AnalyseProject(project, workingDirectory);
+                if (diagnostics.Length > 0) diagnosticResults.AddRange(diagnostics);
             }
         }
+
+        return diagnosticResults.ToImmutableArray();
     }
 
-    private static async Task AnalyseProject(Project project, string workingDir) {
+    private static async Task<ImmutableArray<Diagnostic>> AnalyseProject(Project project, string workingDir) {
+        Console.WriteLine($"Analyzing project: {project.Name}\n=========================================");
         var compilation = await project.GetCompilationAsync();
         if (compilation == null) throw new NullReferenceException("Compilation was null");
         
@@ -32,10 +41,10 @@ public static class Analyzer {
             .GetAnalyzerDiagnosticsAsync().Result;
 
         Console.WriteLine($@"Diagnostics found: {diagnosticResults.Length}");
-        if (!diagnosticResults.IsEmpty) {
-            foreach (var diagnostic in diagnosticResults) {
-                Console.WriteLine(diagnostic.ToString());
-            }
+        foreach (var diagnostic in diagnosticResults) {
+            Console.WriteLine(diagnostic.ToString());
         }
+
+        return diagnosticResults;
     }
 }
