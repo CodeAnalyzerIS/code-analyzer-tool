@@ -8,6 +8,6 @@ public class Program {
     {
         var roslyn = new RoslynMain();
         var result = await roslyn.Analyze();
-        Console.WriteLine(result);
+        // todo pass result to backend API (C.A.S.)
     }
 }
