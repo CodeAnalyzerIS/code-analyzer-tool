@@ -1,17 +1,21 @@
-using System.Text.Json;
+using CodeAnalyzerTool.ConfigModel;
+using Newtonsoft.Json;
+using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace CodeAnalyzerTool;
 
 public static class ConfigReader
 {
     //TODO: Niet dynamic maken buiten voor rules?
-    public static async Task<object?> ReadAsync()
+    public static async Task<ToolConfig?> ReadAsync()
     {
         var workingDir = Directory.GetCurrentDirectory();
         var jsonPath = Path.Combine(workingDir, "CATConfig.json");
         Console.WriteLine($@"JsonPath: {jsonPath}");
-        await using var stream = File.OpenRead(jsonPath);
-        dynamic jsonObject = await JsonSerializer.DeserializeAsync<object>(stream) ?? throw new InvalidOperationException();
-        return jsonObject;
+        var jsonString = await File.ReadAllTextAsync(jsonPath);
+        var result = JsonConvert.DeserializeObject<ToolConfig>(jsonString);
+        // dynamic jsonObject = await JsonSerializer.DeserializeAsync<ToolConfig>(stream) ?? throw new InvalidOperationException();
+        // return jsonObject;
+        return result;
     }
 }
