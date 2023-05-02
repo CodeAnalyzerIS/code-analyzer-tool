@@ -2,6 +2,8 @@
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.CodeAnalysis.MSBuild;
+// todo remove Console.WriteLines (and removeReSharper ignore)
+// ReSharper disable LocalizableElement
 
 namespace RoslynPlugin; 
 
@@ -9,25 +11,27 @@ public static class Analyzer {
     internal static async Task<ImmutableArray<Diagnostic>> StartAnalysis(MSBuildWorkspace workspace) {
         var workingDirectory = Directory.GetCurrentDirectory();
         var solutionPaths = Directory.GetFiles(workingDirectory, "*.sln", SearchOption.AllDirectories);
-        ImmutableArray<Diagnostic> diagnosticResults = new ImmutableArray<Diagnostic>();
+        var diagnosticResults = new List<Diagnostic>();
         
         foreach (var solutionPath in solutionPaths) {
-            Console.WriteLine($@"Loading Solution '{solutionPath}'");
+            Console.WriteLine($"Loading Solution '{solutionPath}'");
 
             var solution = await workspace.OpenSolutionAsync(solutionPath, new ConsoleProgressReporter());
-            Console.WriteLine($@"Finished loading solution '{solutionPath}'");
+            Console.WriteLine($"Finished loading solution '{solutionPath}'");
 
             var projects = solution.Projects;
             
             foreach (var project in projects) {
                 var diagnostics = await AnalyseProject(project, workingDirectory);
-                diagnosticResults = diagnosticResults.AddRange(diagnostics);
+                if (diagnostics.Length > 0) diagnosticResults.AddRange(diagnostics);
             }
         }
-        return diagnosticResults;
+
+        return diagnosticResults.ToImmutableArray();
     }
 
     private static async Task<ImmutableArray<Diagnostic>> AnalyseProject(Project project, string workingDir) {
+        Console.WriteLine($"Analyzing project: {project.Name}\n=========================================");
         var compilation = await project.GetCompilationAsync();
         if (compilation == null) throw new NullReferenceException("Compilation was null");
         
