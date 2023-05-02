@@ -9,6 +9,7 @@ public static class SchemaGenerator
     {
         var generator = new JSchemaGenerator();
         var schema = generator.Generate(typeof(GlobalConfig));
+        //TODO: Not hardcoded
         await File.WriteAllTextAsync("CATSchema.json", schema.ToString());
     }
 }

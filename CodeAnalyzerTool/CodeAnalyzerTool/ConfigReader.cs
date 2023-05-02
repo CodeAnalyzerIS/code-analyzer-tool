@@ -12,6 +12,7 @@ public static class ConfigReader
     {
         var workingDir = Directory.GetCurrentDirectory();
         var jsonPath = Path.Combine(workingDir, "CATConfig.json");
+        //TODO: Not hardcoded
         var schemaPath = Path.Combine(AppContext.BaseDirectory, "CATSchema.json");
 
         var schema = JSchema.Parse(await File.ReadAllTextAsync(schemaPath));
@@ -19,6 +20,7 @@ public static class ConfigReader
 
         var isValid = json.IsValid(schema);
         if (!isValid)
+            //TODO: Not hardcoded
             throw new JsonException("Config is not correctly formed according to the CATSchema.json");
 
         return json.ToObject<GlobalConfig>() ?? throw new JsonException("Null object was created");
