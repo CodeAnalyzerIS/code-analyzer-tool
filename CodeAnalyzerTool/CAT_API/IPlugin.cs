@@ -1,6 +1,8 @@
-﻿namespace CAT_API;
+﻿using CAT_API.ConfigModel;
+
+namespace CAT_API;
 
 public interface IPlugin
 {
-    public Task<IEnumerable<AnalysisResult>> Analyze();
+    public Task<IEnumerable<AnalysisResult>> Analyze(GlobalConfig globalConfig);
 }
