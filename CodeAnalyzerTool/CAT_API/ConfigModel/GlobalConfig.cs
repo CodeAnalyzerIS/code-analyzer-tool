@@ -1,8 +1,8 @@
 using Newtonsoft.Json;
 
-namespace CodeAnalyzerTool.ConfigModel;
+namespace CAT_API.ConfigModel;
 
-public class ToolConfig
+public class GlobalConfig
 {
     [JsonProperty("apiUrl", Required = Required.Always)]
     public string ApiUrl { get; set; }
@@ -13,7 +13,7 @@ public class ToolConfig
     [JsonProperty("plugins", Required = Required.Always)]
     public IEnumerable<PluginConfig> Plugins { get; set; }
     
-    public ToolConfig(string apiUrl, string pluginsPath, IEnumerable<PluginConfig> plugins)
+    public GlobalConfig(string apiUrl, string pluginsPath, IEnumerable<PluginConfig> plugins)
     {
         ApiUrl = apiUrl;
         PluginsPath = pluginsPath;

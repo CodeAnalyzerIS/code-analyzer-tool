@@ -1,45 +1,25 @@
 ﻿
-using CodeAnalyzerTool.ConfigModel;
-using Newtonsoft.Json.Schema;
-using Newtonsoft.Json.Schema.Generation;
+using Newtonsoft.Json;
 using RoslynPlugin;
 
 namespace CodeAnalyzerTool;
 
 public class Program {
-    static async Task Main()
+    private static async Task Main()
     {
-        var roslyn = new RoslynMain();
-        var result = await roslyn.Analyze();
         // todo pass result to backend API (C.A.S.)
-        // var generator = new JSchemaGenerator();
-        // var schema = generator.Generate(typeof(ToolConfig));
-        // Console.WriteLine(schema);
+        await SchemaGenerator.GenerateSchema();
         Console.WriteLine(@"Read jsonConfig");
-        dynamic? jsonObject = await ConfigReader.ReadAsync();
-        Console.WriteLine(@"After reading");
-        Console.WriteLine(jsonObject?.ApiUrl);
-        Console.WriteLine(jsonObject?.PluginsPath);
-        if (jsonObject?.Plugins.Count > 0)
+        var globalConfig = await ConfigReader.ReadAsync();
+        try
         {
-            foreach (var plugin in jsonObject?.Plugins)
-            {
-                Console.WriteLine(plugin.PluginName);
-                if (plugin.Rules.Count <= 0) continue;
-                foreach (var rule in plugin.Rules)
-                {
-                        Console.WriteLine(rule.RuleName);
-                        Console.WriteLine(rule.Enabled);
-                        foreach (var option in rule.Options)
-                        {
-                            Console.WriteLine(option.Key);
-                            Console.WriteLine(option.Value);
-                        }
-                }
-            }
+            var roslyn = new RoslynMain();
+            var result = await roslyn.Analyze(globalConfig);
         }
-        // Console.WriteLine(jsonObject?.api_url);
-        // Console.WriteLine(jsonObject?.pluginsPath);
-        // await RoslynMain.Analyze();
+        catch (JsonException e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
     }
 }

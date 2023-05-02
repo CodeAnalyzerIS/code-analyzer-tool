@@ -1,21 +1,26 @@
-using CodeAnalyzerTool.ConfigModel;
+using CAT_API.ConfigModel;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using Newtonsoft.Json.Schema;
 using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace CodeAnalyzerTool;
 
 public static class ConfigReader
 {
-    //TODO: Niet dynamic maken buiten voor rules?
-    public static async Task<ToolConfig?> ReadAsync()
+    public static async Task<GlobalConfig> ReadAsync()
     {
         var workingDir = Directory.GetCurrentDirectory();
         var jsonPath = Path.Combine(workingDir, "CATConfig.json");
-        Console.WriteLine($@"JsonPath: {jsonPath}");
-        var jsonString = await File.ReadAllTextAsync(jsonPath);
-        var result = JsonConvert.DeserializeObject<ToolConfig>(jsonString);
-        // dynamic jsonObject = await JsonSerializer.DeserializeAsync<ToolConfig>(stream) ?? throw new InvalidOperationException();
-        // return jsonObject;
-        return result;
+        var schemaPath = Path.Combine(AppContext.BaseDirectory, "CATSchema.json");
+
+        var schema = JSchema.Parse(await File.ReadAllTextAsync(schemaPath));
+        var json = JObject.Parse(await File.ReadAllTextAsync(jsonPath));
+
+        var isValid = json.IsValid(schema);
+        if (!isValid)
+            throw new JsonException("Config is not correctly formed according to the CATSchema.json");
+
+        return json.ToObject<GlobalConfig>() ?? throw new JsonException("Null object was created");
     }
 }
