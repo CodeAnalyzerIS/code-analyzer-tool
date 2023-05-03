@@ -14,7 +14,7 @@ public class Program {
         try
         {
             var roslyn = new RoslynMain();
-            var result = await roslyn.Analyze(globalConfig.Plugins.First()); // todo fix plugin config parameter dynamically
+            var result = await roslyn.Analyze(globalConfig.Plugins.First(), globalConfig.PluginsPath); // todo fix plugin config parameter dynamically
         }
         catch (JsonException e)
         {

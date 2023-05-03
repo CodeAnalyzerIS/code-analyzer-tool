@@ -10,12 +10,13 @@ namespace RoslynPlugin;
 
 public static class RuleLoader
 {
-    public static ImmutableArray<DiagnosticAnalyzer> LoadRules(string workingDir, PluginConfig pluginConfig)
+    public static ImmutableArray<DiagnosticAnalyzer> LoadRules(string workingDir, PluginConfig pluginConfig,
+        string pluginsPath)
     {
         var enabledRuleNames = EnabledRuleNames(pluginConfig).ToList();
 
         var analyzers = new List<DiagnosticAnalyzer>();
-        var externalAnalyzers = LoadExternalRules(workingDir, enabledRuleNames, pluginConfig);
+        var externalAnalyzers = LoadExternalRules(workingDir, enabledRuleNames, pluginConfig, pluginsPath);
         var internalAnalyzers = LoadInternalRules(enabledRuleNames, pluginConfig);
         analyzers.AddRange(externalAnalyzers.ToList());
         analyzers.AddRange(internalAnalyzers.ToList());
@@ -24,10 +25,10 @@ public static class RuleLoader
     }
 
     private static IEnumerable<DiagnosticAnalyzer> LoadExternalRules(string workingDir,
-        ICollection<string> enabledRuleNames, PluginConfig pluginConfig)
+        ICollection<string> enabledRuleNames, PluginConfig pluginConfig, string pluginsPath)
     {
         //TODO: Make configurable with config file
-        var externalRules = Path.Combine(workingDir, "CAT/Roslyn/rules");
+        var externalRules = Path.Combine(workingDir, pluginsPath, pluginConfig.PluginName, "rules");
         var rules = Array.Empty<string>();
         var result = new List<DiagnosticAnalyzer>();
 
@@ -68,10 +69,7 @@ public static class RuleLoader
         return assembly.GetExportedTypes()
             .Where(type => typeof(DiagnosticAnalyzer).IsAssignableFrom(type) && !type.IsAbstract)
             .Where(type => enabledNames.Contains(type.GetField("DiagnosticId")?.GetValue(null)))
-            .Select(type => Activator.CreateInstance(type,
-                    GetSeverityFromRuleConfig(type.GetField("DiagnosticId")?.GetValue(null)?.ToString(), pluginConfig),
-                    GetOptionsFromRuleConfig(type.GetField("DiagnosticId")?.GetValue(null)?.ToString(), pluginConfig))
-                as DiagnosticAnalyzer).ToList();
+            .Select(type => CreateDiagnosticAnalyzerInstance(type, pluginConfig)).ToList();
     }
 
     private static IEnumerable<string> EnabledRuleNames(PluginConfig pluginConfig)
@@ -95,5 +93,14 @@ public static class RuleLoader
     {
         var ruleConfig = pluginConfig.Rules.Single(r => r.RuleName.Equals(ruleName));
         return ruleConfig.Options;
+    }
+
+    private static DiagnosticAnalyzer? CreateDiagnosticAnalyzerInstance(Type type, PluginConfig pluginConfig)
+    {
+        var ruleName = type.GetField("DiagnosticId")?.GetValue(null)?.ToString();
+        return Activator.CreateInstance(type,
+                GetSeverityFromRuleConfig(ruleName, pluginConfig),
+                GetOptionsFromRuleConfig(ruleName, pluginConfig))
+            as DiagnosticAnalyzer;
     }
 }
