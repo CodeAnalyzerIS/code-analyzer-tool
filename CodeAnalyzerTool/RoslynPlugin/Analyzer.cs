@@ -1,4 +1,5 @@
 ﻿using System.Collections.Immutable;
+using CAT_API.ConfigModel;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.CodeAnalysis.MSBuild;
@@ -8,8 +9,9 @@ using Microsoft.CodeAnalysis.MSBuild;
 namespace RoslynPlugin; 
 
 public static class Analyzer {
-    internal static async Task<ImmutableArray<Diagnostic>> StartAnalysis(MSBuildWorkspace workspace) {
-        var workingDirectory = Directory.GetCurrentDirectory();
+    internal static async Task<ImmutableArray<Diagnostic>> StartAnalysis(MSBuildWorkspace workspace, GlobalConfig globalConfig) {
+        // var workingDirectory = Directory.GetCurrentDirectory();
+        var workingDirectory = @"C:\Users\AlexanderW\Documents\Blazor-CRUD-webapp";
         var solutionPaths = Directory.GetFiles(workingDirectory, "*.sln", SearchOption.AllDirectories);
         var diagnosticResults = new List<Diagnostic>();
         
@@ -18,11 +20,13 @@ public static class Analyzer {
 
             var solution = await workspace.OpenSolutionAsync(solutionPath, new ConsoleProgressReporter());
             Console.WriteLine($"Finished loading solution '{solutionPath}'");
+            
+            var analyzers = RuleLoader.LoadRules(workingDirectory);
 
             var projects = solution.Projects;
             
             foreach (var project in projects) {
-                var diagnostics = await AnalyseProject(project, workingDirectory);
+                var diagnostics = await AnalyseProject(project, globalConfig, analyzers);
                 if (diagnostics.Length > 0) diagnosticResults.AddRange(diagnostics);
             }
         }
@@ -30,13 +34,12 @@ public static class Analyzer {
         return diagnosticResults.ToImmutableArray();
     }
 
-    private static async Task<ImmutableArray<Diagnostic>> AnalyseProject(Project project, string workingDir) {
+    private static async Task<ImmutableArray<Diagnostic>> AnalyseProject(Project project, GlobalConfig globalConfig, 
+        ImmutableArray<DiagnosticAnalyzer> analyzers) {
         Console.WriteLine($"Analyzing project: {project.Name}\n=========================================");
         var compilation = await project.GetCompilationAsync();
         if (compilation == null) throw new NullReferenceException("Compilation was null");
         
-        var analyzers = RuleLoader.LoadRules(workingDir);
-
         var diagnosticResults = compilation.WithAnalyzers(analyzers)
             .GetAnalyzerDiagnosticsAsync().Result;
 

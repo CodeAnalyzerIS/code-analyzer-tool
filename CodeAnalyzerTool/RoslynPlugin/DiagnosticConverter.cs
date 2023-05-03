@@ -49,10 +49,10 @@ public static class DiagnosticConverter
     {
         return diagnosticSeverity switch
         {
-            DiagnosticSeverity.Hidden => Severity.INFO,
-            DiagnosticSeverity.Info => Severity.INFO,
-            DiagnosticSeverity.Warning => Severity.WARNING,
-            DiagnosticSeverity.Error => Severity.ERROR,
+            DiagnosticSeverity.Hidden => Severity.Info,
+            DiagnosticSeverity.Info => Severity.Info,
+            DiagnosticSeverity.Warning => Severity.Warning,
+            DiagnosticSeverity.Error => Severity.Error,
             _ => throw new ArgumentOutOfRangeException(nameof(diagnosticSeverity), diagnosticSeverity, null)
         };
     }

@@ -10,6 +10,9 @@ public class RuleConfig
     [JsonProperty("enabled", Required = Required.Always)]
     public bool Enabled { get; set; }
     
+    [JsonProperty("severity", Required = Required.Always)]
+    public Severity Severity { get; set; }
+
     [JsonProperty("options")]
     public Dictionary<string, string> Options { get; set; }
 

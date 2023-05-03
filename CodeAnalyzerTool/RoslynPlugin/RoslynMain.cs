@@ -14,7 +14,7 @@ public class RoslynMain : IPlugin
         using var workspace = MSBuildWorkspace.Create();
         workspace.WorkspaceFailed += (o, e) => Console.WriteLine(e.Diagnostic.Message);
 
-        var diagnostics = await Analyzer.StartAnalysis(workspace);
+        var diagnostics = await Analyzer.StartAnalysis(workspace, globalConfig);
         return DiagnosticConverter.ConvertDiagnostics(diagnostics);
     }
 }

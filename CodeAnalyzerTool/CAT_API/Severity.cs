@@ -2,7 +2,7 @@
 
 public enum Severity
 {
-    INFO,
-    WARNING,
-    ERROR
+    Info,
+    Warning,
+    Error
 }

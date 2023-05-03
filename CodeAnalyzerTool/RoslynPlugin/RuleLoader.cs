@@ -1,5 +1,6 @@
 ﻿using System.Collections.Immutable;
 using System.Reflection;
+using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
 
 namespace RoslynPlugin;
@@ -9,9 +10,9 @@ public static class RuleLoader
     public static ImmutableArray<DiagnosticAnalyzer> LoadRules(string workingDir)
     {
         var analyzers = new List<DiagnosticAnalyzer>();
-        var externalAnalyzers = LoadExternalRules(workingDir);
+        // var externalAnalyzers = LoadExternalRules(workingDir);
         var internalAnalyzers = LoadInternalRules();
-        analyzers.AddRange(externalAnalyzers.ToList());
+        // analyzers.AddRange(externalAnalyzers.ToList());
         analyzers.AddRange(internalAnalyzers.ToList());
 
         return analyzers.ToImmutableArray();
@@ -58,6 +59,6 @@ public static class RuleLoader
     {
         return assembly.GetExportedTypes()
             .Where(type => typeof(DiagnosticAnalyzer).IsAssignableFrom(type) && !type.IsAbstract)
-            .Select(type => Activator.CreateInstance(type) as DiagnosticAnalyzer).ToList();
+            .Select(type => Activator.CreateInstance(type, DiagnosticSeverity.Error) as DiagnosticAnalyzer).ToList();
     }
 }
