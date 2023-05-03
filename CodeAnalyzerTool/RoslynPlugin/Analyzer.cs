@@ -14,8 +14,7 @@ public static class Analyzer
     internal static async Task<ImmutableArray<Diagnostic>> StartAnalysis(MSBuildWorkspace workspace,
         PluginConfig pluginConfig, string pluginsPath)
     {
-        // var workingDirectory = Directory.GetCurrentDirectory();
-        var workingDirectory = @"C:\Users\AlexanderW\Documents\Blazor-CRUD-webapp";
+        var workingDirectory = Directory.GetCurrentDirectory();
         var solutionPaths = Directory.GetFiles(workingDirectory, "*.sln", SearchOption.AllDirectories);
         var diagnosticResults = new List<Diagnostic>();
 
