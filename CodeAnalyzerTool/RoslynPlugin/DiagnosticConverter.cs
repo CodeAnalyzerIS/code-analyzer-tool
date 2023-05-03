@@ -14,33 +14,31 @@ public static class DiagnosticConverter
 
     private static AnalysisResult ConvertDiagnostic(Diagnostic diagnostic)
     {
-        var rule = new Rule()
-        {
-            Id = diagnostic.Descriptor.Id,
-            Title = diagnostic.Descriptor.Title.ToString(),
-            Category = diagnostic.Descriptor.Category,
-            DefaultSeverity = ConvertSeverity(diagnostic.DefaultSeverity),
-            Description = diagnostic.Descriptor.Description.ToString(),
-            IsEnabledByDefault = diagnostic.Descriptor.IsEnabledByDefault
-        }; // todo maybe make extension?
+        var rule = new Rule(
+            id: diagnostic.Descriptor.Id,
+            title: diagnostic.Descriptor.Title.ToString(),
+            category: diagnostic.Descriptor.Category,
+            defaultSeverity: ConvertSeverity(diagnostic.DefaultSeverity),
+            description: diagnostic.Descriptor.Description.ToString(),
+            isEnabledByDefault: diagnostic.Descriptor.IsEnabledByDefault
+        );
 
-        var location = new Location()
-        {
-            Path = diagnostic.Location.GetLineSpan().Path,
-            StartLine = diagnostic.Location.GetLineSpan().StartLinePosition.Line,
-            EndLine = diagnostic.Location.GetLineSpan().EndLinePosition.Line,
-            FileExtension = ".cs" // TODO not hardcoded
-        }; // todo maybe make extension?
-        
-        AnalysisResult result = new AnalysisResult()
-        {
-            Rule = rule,
-            PluginId = "Roslyn", // TODO not hardcoded
-            TargetLanguage = "c#",// TODO vraag of mss betere manier (zonder Enum die het restrict vr packages)
-            Location = location,
-            Severity = ConvertSeverity(diagnostic.Severity), // TODO test to make sure the severity can be configured in config file
-            Message = diagnostic.GetMessage()
-        };
+        var location = new Location(
+            path: diagnostic.Location.GetLineSpan().Path,
+            startLine: diagnostic.Location.GetLineSpan().StartLinePosition.Line,
+            endLine: diagnostic.Location.GetLineSpan().EndLinePosition.Line,
+            fileExtension: ".cs" // TODO not hardcoded
+        );
+
+        var sev = ConvertSeverity(diagnostic.Severity);
+        // TODO not hardcoded PluginId, TargetLanguage
+        var result = new AnalysisResult(
+            rule: rule, 
+            pluginId: "Roslyn", 
+            message: diagnostic.GetMessage(), 
+            targetLanguage: "c#", 
+            location: location, 
+            severity: sev);
 
         return result;
     }
