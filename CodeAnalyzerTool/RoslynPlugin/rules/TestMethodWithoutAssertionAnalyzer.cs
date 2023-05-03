@@ -9,9 +9,11 @@ namespace RoslynPlugin.rules;
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public class TestMethodWithoutAssertionAnalyzer : DiagnosticAnalyzer
 {
-    private const string DiagnosticId = "NoAssertion";
+    // ReSharper disable once MemberCanBePrivate.Global
+    public const string DiagnosticId = "NoAssertion";
     private const string Category = "Syntax";
     private readonly DiagnosticSeverity _severity;
+    private readonly Dictionary<string, string> _options;
 
     private static readonly LocalizableString Title = new LocalizableResourceString(nameof(Resources.NoAssertionTitle),
         Resources.ResourceManager, typeof(Resources));
@@ -26,12 +28,14 @@ public class TestMethodWithoutAssertionAnalyzer : DiagnosticAnalyzer
 
     public TestMethodWithoutAssertionAnalyzer()
     {
+        _options = new Dictionary<string, string>();
         _severity = DiagnosticSeverity.Warning;
     }
 
-    public TestMethodWithoutAssertionAnalyzer(DiagnosticSeverity severity)
+    public TestMethodWithoutAssertionAnalyzer(DiagnosticSeverity severity, Dictionary<string, string> options)
     {
         _severity = severity;
+        _options = options;
     }
 
     private static readonly DiagnosticDescriptor Rule = new(DiagnosticId, Title, MessageFormat, Category,
@@ -53,7 +57,6 @@ public class TestMethodWithoutAssertionAnalyzer : DiagnosticAnalyzer
         if (!IsTestMethod(methodDeclaration)) return;
         if (ContainsAssertion(methodDeclaration)) return;
 
-        // var descriptor = CreateDescriptor();
         var diagnostic = Diagnostic.Create(Rule, 
             methodDeclaration.GetFirstToken().GetLocation(),
             effectiveSeverity: _severity,

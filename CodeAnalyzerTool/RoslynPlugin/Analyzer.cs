@@ -21,7 +21,7 @@ public static class Analyzer {
             var solution = await workspace.OpenSolutionAsync(solutionPath, new ConsoleProgressReporter());
             Console.WriteLine($"Finished loading solution '{solutionPath}'");
             
-            var analyzers = RuleLoader.LoadRules(workingDirectory);
+            var analyzers = RuleLoader.LoadRules(workingDirectory, pluginConfig);
 
             var projects = solution.Projects;
             
