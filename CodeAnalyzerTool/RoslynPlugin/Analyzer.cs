@@ -9,7 +9,7 @@ using Microsoft.CodeAnalysis.MSBuild;
 namespace RoslynPlugin; 
 
 public static class Analyzer {
-    internal static async Task<ImmutableArray<Diagnostic>> StartAnalysis(MSBuildWorkspace workspace, GlobalConfig globalConfig) {
+    internal static async Task<ImmutableArray<Diagnostic>> StartAnalysis(MSBuildWorkspace workspace, PluginConfig pluginConfig) {
         // var workingDirectory = Directory.GetCurrentDirectory();
         var workingDirectory = @"C:\Users\AlexanderW\Documents\Blazor-CRUD-webapp";
         var solutionPaths = Directory.GetFiles(workingDirectory, "*.sln", SearchOption.AllDirectories);
@@ -26,7 +26,7 @@ public static class Analyzer {
             var projects = solution.Projects;
             
             foreach (var project in projects) {
-                var diagnostics = await AnalyseProject(project, globalConfig, analyzers);
+                var diagnostics = await AnalyseProject(project, pluginConfig, analyzers);
                 if (diagnostics.Length > 0) diagnosticResults.AddRange(diagnostics);
             }
         }
@@ -34,7 +34,7 @@ public static class Analyzer {
         return diagnosticResults.ToImmutableArray();
     }
 
-    private static async Task<ImmutableArray<Diagnostic>> AnalyseProject(Project project, GlobalConfig globalConfig, 
+    private static async Task<ImmutableArray<Diagnostic>> AnalyseProject(Project project, PluginConfig pluginConfig, 
         ImmutableArray<DiagnosticAnalyzer> analyzers) {
         Console.WriteLine($"Analyzing project: {project.Name}\n=========================================");
         var compilation = await project.GetCompilationAsync();
