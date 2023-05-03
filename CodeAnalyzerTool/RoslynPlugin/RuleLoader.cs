@@ -12,38 +12,39 @@ public static class RuleLoader
 {
     public static ImmutableArray<DiagnosticAnalyzer> LoadRules(string workingDir, PluginConfig pluginConfig)
     {
-        var enabledRuleNames = EnabledRuleNames(pluginConfig);
+        var enabledRuleNames = EnabledRuleNames(pluginConfig).ToList();
 
         var analyzers = new List<DiagnosticAnalyzer>();
-        // var externalAnalyzers = LoadExternalRules(workingDir);
-        var internalAnalyzers = LoadInternalRules(enabledRuleNames.ToList(), pluginConfig);
-        // analyzers.AddRange(externalAnalyzers.ToList());
+        var externalAnalyzers = LoadExternalRules(workingDir, enabledRuleNames, pluginConfig);
+        var internalAnalyzers = LoadInternalRules(enabledRuleNames, pluginConfig);
+        analyzers.AddRange(externalAnalyzers.ToList());
         analyzers.AddRange(internalAnalyzers.ToList());
 
         return analyzers.ToImmutableArray();
     }
 
-    // private static IEnumerable<DiagnosticAnalyzer> LoadExternalRules(string workingDir)
-    // {
-    //     //TODO: Make configurable with config file
-    //     var externalRules = Path.Combine(workingDir, "CAT/Roslyn/rules");
-    //     var rules = Array.Empty<string>();
-    //     var result = new List<DiagnosticAnalyzer>();
-    //
-    //     if (Directory.Exists(externalRules))
-    //         rules = Directory.GetFiles(externalRules, "*.dll");
-    //
-    //     foreach (var rulePath in rules)
-    //     {
-    //         var a = Assembly.LoadFrom(rulePath);
-    //         var analyzers = LoadAnalyzersFromAssembly(a);
-    //
-    //         if (analyzers.Any())
-    //             result.AddRange(analyzers.Where(analyzer => analyzer != null)!);
-    //     }
-    //
-    //     return result;
-    // }
+    private static IEnumerable<DiagnosticAnalyzer> LoadExternalRules(string workingDir,
+        ICollection<string> enabledRuleNames, PluginConfig pluginConfig)
+    {
+        //TODO: Make configurable with config file
+        var externalRules = Path.Combine(workingDir, "CAT/Roslyn/rules");
+        var rules = Array.Empty<string>();
+        var result = new List<DiagnosticAnalyzer>();
+
+        if (Directory.Exists(externalRules))
+            rules = Directory.GetFiles(externalRules, "*.dll");
+
+        foreach (var rulePath in rules)
+        {
+            var a = Assembly.LoadFrom(rulePath);
+            var analyzers = LoadAnalyzersFromAssembly(a, enabledRuleNames, pluginConfig);
+
+            if (analyzers.Any())
+                result.AddRange(analyzers.Where(analyzer => analyzer != null)!);
+        }
+
+        return result;
+    }
 
     private static IEnumerable<DiagnosticAnalyzer> LoadInternalRules(ICollection<string> enabledRuleNames,
         PluginConfig pluginConfig)
