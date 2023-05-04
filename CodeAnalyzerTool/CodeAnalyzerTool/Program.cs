@@ -1,25 +1,92 @@
 ﻿
+using System.Reflection;
+using CAT_API;
 using Newtonsoft.Json;
-using RoslynPlugin;
 
 namespace CodeAnalyzerTool;
 
 public class Program {
     private static async Task Main()
     {
-        // todo pass result to backend API (C.A.S.)
-        await SchemaGenerator.GenerateSchema();
-        Console.WriteLine(@"Read jsonConfig");
-        var globalConfig = await ConfigReader.ReadAsync();
         try
         {
-            var roslyn = new RoslynMain();
-            var result = await roslyn.Analyze(globalConfig.Plugins.First(), globalConfig.PluginsPath); // todo fix plugin config parameter dynamically
+            await SchemaGenerator.GenerateSchema();
+            Console.WriteLine(@"Read jsonConfig");
+            var globalConfig = await ConfigReader.ReadAsync();
+            var directoryPath = globalConfig.PluginsPath;
+            var pluginNames = globalConfig.Plugins.Select(p => p.PluginName);
+            var pluginsDictionary = pluginNames.SelectMany(name =>
+            {
+                var path = Path.Combine(globalConfig.PluginsPath, name);
+                Assembly pluginAssembly = LoadPlugin(path);
+                return CreatePlugin(pluginAssembly, name);
+            })
+                .ToDictionary(pair => pair.Key, pair => pair.Value);
+            
+            // Dictionary<string, IPlugin> plugins = pluginNames.SelectMany(name =>
+            // {
+            //     var path = Path.Combine(globalConfig.PluginsPath, name);
+            //     Assembly pluginAssembly = LoadPlugin(path);
+            //     return CreatePlugin(pluginAssembly, name);
+            // }).ToList();
+
+            var analysisResults = new List<AnalysisResult>();
+            foreach (var kv in pluginsDictionary)
+            {
+                var pluginConfig = globalConfig.Plugins.Single(p => p.PluginName == kv.Key);
+                var pluginResults = await kv.Value.Analyze(pluginConfig, directoryPath);
+                analysisResults.AddRange(pluginResults);
+            }
+            // todo pass result to backend API (C.A.S.)
+            Console.WriteLine(analysisResults);
         }
-        catch (JsonException e)
+        catch (Exception ex)
         {
-            Console.WriteLine(e);
-            throw;
+            Console.WriteLine(ex);
         }
+    }
+    
+    
+    static Assembly LoadPlugin(string relativePath)
+    {
+        // // Navigate up to the solution root
+        // string root = Path.GetFullPath(Path.Combine(
+        //     Path.GetDirectoryName(
+        //         Path.GetDirectoryName(
+        //             Path.GetDirectoryName(
+        //                 Path.GetDirectoryName(
+        //                     Path.GetDirectoryName(typeof(Program).Assembly.Location)))))));
+
+        // string pluginLocation = Path.GetFullPath(Path.Combine(root, relativePath.Replace('\\', Path.DirectorySeparatorChar)));
+        // var wd = Directory.GetCurrentDirectory();
+        var wd = @"C:\Users\Michel\Documents_Local\repos\Blazor-CRUD-webapp";
+        var pluginLocation = Path.Combine(wd, relativePath);
+        pluginLocation = Path.Combine(pluginLocation, "RoslynPlugin.dll");
+        Console.WriteLine($"Loading plugins from: {pluginLocation}");
+        PluginLoadContext loadContext = new PluginLoadContext(pluginLocation);
+        return loadContext.LoadFromAssemblyName(new AssemblyName(Path.GetFileNameWithoutExtension(pluginLocation)));
+    }
+    
+    
+    static Dictionary<string, IPlugin> CreatePlugin(Assembly assembly, string pluginName)
+    {
+        
+        foreach (var type in assembly.GetTypes())
+        {
+            if (typeof(IPlugin).IsAssignableFrom(type))
+            {
+                IPlugin? result = Activator.CreateInstance(type) as IPlugin;
+                if (result != null){
+                    var dic =  new Dictionary<string, IPlugin>();
+                    dic[pluginName] = result;
+                    return dic;
+                }
+            }
+        }
+        // todo maybe don't throw exception and stop application when a single plugin can't be loaded
+        string availableTypes = string.Join(",", assembly.GetTypes().Select(t => t.FullName));
+        throw new ApplicationException(
+            $"Can't find any type which implements IPlugin in {assembly} from {assembly.Location}.\n" +
+            $"Available types: {availableTypes}");
     }
 }
