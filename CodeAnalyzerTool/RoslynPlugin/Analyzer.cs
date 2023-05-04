@@ -9,17 +9,15 @@ using Microsoft.CodeAnalysis.MSBuild;
 
 namespace RoslynPlugin;
 
-public static class Analyzer
-{
+public static class Analyzer {
     internal static async Task<ImmutableArray<Diagnostic>> StartAnalysis(MSBuildWorkspace workspace,
-        PluginConfig pluginConfig, string pluginsPath)
-    {
+        PluginConfig pluginConfig, string pluginsPath) {
         var workingDirectory = Directory.GetCurrentDirectory();
-        var solutionPaths = Directory.GetFiles(workingDirectory, "*.sln", SearchOption.AllDirectories);
+        var solutionPaths = Directory.GetFiles(workingDirectory, StringResources.SolutionExtension,
+            SearchOption.AllDirectories);
         var diagnosticResults = new List<Diagnostic>();
 
-        foreach (var solutionPath in solutionPaths)
-        {
+        foreach (var solutionPath in solutionPaths) {
             Console.WriteLine($"Loading Solution '{solutionPath}'");
 
             var solution = await workspace.OpenSolutionAsync(solutionPath, new ConsoleProgressReporter());
@@ -29,8 +27,7 @@ public static class Analyzer
 
             var projects = solution.Projects;
 
-            foreach (var project in projects)
-            {
+            foreach (var project in projects) {
                 var diagnostics = await AnalyseProject(project, analyzers);
                 if (!diagnostics.IsEmpty) diagnosticResults.AddRange(diagnostics);
             }
@@ -40,11 +37,10 @@ public static class Analyzer
     }
 
     private static async Task<ImmutableArray<Diagnostic>> AnalyseProject(Project project,
-        ImmutableArray<DiagnosticAnalyzer> analyzers)
-    {
+        ImmutableArray<DiagnosticAnalyzer> analyzers) {
         Console.WriteLine($"Analyzing project: {project.Name}\n=========================================");
         var compilation = await project.GetCompilationAsync();
-        if (compilation == null) throw new NullReferenceException("Compilation was null");
+        if (compilation == null) throw new NullReferenceException(StringResources.NullCompilationMsg);
 
         if (analyzers.IsEmpty) return new List<Diagnostic>().ToImmutableArray();
 
@@ -52,8 +48,7 @@ public static class Analyzer
             .GetAnalyzerDiagnosticsAsync().Result;
 
         Console.WriteLine($@"Diagnostics found: {diagnosticResults.Length}");
-        foreach (var diagnostic in diagnosticResults)
-        {
+        foreach (var diagnostic in diagnosticResults) {
             Console.WriteLine(diagnostic.ToString());
         }
 

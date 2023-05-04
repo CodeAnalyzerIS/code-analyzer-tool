@@ -11,7 +11,6 @@ public static class SchemaGenerator
         var generator = new JSchemaGenerator();
         generator.GenerationProviders.Add(new StringEnumGenerationProvider());
         var schema = generator.Generate(typeof(GlobalConfig));
-        //TODO: Not hardcoded
-        await File.WriteAllTextAsync("CATSchema.json", schema.ToString());
+        await File.WriteAllTextAsync(StringResources.SchemaFileName, schema.ToString());
     }
 }

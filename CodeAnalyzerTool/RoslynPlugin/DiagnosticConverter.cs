@@ -27,7 +27,7 @@ public static class DiagnosticConverter
             path: diagnostic.Location.GetLineSpan().Path,
             startLine: diagnostic.Location.GetLineSpan().StartLinePosition.Line,
             endLine: diagnostic.Location.GetLineSpan().EndLinePosition.Line,
-            fileExtension: ".cs" // TODO not hardcoded
+            fileExtension: StringResources.FileExtension
         );
 
         var sev = ConvertSeverity(diagnostic.Severity);
@@ -36,7 +36,7 @@ public static class DiagnosticConverter
             rule: rule, 
             pluginId: "Roslyn", 
             message: diagnostic.GetMessage(), 
-            targetLanguage: "c#", 
+            targetLanguage: StringResources.TargetLanguage, 
             location: location, 
             severity: sev);
 
