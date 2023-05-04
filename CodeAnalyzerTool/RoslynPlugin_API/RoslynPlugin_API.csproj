@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net7.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <Version>0.0.1</Version>
+        <Title>Code Analyzer Tool: RoslynRule API</Title>
+        <RepositoryUrl>https://github.com/CodeAnalyzerIS/code-analyzer-tool</RepositoryUrl>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <PackageId>CodeAnalyzerTool.RoslynPlugin.API</PackageId>
+        <Authors>Code Analyzer Tool</Authors>
+        <PackageOutputPath>./nupkg</PackageOutputPath>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Microsoft.CodeAnalysis" Version="4.5.0" />
+    </ItemGroup>
+
+</Project>
