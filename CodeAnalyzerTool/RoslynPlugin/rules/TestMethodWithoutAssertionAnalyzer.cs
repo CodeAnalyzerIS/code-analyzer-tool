@@ -9,8 +9,11 @@ namespace RoslynPlugin.rules;
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public class TestMethodWithoutAssertionAnalyzer : DiagnosticAnalyzer
 {
-    private const string DiagnosticId = "NoAssertion";
+    // ReSharper disable once MemberCanBePrivate.Global
+    public const string DiagnosticId = "NoAssertion";
     private const string Category = "Syntax";
+    private readonly DiagnosticSeverity _severity;
+    private readonly Dictionary<string, string> _options;
 
     private static readonly LocalizableString Title = new LocalizableResourceString(nameof(Resources.NoAssertionTitle),
         Resources.ResourceManager, typeof(Resources));
@@ -22,6 +25,18 @@ public class TestMethodWithoutAssertionAnalyzer : DiagnosticAnalyzer
     private static readonly LocalizableString Description =
         new LocalizableResourceString(nameof(Resources.NoAssertionDescription), Resources.ResourceManager,
             typeof(Resources));
+
+    public TestMethodWithoutAssertionAnalyzer()
+    {
+        _options = new Dictionary<string, string>();
+        _severity = DiagnosticSeverity.Warning;
+    }
+
+    public TestMethodWithoutAssertionAnalyzer(DiagnosticSeverity severity, Dictionary<string, string> options)
+    {
+        _severity = severity;
+        _options = options;
+    }
 
     private static readonly DiagnosticDescriptor Rule = new(DiagnosticId, Title, MessageFormat, Category,
         DiagnosticSeverity.Warning, isEnabledByDefault: true, description: Description);
@@ -35,14 +50,18 @@ public class TestMethodWithoutAssertionAnalyzer : DiagnosticAnalyzer
         context.RegisterSyntaxNodeAction(AnalyzeMethod, SyntaxKind.MethodDeclaration);
     }
 
-    private static void AnalyzeMethod(SyntaxNodeAnalysisContext ctx)
+    private void AnalyzeMethod(SyntaxNodeAnalysisContext ctx)
     {
         var methodDeclaration = (MethodDeclarationSyntax)ctx.Node;
 
         if (!IsTestMethod(methodDeclaration)) return;
         if (ContainsAssertion(methodDeclaration)) return;
 
-        var diagnostic = Diagnostic.Create(Rule, methodDeclaration.GetFirstToken().GetLocation(),
+        var diagnostic = Diagnostic.Create(Rule, 
+            methodDeclaration.GetFirstToken().GetLocation(),
+            effectiveSeverity: _severity,
+            null,
+            null,
             methodDeclaration.Identifier.ValueText);
         ctx.ReportDiagnostic(diagnostic);
     }

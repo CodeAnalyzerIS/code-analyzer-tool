@@ -1,36 +1,39 @@
 ﻿using System.Collections.Immutable;
 using System.Reflection;
+using CAT_API;
+using CAT_API.ConfigModel;
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 
 namespace RoslynPlugin;
 
-public static class RuleLoader
-{
-    public static ImmutableArray<DiagnosticAnalyzer> LoadRules(string workingDir)
-    {
+public static class RuleLoader {
+    public static ImmutableArray<DiagnosticAnalyzer> LoadRules(string workingDir, PluginConfig pluginConfig,
+        string pluginsPath) {
+        var enabledRuleNames = EnabledRuleNames(pluginConfig).ToList();
+
         var analyzers = new List<DiagnosticAnalyzer>();
-        var externalAnalyzers = LoadExternalRules(workingDir);
-        var internalAnalyzers = LoadInternalRules();
+        var externalAnalyzers = LoadExternalRules(workingDir, enabledRuleNames, pluginConfig, pluginsPath);
+        var internalAnalyzers = LoadInternalRules(enabledRuleNames, pluginConfig);
         analyzers.AddRange(externalAnalyzers.ToList());
         analyzers.AddRange(internalAnalyzers.ToList());
 
         return analyzers.ToImmutableArray();
     }
 
-    private static IEnumerable<DiagnosticAnalyzer> LoadExternalRules(string workingDir)
-    {
-        //TODO: Make configurable with config file
-        var externalRules = Path.Combine(workingDir, "CAT/Roslyn/rules");
+    private static IEnumerable<DiagnosticAnalyzer> LoadExternalRules(string workingDir,
+        ICollection<string> enabledRuleNames, PluginConfig pluginConfig, string pluginsPath) {
+        var externalRules = Path.Combine(workingDir, pluginsPath, pluginConfig.PluginName, StringResources.RulesFolderName);
         var rules = Array.Empty<string>();
         var result = new List<DiagnosticAnalyzer>();
 
         if (Directory.Exists(externalRules))
-            rules = Directory.GetFiles(externalRules, "*.dll");
+            rules = Directory.GetFiles(externalRules, StringResources.PluginExtension);
 
-        foreach (var rulePath in rules)
-        {
+        foreach (var rulePath in rules) {
             var a = Assembly.LoadFrom(rulePath);
-            var analyzers = LoadAnalyzersFromAssembly(a);
+            var analyzers = LoadAnalyzersFromAssembly(a, enabledRuleNames, pluginConfig);
 
             if (analyzers.Any())
                 result.AddRange(analyzers.Where(analyzer => analyzer != null)!);
@@ -39,13 +42,12 @@ public static class RuleLoader
         return result;
     }
 
-    private static IEnumerable<DiagnosticAnalyzer> LoadInternalRules()
-    {
+    private static IEnumerable<DiagnosticAnalyzer> LoadInternalRules(ICollection<string> enabledRuleNames,
+        PluginConfig pluginConfig) {
         var result = new List<DiagnosticAnalyzer>();
 
-        foreach (var a in AppDomain.CurrentDomain.GetAssemblies())
-        {
-            var analyzers = LoadAnalyzersFromAssembly(a);
+        foreach (var a in AppDomain.CurrentDomain.GetAssemblies()) {
+            var analyzers = LoadAnalyzersFromAssembly(a, enabledRuleNames, pluginConfig);
 
             if (analyzers.Any())
                 result.AddRange(analyzers.Where(analyzer => analyzer != null)!);
@@ -54,10 +56,38 @@ public static class RuleLoader
         return result;
     }
 
-    private static List<DiagnosticAnalyzer?> LoadAnalyzersFromAssembly(Assembly assembly)
-    {
+    private static List<DiagnosticAnalyzer?> LoadAnalyzersFromAssembly(Assembly assembly,
+        ICollection<string> enabledNames, PluginConfig pluginConfig) {
         return assembly.GetExportedTypes()
             .Where(type => typeof(DiagnosticAnalyzer).IsAssignableFrom(type) && !type.IsAbstract)
-            .Select(type => Activator.CreateInstance(type) as DiagnosticAnalyzer).ToList();
+            .Where(type => enabledNames.Contains(type.GetField(StringResources.RuleIdFieldName)?.GetValue(null)))
+            .Select(type => CreateDiagnosticAnalyzerInstance(type, pluginConfig)).ToList();
+    }
+
+    private static IEnumerable<string> EnabledRuleNames(PluginConfig pluginConfig) {
+        return pluginConfig.Rules.Where(r => r.Enabled).Select(r => r.RuleName);
+    }
+
+    private static DiagnosticSeverity GetSeverityFromRuleConfig(string? ruleName, PluginConfig plugConf) {
+        var ruleConfig = plugConf.Rules.Single(r => r.RuleName.Equals(ruleName));
+        return ruleConfig.Severity switch {
+            Severity.Info => DiagnosticSeverity.Info,
+            Severity.Warning => DiagnosticSeverity.Warning,
+            Severity.Error => DiagnosticSeverity.Error,
+            _ => throw new ArgumentOutOfRangeException()
+        };
+    }
+
+    private static Dictionary<string, string> GetOptionsFromRuleConfig(string? ruleName, PluginConfig pluginConfig) {
+        var ruleConfig = pluginConfig.Rules.Single(r => r.RuleName.Equals(ruleName));
+        return ruleConfig.Options;
+    }
+
+    private static DiagnosticAnalyzer? CreateDiagnosticAnalyzerInstance(Type type, PluginConfig pluginConfig) {
+        var ruleName = type.GetField(StringResources.RuleIdFieldName)?.GetValue(null)?.ToString();
+        return Activator.CreateInstance(type,
+                GetSeverityFromRuleConfig(ruleName, pluginConfig),
+                GetOptionsFromRuleConfig(ruleName, pluginConfig))
+            as DiagnosticAnalyzer;
     }
 }

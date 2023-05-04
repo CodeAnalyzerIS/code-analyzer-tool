@@ -11,18 +11,19 @@ public static class ConfigReader
     public static async Task<GlobalConfig> ReadAsync()
     {
         var workingDir = Directory.GetCurrentDirectory();
-        var jsonPath = Path.Combine(workingDir, "CATConfig.json");
-        //TODO: Not hardcoded
-        var schemaPath = Path.Combine(AppContext.BaseDirectory, "CATSchema.json");
+        var configPath = Path.Combine(workingDir, StringResources.ConfigFileName);
+        var schemaPath = Path.Combine(AppContext.BaseDirectory, StringResources.SchemaFileName);
 
         var schema = JSchema.Parse(await File.ReadAllTextAsync(schemaPath));
-        var json = JObject.Parse(await File.ReadAllTextAsync(jsonPath));
+        var config = JObject.Parse(await File.ReadAllTextAsync(configPath));
 
-        var isValid = json.IsValid(schema);
-        if (!isValid)
-            //TODO: Not hardcoded
-            throw new JsonException("Config is not correctly formed according to the CATSchema.json");
+        var isValid = config.IsValid(schema, out IList<string> errorMessages);
+        if (isValid) return config.ToObject<GlobalConfig>() ?? throw new JsonException(StringResources.NullConfigMsg);
+        foreach (var errorMessage in errorMessages)
+        {
+            Console.WriteLine(errorMessage);
+        }
+        throw new JsonException(StringResources.IncorrectConfigMsg);
 
-        return json.ToObject<GlobalConfig>() ?? throw new JsonException("Null object was created");
     }
 }

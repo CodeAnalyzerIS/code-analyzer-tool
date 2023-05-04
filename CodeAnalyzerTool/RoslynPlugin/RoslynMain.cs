@@ -8,13 +8,13 @@ namespace RoslynPlugin;
 public class RoslynMain : IPlugin
 {
     //This main method will be called in the analyzerToolProgram
-    public async Task<IEnumerable<AnalysisResult>> Analyze(GlobalConfig globalConfig) {
+    public async Task<IEnumerable<AnalysisResult>> Analyze(PluginConfig pluginConfig, string pluginsPath) {
         MSBuildLocator.RegisterDefaults();
 
         using var workspace = MSBuildWorkspace.Create();
         workspace.WorkspaceFailed += (o, e) => Console.WriteLine(e.Diagnostic.Message);
 
-        var diagnostics = await Analyzer.StartAnalysis(workspace);
+        var diagnostics = await Analyzer.StartAnalysis(workspace, pluginConfig, pluginsPath);
         return DiagnosticConverter.ConvertDiagnostics(diagnostics);
     }
 }
