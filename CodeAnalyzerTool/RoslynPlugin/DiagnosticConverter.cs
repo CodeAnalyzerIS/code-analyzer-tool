@@ -18,7 +18,7 @@ public static class DiagnosticConverter
             id: diagnostic.Descriptor.Id,
             title: diagnostic.Descriptor.Title.ToString(),
             category: diagnostic.Descriptor.Category,
-            defaultSeverity: ConvertSeverity(diagnostic.DefaultSeverity),
+            defaultSeverity: ConvertDiagnosticSeverity(diagnostic.DefaultSeverity),
             description: diagnostic.Descriptor.Description.ToString(),
             isEnabledByDefault: diagnostic.Descriptor.IsEnabledByDefault
         );
@@ -30,7 +30,7 @@ public static class DiagnosticConverter
             fileExtension: StringResources.FileExtension
         );
 
-        var sev = ConvertSeverity(diagnostic.Severity);
+        var sev = ConvertDiagnosticSeverity(diagnostic.Severity);
         // TODO not hardcoded PluginId, TargetLanguage
         var result = new AnalysisResult(
             rule: rule, 
@@ -43,7 +43,7 @@ public static class DiagnosticConverter
         return result;
     }
 
-    private static Severity ConvertSeverity(DiagnosticSeverity diagnosticSeverity)
+    private static Severity ConvertDiagnosticSeverity(DiagnosticSeverity diagnosticSeverity)
     {
         return diagnosticSeverity switch
         {
@@ -52,6 +52,17 @@ public static class DiagnosticConverter
             DiagnosticSeverity.Warning => Severity.Warning,
             DiagnosticSeverity.Error => Severity.Error,
             _ => throw new ArgumentOutOfRangeException(nameof(diagnosticSeverity), diagnosticSeverity, null)
+        };
+    }
+    
+    public static DiagnosticSeverity ConvertSeverity(Severity severity)
+    {
+        return severity switch
+        {
+            Severity.Info => DiagnosticSeverity.Info,
+            Severity.Warning => DiagnosticSeverity.Warning,
+            Severity.Error => DiagnosticSeverity.Error,
+            _ => throw new ArgumentOutOfRangeException(nameof(severity), severity, null)
         };
     }
 }

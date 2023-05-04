@@ -82,13 +82,7 @@ public static class RuleLoader
     private static DiagnosticSeverity GetSeverityFromRuleConfig(string? ruleName, PluginConfig plugConf)
     {
         var ruleConfig = plugConf.Rules.Single(r => r.RuleName.Equals(ruleName));
-        return ruleConfig.Severity switch
-        {
-            Severity.Info => DiagnosticSeverity.Info,
-            Severity.Warning => DiagnosticSeverity.Warning,
-            Severity.Error => DiagnosticSeverity.Error,
-            _ => throw new ArgumentOutOfRangeException()
-        };
+        return DiagnosticConverter.ConvertSeverity(ruleConfig.Severity);
     }
 
     private static Dictionary<string, string> GetOptionsFromRuleConfig(string? ruleName, PluginConfig pluginConfig)
