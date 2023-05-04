@@ -9,11 +9,16 @@
         <ToolCommandName>code_analyzer_tool</ToolCommandName>
         <PackageOutputPath>./nupkg</PackageOutputPath>
         <RootNamespace>CodeAnalyzerTool</RootNamespace>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     </PropertyGroup>
 
     <ItemGroup>
       <PackageReference Include="CodeAnalyzerTool.API" Version="0.0.2" />
       <PackageReference Include="Newtonsoft.Json.Schema" Version="3.0.15" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="nupkg" />
     </ItemGroup>
 
 </Project>

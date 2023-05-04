@@ -12,8 +12,7 @@ namespace RoslynPlugin;
 public static class Analyzer {
     internal static async Task<ImmutableArray<Diagnostic>> StartAnalysis(MSBuildWorkspace workspace,
         PluginConfig pluginConfig, string pluginsPath) {
-        // var workingDirectory = Directory.GetCurrentDirectory();
-        var workingDirectory = @"C:\Users\Michel\Documents_Local\repos\Blazor-CRUD-webapp";
+        var workingDirectory = Directory.GetCurrentDirectory();
         var solutionPaths = Directory.GetFiles(workingDirectory, StringResources.SolutionSearchPattern,
             SearchOption.AllDirectories);
         var diagnosticResults = new List<Diagnostic>();
