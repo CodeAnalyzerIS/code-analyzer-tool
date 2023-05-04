@@ -60,6 +60,33 @@ namespace RoslynPlugin {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Namespaces should be part of the parent namespace..
+        /// </summary>
+        internal static string NamespaceCheckDescription {
+            get {
+                return ResourceManager.GetString("NamespaceCheckDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Namespace should be part of the &apos;{0}&apos; parent namespace.
+        /// </summary>
+        internal static string NamespaceCheckMessageFormat {
+            get {
+                return ResourceManager.GetString("NamespaceCheckMessageFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Namespaces should be part of parent namespace.
+        /// </summary>
+        internal static string NamespaceCheckTitle {
+            get {
+                return ResourceManager.GetString("NamespaceCheckTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Test method should contain at least one assertion..
         /// </summary>
         internal static string NoAssertionDescription {

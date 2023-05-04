@@ -7,4 +7,5 @@ public static class StringResources {
     public const string ExternalRuleSearchPattern = "*.dll";
     public const string SolutionSearchPattern = "*.sln";
     public const string NullCompilationMsg = "Compilation was null";
+    public const string NoNameSpaceOptionMsg = "No namespace option has been provided";
 }

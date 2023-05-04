@@ -27,4 +27,13 @@
     <data name="NoAssertionTitle" xml:space="preserve">
         <value>Test method should contain at least one assertion</value>
     </data>
+    <data name="NamespaceCheckDescription" xml:space="preserve">
+        <value>Namespaces should be part of the parent namespace.</value>
+    </data>
+    <data name="NamespaceCheckTitle" xml:space="preserve">
+        <value>Namespaces should be part of parent namespace</value>
+    </data>
+    <data name="NamespaceCheckMessageFormat" xml:space="preserve">
+        <value>Namespace should be part of the '{0}' parent namespace</value>
+    </data>
 </root>
