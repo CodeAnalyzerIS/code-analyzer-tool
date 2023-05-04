@@ -3,14 +3,16 @@ using System.Reflection;
 using CAT_API;
 using CAT_API.ConfigModel;
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
+using RoslynPlugin_API;
 
 namespace RoslynPlugin;
 
-public static class RuleLoader {
+public static class RuleLoader
+{
     public static ImmutableArray<DiagnosticAnalyzer> LoadRules(string workingDir, PluginConfig pluginConfig,
-        string pluginsPath) {
+        string pluginsPath)
+    {
         var enabledRuleNames = EnabledRuleNames(pluginConfig).ToList();
 
         var analyzers = new List<DiagnosticAnalyzer>();
@@ -23,15 +25,18 @@ public static class RuleLoader {
     }
 
     private static IEnumerable<DiagnosticAnalyzer> LoadExternalRules(string workingDir,
-        ICollection<string> enabledRuleNames, PluginConfig pluginConfig, string pluginsPath) {
-        var externalRules = Path.Combine(workingDir, pluginsPath, pluginConfig.PluginName, StringResources.RulesFolderName);
+        ICollection<string> enabledRuleNames, PluginConfig pluginConfig, string pluginsPath)
+    {
+        var externalRules =
+            Path.Combine(workingDir, pluginsPath, pluginConfig.PluginName, StringResources.RulesFolderName);
         var rules = Array.Empty<string>();
         var result = new List<DiagnosticAnalyzer>();
 
         if (Directory.Exists(externalRules))
             rules = Directory.GetFiles(externalRules, StringResources.ExternalRuleSearchPattern);
 
-        foreach (var rulePath in rules) {
+        foreach (var rulePath in rules)
+        {
             var a = Assembly.LoadFrom(rulePath);
             var analyzers = LoadAnalyzersFromAssembly(a, enabledRuleNames, pluginConfig);
 
@@ -43,10 +48,12 @@ public static class RuleLoader {
     }
 
     private static IEnumerable<DiagnosticAnalyzer> LoadInternalRules(ICollection<string> enabledRuleNames,
-        PluginConfig pluginConfig) {
+        PluginConfig pluginConfig)
+    {
         var result = new List<DiagnosticAnalyzer>();
 
-        foreach (var a in AppDomain.CurrentDomain.GetAssemblies()) {
+        foreach (var a in AppDomain.CurrentDomain.GetAssemblies())
+        {
             var analyzers = LoadAnalyzersFromAssembly(a, enabledRuleNames, pluginConfig);
 
             if (analyzers.Any())
@@ -55,29 +62,28 @@ public static class RuleLoader {
 
         return result;
     }
-
-    // private static List<DiagnosticAnalyzer?> LoadAnalyzersFromAssembly(Assembly assembly,
-    //     ICollection<string> enabledNames, PluginConfig pluginConfig) {
-    //     return assembly.GetExportedTypes()
-    //         .Where(type => typeof(DiagnosticAnalyzer).IsAssignableFrom(type) && !type.IsAbstract)
-    //         .Where(type => enabledNames.Contains(type.GetProperty(StringResources.RuleIdFieldName)?.GetValue(null)))
-    //         .Select(type => CreateDiagnosticAnalyzerInstance(type, pluginConfig)).ToList();
-    // }
+    
     private static List<DiagnosticAnalyzer?> LoadAnalyzersFromAssembly(Assembly assembly,
-        ICollection<string> enabledNames, PluginConfig pluginConfig) {
-        return assembly.GetExportedTypes()
+        ICollection<string> enabledNames, PluginConfig pluginConfig)
+    {
+        var roslynRules = assembly.GetExportedTypes()
             .Where(type => typeof(DiagnosticAnalyzer).IsAssignableFrom(type) && !type.IsAbstract)
-            .Where(type => enabledNames.Contains(type.GetProperty(StringResources.RuleIdFieldName)?.GetValue(null)))
-            .Select(type => CreateDiagnosticAnalyzerInstance(type, pluginConfig)).ToList();
+            .Select(type => Activator.CreateInstance(type) as RoslynRule)
+            .Where(r => r?.DiagnosticId != null && enabledNames.Contains(r.DiagnosticId)).ToList();
+        return SetRuleConfiguration(roslynRules, pluginConfig)
+            .Select(r => r as DiagnosticAnalyzer).ToList();
     }
 
-    private static IEnumerable<string> EnabledRuleNames(PluginConfig pluginConfig) {
+    private static IEnumerable<string> EnabledRuleNames(PluginConfig pluginConfig)
+    {
         return pluginConfig.Rules.Where(r => r.Enabled).Select(r => r.RuleName);
     }
 
-    private static DiagnosticSeverity GetSeverityFromRuleConfig(string? ruleName, PluginConfig plugConf) {
+    private static DiagnosticSeverity GetSeverityFromRuleConfig(string? ruleName, PluginConfig plugConf)
+    {
         var ruleConfig = plugConf.Rules.Single(r => r.RuleName.Equals(ruleName));
-        return ruleConfig.Severity switch {
+        return ruleConfig.Severity switch
+        {
             Severity.Info => DiagnosticSeverity.Info,
             Severity.Warning => DiagnosticSeverity.Warning,
             Severity.Error => DiagnosticSeverity.Error,
@@ -85,16 +91,21 @@ public static class RuleLoader {
         };
     }
 
-    private static Dictionary<string, string> GetOptionsFromRuleConfig(string? ruleName, PluginConfig pluginConfig) {
+    private static Dictionary<string, string> GetOptionsFromRuleConfig(string? ruleName, PluginConfig pluginConfig)
+    {
         var ruleConfig = pluginConfig.Rules.Single(r => r.RuleName.Equals(ruleName));
         return ruleConfig.Options;
     }
 
-    private static DiagnosticAnalyzer? CreateDiagnosticAnalyzerInstance(Type type, PluginConfig pluginConfig) {
-        var ruleName = type.GetProperty(StringResources.RuleIdFieldName)?.GetValue(null)?.ToString();
-        return Activator.CreateInstance(type,
-                GetSeverityFromRuleConfig(ruleName, pluginConfig),
-                GetOptionsFromRuleConfig(ruleName, pluginConfig))
-            as DiagnosticAnalyzer;
+    private static List<RoslynRule?> SetRuleConfiguration(IList<RoslynRule?> rules, PluginConfig pluginConfig)
+    {
+        foreach (var rule in rules)
+        {
+            if (rule == null) continue;
+            rule.Severity = GetSeverityFromRuleConfig(rule.DiagnosticId, pluginConfig);
+            rule.Options = GetOptionsFromRuleConfig(rule.DiagnosticId, pluginConfig);
+        }
+
+        return rules.ToList();
     }
 }

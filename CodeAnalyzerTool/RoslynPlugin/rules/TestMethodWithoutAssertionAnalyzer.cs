@@ -8,7 +8,7 @@ using RoslynPlugin_API;
 namespace RoslynPlugin.rules;
 
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
-public class TestMethodWithoutAssertionAnalyzer : Rule
+public class TestMethodWithoutAssertionAnalyzer : RoslynRule
 {
     // ReSharper disable once MemberCanBePrivate.Global
     // public const string DiagnosticId = "NoAssertion";

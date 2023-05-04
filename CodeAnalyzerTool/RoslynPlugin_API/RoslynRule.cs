@@ -3,7 +3,7 @@ using Microsoft.CodeAnalysis.Diagnostics;
 
 namespace RoslynPlugin_API;
 
-public abstract class Rule : DiagnosticAnalyzer
+public abstract class RoslynRule : DiagnosticAnalyzer
 {
     public abstract string DiagnosticId { get; }
     public abstract DiagnosticSeverity Severity { get; set; }
