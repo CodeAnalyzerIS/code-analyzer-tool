@@ -29,7 +29,7 @@ public static class RuleLoader {
         var result = new List<DiagnosticAnalyzer>();
 
         if (Directory.Exists(externalRules))
-            rules = Directory.GetFiles(externalRules, StringResources.PluginExtension);
+            rules = Directory.GetFiles(externalRules, StringResources.ExternalRuleSearchPattern);
 
         foreach (var rulePath in rules) {
             var a = Assembly.LoadFrom(rulePath);
@@ -56,11 +56,18 @@ public static class RuleLoader {
         return result;
     }
 
+    // private static List<DiagnosticAnalyzer?> LoadAnalyzersFromAssembly(Assembly assembly,
+    //     ICollection<string> enabledNames, PluginConfig pluginConfig) {
+    //     return assembly.GetExportedTypes()
+    //         .Where(type => typeof(DiagnosticAnalyzer).IsAssignableFrom(type) && !type.IsAbstract)
+    //         .Where(type => enabledNames.Contains(type.GetProperty(StringResources.RuleIdFieldName)?.GetValue(null)))
+    //         .Select(type => CreateDiagnosticAnalyzerInstance(type, pluginConfig)).ToList();
+    // }
     private static List<DiagnosticAnalyzer?> LoadAnalyzersFromAssembly(Assembly assembly,
         ICollection<string> enabledNames, PluginConfig pluginConfig) {
         return assembly.GetExportedTypes()
             .Where(type => typeof(DiagnosticAnalyzer).IsAssignableFrom(type) && !type.IsAbstract)
-            .Where(type => enabledNames.Contains(type.GetField(StringResources.RuleIdFieldName)?.GetValue(null)))
+            .Where(type => enabledNames.Contains(type.GetProperty(StringResources.RuleIdFieldName)?.GetValue(null)))
             .Select(type => CreateDiagnosticAnalyzerInstance(type, pluginConfig)).ToList();
     }
 
@@ -84,7 +91,7 @@ public static class RuleLoader {
     }
 
     private static DiagnosticAnalyzer? CreateDiagnosticAnalyzerInstance(Type type, PluginConfig pluginConfig) {
-        var ruleName = type.GetField(StringResources.RuleIdFieldName)?.GetValue(null)?.ToString();
+        var ruleName = type.GetProperty(StringResources.RuleIdFieldName)?.GetValue(null)?.ToString();
         return Activator.CreateInstance(type,
                 GetSeverityFromRuleConfig(ruleName, pluginConfig),
                 GetOptionsFromRuleConfig(ruleName, pluginConfig))

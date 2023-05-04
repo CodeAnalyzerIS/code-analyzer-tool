@@ -3,17 +3,20 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
+using RoslynPlugin_API;
 
 namespace RoslynPlugin.rules;
 
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
-public class TestMethodWithoutAssertionAnalyzer : DiagnosticAnalyzer
+public class TestMethodWithoutAssertionAnalyzer : Rule
 {
     // ReSharper disable once MemberCanBePrivate.Global
-    public const string DiagnosticId = "NoAssertion";
+    // public const string DiagnosticId = "NoAssertion";
+    public sealed override string DiagnosticId => "NoAssertion";
+    public sealed override DiagnosticSeverity Severity { get; set; }
+    public sealed override Dictionary<string, string> Options { get; set; }
     private const string Category = "Syntax";
-    private readonly DiagnosticSeverity _severity;
-    private readonly Dictionary<string, string> _options;
+    private readonly DiagnosticDescriptor _rule;
 
     private static readonly LocalizableString Title = new LocalizableResourceString(nameof(Resources.NoAssertionTitle),
         Resources.ResourceManager, typeof(Resources));
@@ -28,20 +31,14 @@ public class TestMethodWithoutAssertionAnalyzer : DiagnosticAnalyzer
 
     public TestMethodWithoutAssertionAnalyzer()
     {
-        _options = new Dictionary<string, string>();
-        _severity = DiagnosticSeverity.Warning;
+        Options = new Dictionary<string, string>();
+        Severity = DiagnosticSeverity.Warning;
+        _rule = new DiagnosticDescriptor(DiagnosticId, Title, MessageFormat, Category,
+            DiagnosticSeverity.Warning, isEnabledByDefault: true, description: Description);
+        SupportedDiagnostics = ImmutableArray.Create(_rule);
     }
 
-    public TestMethodWithoutAssertionAnalyzer(DiagnosticSeverity severity, Dictionary<string, string> options)
-    {
-        _severity = severity;
-        _options = options;
-    }
-
-    private static readonly DiagnosticDescriptor Rule = new(DiagnosticId, Title, MessageFormat, Category,
-        DiagnosticSeverity.Warning, isEnabledByDefault: true, description: Description);
-    
-    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Rule);
+    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get; }
 
     public override void Initialize(AnalysisContext context)
     {
@@ -57,9 +54,9 @@ public class TestMethodWithoutAssertionAnalyzer : DiagnosticAnalyzer
         if (!IsTestMethod(methodDeclaration)) return;
         if (ContainsAssertion(methodDeclaration)) return;
 
-        var diagnostic = Diagnostic.Create(Rule, 
+        var diagnostic = Diagnostic.Create(_rule, 
             methodDeclaration.GetFirstToken().GetLocation(),
-            effectiveSeverity: _severity,
+            effectiveSeverity: Severity,
             null,
             null,
             methodDeclaration.Identifier.ValueText);
