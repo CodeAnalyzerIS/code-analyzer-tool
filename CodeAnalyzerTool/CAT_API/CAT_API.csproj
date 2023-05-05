@@ -4,7 +4,6 @@
         <TargetFramework>net7.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
-        <Version>0.0.2</Version>
         <Title>Code Analyzer Tool: API</Title>
         <RepositoryUrl>https://github.com/CodeAnalyzerIS/code-analyzer-tool</RepositoryUrl>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
