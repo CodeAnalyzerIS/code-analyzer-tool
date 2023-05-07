@@ -21,4 +21,8 @@
         <ProjectReference Include="..\RoslynPlugin\RoslynPlugin.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="nupkg" />
+    </ItemGroup>
+
 </Project>
