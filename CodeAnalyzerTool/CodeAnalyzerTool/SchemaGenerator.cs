@@ -1,5 +1,4 @@
 using CAT_API.ConfigModel;
-using Newtonsoft.Json.Schema;
 using Newtonsoft.Json.Schema.Generation;
 
 namespace CodeAnalyzerTool;

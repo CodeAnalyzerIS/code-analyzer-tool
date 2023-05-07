@@ -1,6 +1,5 @@
 ﻿using System.Collections.Immutable;
 using System.Reflection;
-using CAT_API;
 using CAT_API.ConfigModel;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;

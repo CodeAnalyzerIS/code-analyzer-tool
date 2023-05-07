@@ -1,4 +1,3 @@
-using System.ComponentModel.DataAnnotations;
 using Newtonsoft.Json;
 
 namespace CAT_API.ConfigModel;
