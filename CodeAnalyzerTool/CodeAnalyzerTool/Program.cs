@@ -1,7 +1,4 @@
-﻿using CAT_API;
-using CAT_API.ConfigModel;
-
-namespace CodeAnalyzerTool;
+﻿namespace CodeAnalyzerTool;
 
 public class Program
 {
