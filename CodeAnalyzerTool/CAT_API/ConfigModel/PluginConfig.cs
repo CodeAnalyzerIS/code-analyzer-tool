@@ -28,6 +28,7 @@ public class PluginConfig
         Enabled = enabled;
     }
 
+    [JsonConstructor]
     public PluginConfig(string pluginName, string folderName, IEnumerable<RuleConfig> rules, bool enabled,
         string assemblyName) : this(pluginName, folderName, rules, enabled)
     {

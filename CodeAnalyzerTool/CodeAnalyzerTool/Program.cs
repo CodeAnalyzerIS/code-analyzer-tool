@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using System.Text.Json.Nodes;
 using CAT_API;
 
 namespace CodeAnalyzerTool;
@@ -32,10 +33,10 @@ public class Program
                 var pluginResults = await kv.Value.Analyze(pluginConfig, pluginsDirectoryPath);
                 analysisResults.AddRange(pluginResults);
             }
-
+            if (analysisResults.Count > 0) analysisResults.ForEach(Console.WriteLine);
+            else Console.WriteLine("No problems found! (no analysis results)");
+            
             // todo pass result to backend API (C.A.S.)
-            Console.WriteLine(analysisResults);
-            analysisResults.ForEach(result => Console.WriteLine(result));
         }
         catch (Exception ex)
         {
@@ -46,7 +47,7 @@ public class Program
 
     static Assembly LoadPlugin(string path)
     {
-        Console.WriteLine($"Loading plugins from: {path}");
+        Console.WriteLine($"Loading plugin from: {path}");
         PluginLoadContext loadContext = new PluginLoadContext(path);
         return loadContext.LoadFromAssemblyName(new AssemblyName(Path.GetFileNameWithoutExtension(path)));
     }
