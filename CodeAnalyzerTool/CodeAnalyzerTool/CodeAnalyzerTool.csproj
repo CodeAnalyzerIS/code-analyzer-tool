@@ -13,12 +13,16 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="CodeAnalyzerTool.API" Version="0.0.2" />
       <PackageReference Include="Newtonsoft.Json.Schema" Version="3.0.15" />
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="nupkg" />
+        <ProjectReference Include="..\CAT_API\CAT_API.csproj" />
+        <ProjectReference Include="..\RoslynPlugin\RoslynPlugin.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="nupkg\" />
     </ItemGroup>
 
 </Project>

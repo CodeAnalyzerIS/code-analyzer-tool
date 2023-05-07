@@ -1,6 +1,5 @@
 ﻿using System.Reflection;
 using CAT_API;
-using Newtonsoft.Json;
 
 namespace CodeAnalyzerTool;
 
@@ -13,26 +12,30 @@ public class Program
             await SchemaGenerator.GenerateSchema();
             Console.WriteLine(@"Read jsonConfig");
             var globalConfig = await ConfigReader.ReadAsync();
-            var directoryPath = globalConfig.PluginsPath;
-            var pluginNames = globalConfig.Plugins.Select(p => p.PluginName);
-            var pluginsDictionary = pluginNames.SelectMany(pluginName =>
+            // todo move loading plugins to separate class
+            var pluginsDirectoryPath = globalConfig.PluginsPath;
+            var pluginsDictionary = globalConfig.ExternalPlugins
+                .Where(p => p.Enabled)
+                .SelectMany(p =>
                 {
-                    var pluginPath = Path.Combine(directoryPath, globalConfig.PluginsPath, pluginName + ".dll"); // todo maybe change that plugin main .dll file name doesn't need to be name of the plugin
+                    // todo check that AssemblyName is not null
+                    var pluginPath = Path.Combine(pluginsDirectoryPath, p.FolderName, p.AssemblyName);
                     Assembly pluginAssembly = LoadPlugin(pluginPath);
-                    return CreatePlugin(pluginAssembly, pluginName);
+                    return CreatePlugin(pluginAssembly, p.PluginName);
                 })
                 .ToDictionary(pair => pair.Key, pair => pair.Value);
 
             var analysisResults = new List<AnalysisResult>();
             foreach (var kv in pluginsDictionary)
             {
-                var pluginConfig = globalConfig.Plugins.Single(p => p.PluginName == kv.Key);
-                var pluginResults = await kv.Value.Analyze(pluginConfig, directoryPath);
+                var pluginConfig = globalConfig.ExternalPlugins.Single(p => p.PluginName == kv.Key);
+                var pluginResults = await kv.Value.Analyze(pluginConfig, pluginsDirectoryPath);
                 analysisResults.AddRange(pluginResults);
             }
 
             // todo pass result to backend API (C.A.S.)
             Console.WriteLine(analysisResults);
+            analysisResults.ForEach(result => Console.WriteLine(result));
         }
         catch (Exception ex)
         {

@@ -2,7 +2,6 @@ using CAT_API.ConfigModel;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Schema;
-using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace CodeAnalyzerTool;
 
