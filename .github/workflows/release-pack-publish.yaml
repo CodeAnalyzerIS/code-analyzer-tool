@@ -31,7 +31,9 @@ jobs:
         echo "tagVersion=${GITHUB_REF_NAME:1}" >> $GITHUB_ENV
     - name: Pack tool and API's with tag version
       working-directory: ./CodeAnalyzerTool/
-      run: dotnet pack -p:PackageVersion=${{ env.tagVersion }}
+      run: |
+        dotnet build
+        dotnet pack -p:PackageVersion=${{ env.tagVersion }}
     - name: Push CodeAnalyzerTool to nuget org
       working-directory: ./CodeAnalyzerTool/CodeAnalyzerTool/nupkg/
       run: dotnet nuget push CodeAnalyzerTool.${{ env.tagVersion }}.nupkg --api-key ${{secrets.NUGET_API_KEY}} --source ${{vars.NUGET_URL}}
