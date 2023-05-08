@@ -6,7 +6,6 @@
         <Nullable>enable</Nullable>
         <Title>Code Analyzer Tool: RoslynRule API</Title>
         <RepositoryUrl>https://github.com/CodeAnalyzerIS/code-analyzer-tool</RepositoryUrl>
-        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <PackageId>CodeAnalyzerTool.RoslynPlugin.API</PackageId>
         <Authors>Code Analyzer Tool</Authors>
         <PackageOutputPath>./nupkg</PackageOutputPath>

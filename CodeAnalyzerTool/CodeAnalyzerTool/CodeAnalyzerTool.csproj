@@ -6,6 +6,10 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <PackAsTool>true</PackAsTool>
+        <Title>Code Analyzer Tool</Title>
+        <RepositoryUrl>https://github.com/CodeAnalyzerIS/code-analyzer-tool</RepositoryUrl>
+        <PackageId>CodeAnalyzerTool</PackageId>
+        <Authors>Code Analyzer Tool</Authors>
         <ToolCommandName>code_analyzer_tool</ToolCommandName>
         <PackageOutputPath>./nupkg</PackageOutputPath>
         <RootNamespace>CodeAnalyzerTool</RootNamespace>
