@@ -43,7 +43,7 @@ public static class PluginLoader
     private static Dictionary<string, IPlugin> LoadBuiltInPlugins(GlobalConfig globalConfig)
     {
         var builtInPlugins = new Dictionary<string, IPlugin>();
-        foreach (var pluginConfig in globalConfig.BuiltInPlugins)
+        foreach (var pluginConfig in globalConfig.BuiltInPlugins.Where(p => p.Enabled))
         {
             switch (pluginConfig.PluginName)
             {
