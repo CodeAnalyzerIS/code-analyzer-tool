@@ -1,0 +1,43 @@
+name: Create a release, pack and publish the tool
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+      
+jobs:
+  create_release:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Create Release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ github.ref }}
+        release_name: ${{ github.ref }}
+        body: |
+          Release ${{ github.ref }}
+        draft: false
+        prerelease: false
+  
+  pack_push_tool:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+    - name: Get tag version
+      run: |
+        echo "tagVersion=${GITHUB_REF_NAME:1}" >> $GITHUB_ENV
+    - name: Pack tool and API's with tag version
+      working-directory: ./CodeAnalyzerTool/
+      run: dotnet pack -p:PackageVersion=${{ env.tagVersion }}
+    - name: Push CodeAnalyzerTool to nuget org
+      working-directory: ./CodeAnalyzerTool/CodeAnalyzerTool/nupkg/
+      run: dotnet nuget push CodeAnalyzerTool.${{ env.tagVersion }}.nupkg --api-key ${{secrets.NUGET_API_KEY}} --source ${{vars.NUGET_URL}}
+    - name: Push CAT-API to nuget org
+      working-directory: ./CodeAnalyzerTool/CAT_API/nupkg/
+      run: dotnet nuget push CodeAnalyzerTool.API.${{ env.tagVersion }}.nupkg --api-key ${{secrets.NUGET_API_KEY}} --source ${{vars.NUGET_URL}}
+    - name: Push RoslynPlugin-API to nuget org
+      working-directory: ./CodeAnalyzerTool/RoslynPlugin_API/nupkg/
+      run: dotnet nuget push CodeAnalyzerTool.RoslynPlugin.API.${{ env.tagVersion }}.nupkg --api-key ${{secrets.NUGET_API_KEY}} --source ${{vars.NUGET_URL}}
