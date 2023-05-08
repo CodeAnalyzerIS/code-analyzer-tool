@@ -7,7 +7,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="CodeAnalyzerTool.RoslynPlugin.API" Version="0.0.1" />
       <PackageReference Include="Microsoft.Build.Locator" Version="1.5.5" />
       <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="4.5.0" />
       <PackageReference Include="Microsoft.CodeAnalysis.Workspaces.MSBuild" Version="4.5.0" />
@@ -30,6 +29,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\CAT_API\CAT_API.csproj" />
+      <ProjectReference Include="..\RoslynPlugin_API\RoslynPlugin_API.csproj" />
     </ItemGroup>
 
 </Project>
