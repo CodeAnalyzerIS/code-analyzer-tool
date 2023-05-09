@@ -24,4 +24,9 @@ public class AnalysisResult
         Location = location;
         Severity = severity;
     }
+
+    public override string ToString()
+    {
+        return $"{nameof(Id)}: {Id}, {nameof(Rule)}: {Rule}, {nameof(PluginId)}: {PluginId}, {nameof(Message)}: {Message}, {nameof(TargetLanguage)}: {TargetLanguage}, {nameof(Location)}: {Location}, {nameof(Severity)}: {Severity}";
+    }
 }

@@ -1,6 +1,8 @@
 ﻿namespace CodeAnalyzerTool; 
 
-public static class StringResources {
+public static class StringResources
+{
+    public const string RoslynPluginName = "Roslyn";
     public const string SchemaFileName = "CATSchema.json";
     public const string ConfigFileName = "CATConfig.json";
     public const string NullConfigMsg = "Null object was created";

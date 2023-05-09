@@ -1,25 +1,25 @@
-﻿
-using Newtonsoft.Json;
-using RoslynPlugin;
+﻿namespace CodeAnalyzerTool;
 
-namespace CodeAnalyzerTool;
-
-public class Program {
-    private static async Task Main()
+public class Program
+{
+    public static async Task Main()
     {
-        // todo pass result to backend API (C.A.S.)
-        await SchemaGenerator.GenerateSchema();
-        Console.WriteLine(@"Read jsonConfig");
-        var globalConfig = await ConfigReader.ReadAsync();
         try
         {
-            var roslyn = new RoslynMain();
-            var result = await roslyn.Analyze(globalConfig.Plugins.First(), globalConfig.PluginsPath); // todo fix plugin config parameter dynamically
+            await SchemaGenerator.GenerateSchema();
+            Console.WriteLine(@"Read jsonConfig");
+            var globalConfig = await ConfigReader.ReadAsync();
+
+            var analysisResults = await PluginLoader.LoadAndRunPlugins(globalConfig);
+            if (analysisResults.Count > 0) analysisResults.ForEach(Console.WriteLine);
+            else Console.WriteLine("No problems found! (no analysis results)");
+
+            // todo pass result to backend API (C.A.S.)
         }
-        catch (JsonException e)
+        catch (Exception ex)
         {
-            Console.WriteLine(e);
-            throw;
+            // todo fix exception handling
+            Console.WriteLine(ex);
         }
     }
 }
