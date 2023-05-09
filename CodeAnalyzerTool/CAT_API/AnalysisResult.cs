@@ -11,7 +11,8 @@ public class AnalysisResult
     public Location Location { get; set; }
     public Severity Severity { get; set; }
 
-    public AnalysisResult(Rule rule, string pluginId, string message, string targetLanguage, Location location, Severity severity)
+    public AnalysisResult(Rule rule, string pluginId, string message, string targetLanguage, Location location,
+        Severity severity)
     {
         Rule = rule;
         PluginId = pluginId;
@@ -23,6 +24,8 @@ public class AnalysisResult
 
     public override string ToString()
     {
-        return $"{nameof(Id)}: {Id}, {nameof(Rule)}: {Rule}, {nameof(PluginId)}: {PluginId}, {nameof(Message)}: {Message}, {nameof(TargetLanguage)}: {TargetLanguage}, {nameof(Location)}: {Location}, {nameof(Severity)}: {Severity}";
+        return
+            $"[{Severity.ToString().ToUpper()}] {nameof(Rule)}: {Rule.Id}, {nameof(PluginId)}: {PluginId}, " +
+            $"{nameof(Message)}: {Message}\n\t{Location}";
     }
 }

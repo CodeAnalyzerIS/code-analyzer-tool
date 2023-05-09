@@ -4,7 +4,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.CodeAnalysis.MSBuild;
 
-// todo remove Console.WriteLines (and removeReSharper ignore)
+// todo REFACTOR Console.WriteLines TO LOGS (and removeReSharper ignore)
 // ReSharper disable LocalizableElement
 
 namespace RoslynPlugin;
