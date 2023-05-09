@@ -23,10 +23,7 @@ public static class PluginLoader
             pluginsPath: globalConfig.PluginsPath);
 
         AddValidatedResults(externalPluginResults, analysisResults);
-        AddValidatedResults(
-            builtInPluginResults.Select(r =>
-                new AnalysisResult(r.Rule, r.PluginId, r.Message, r.TargetLanguage, null, r.Severity)),
-            analysisResults);
+        AddValidatedResults(builtInPluginResults, analysisResults);
 
         return analysisResults;
     }
