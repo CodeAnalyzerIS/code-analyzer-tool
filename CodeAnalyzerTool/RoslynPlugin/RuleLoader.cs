@@ -26,13 +26,17 @@ public static class RuleLoader
     private static IEnumerable<DiagnosticAnalyzer> LoadExternalRules(string workingDir,
         ICollection<string> enabledRuleNames, PluginConfig pluginConfig, string pluginsPath)
     {
-        var externalRules =
-            Path.Combine(workingDir, pluginsPath, pluginConfig.PluginName, StringResources.RulesFolderName);
-        var rules = Array.Empty<string>();
+        var rules = new List<string>();
         var result = new List<DiagnosticAnalyzer>();
+        foreach (var ruleConfig in pluginConfig.Rules.Where(r => r.Enabled))
+        {
+            // todo maybe change ruleName to rulePath in config?
+            var externalRules =
+                Path.Combine(workingDir, pluginsPath, pluginConfig.PluginName, StringResources.RulesFolderName, ruleConfig.RuleName);
 
-        if (Directory.Exists(externalRules))
-            rules = Directory.GetFiles(externalRules, StringResources.ExternalRuleSearchPattern);
+            if (Directory.Exists(externalRules))
+                rules.AddRange(Directory.GetFiles(externalRules, StringResources.ExternalRuleSearchPattern));
+        }
 
         foreach (var rulePath in rules)
         {
