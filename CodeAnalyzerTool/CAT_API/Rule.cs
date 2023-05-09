@@ -1,15 +1,18 @@
-﻿namespace CAT_API;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace CAT_API;
 
 public class Rule
 {
-    public string Id { get; set; }
-    public string Title { get; set; }
-    public string Description { get; set; }
-    public string Category { get; set; }
+    [Required] public string Id { get; set; }
+    [Required] public string Title { get; set; }
+    [Required] [MinLength(10)] public string Description { get; set; }
+    [Required] public string Category { get; set; }
     public bool IsEnabledByDefault { get; set; }
     public Severity DefaultSeverity { get; set; }
 
-    public Rule(string id, string title, string description, string category, bool isEnabledByDefault, Severity defaultSeverity)
+    public Rule(string id, string title, string description, string category, bool isEnabledByDefault,
+        Severity defaultSeverity)
     {
         Id = id;
         Title = title;
