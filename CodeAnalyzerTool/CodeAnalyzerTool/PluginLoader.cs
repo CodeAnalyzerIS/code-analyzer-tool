@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System.ComponentModel.DataAnnotations;
+using System.Reflection;
 using System.Text.Json;
 using CAT_API;
 using CAT_API.ConfigModel;
@@ -15,15 +16,40 @@ public static class PluginLoader
             pluginsDictionary: LoadExternalPlugins(globalConfig),
             pluginConfigs: globalConfig.ExternalPlugins.ToList(),
             pluginsPath: globalConfig.PluginsPath);
-        
+
         var builtInPluginResults = await RunPlugins(
             pluginsDictionary: LoadBuiltInPlugins(globalConfig),
             pluginConfigs: globalConfig.BuiltInPlugins.ToList(),
             pluginsPath: globalConfig.PluginsPath);
-        
-        analysisResults.AddRange(externalPluginResults);
-        analysisResults.AddRange(builtInPluginResults);
+
+        AddValidatedResults(externalPluginResults, analysisResults);
+        AddValidatedResults(
+            builtInPluginResults.Select(r =>
+                new AnalysisResult(r.Rule, r.PluginId, r.Message, r.TargetLanguage, null, r.Severity)),
+            analysisResults);
+
         return analysisResults;
+    }
+
+    private static void AddValidatedResults(IEnumerable<AnalysisResult> resultsToValidate,
+        List<AnalysisResult> listToAddResultsTo)
+    {
+        var validatedResults = resultsToValidate.Where(result =>
+        {
+            var validationResults = new List<ValidationResult>();
+            var valid = Validator.TryValidateObject(result, new ValidationContext(result),
+                validationResults, true);
+            if (!valid)
+            {
+                 // todo convert to log
+                Console.Write("\n[WARNING] INVALID AnalysisResult detected: |");
+                validationResults.ForEach(vr => Console.Write($" {vr} |"));
+                Console.Write("\n");
+            }
+
+            return valid;
+        });
+        listToAddResultsTo.AddRange(validatedResults);
     }
 
     private static async Task<IEnumerable<AnalysisResult>> RunPlugins(Dictionary<string, IPlugin> pluginsDictionary,
@@ -67,8 +93,9 @@ public static class PluginLoader
             .SelectMany(p =>
             {
                 if (p.AssemblyName == null)
-                    throw new JsonException( // todo make loading external plugins NOT fail because of single invalid plugin config
-                        "Invalid config file: AssemblyName is a required field for non built-in plugins (external plugins).");
+                    throw new
+                        JsonException( // todo make loading external plugins NOT fail because of single invalid plugin config
+                            "Invalid config file: AssemblyName is a required field for non built-in plugins (external plugins).");
                 var pluginPath = Path.Combine(globalConfig.PluginsPath, p.FolderName, p.AssemblyName);
                 Assembly pluginAssembly = LoadPlugin(pluginPath);
                 return CreatePlugin(pluginAssembly, p.PluginName);

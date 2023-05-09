@@ -1,14 +1,15 @@
-﻿namespace CAT_API;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace CAT_API;
 
 public class AnalysisResult
 {
-    public int Id { get; set; }
-    public Rule Rule { get; set; }
-    public string PluginId { get; set; }
-    public string Message { get; set; }
-    // What (programming) language the analyzer is analysing (i.e. c#, markdown, etc.)
-    public string TargetLanguage { get; set; }
-    public Location Location { get; set; }
+    [Required] public int Id { get; set; }
+    [Required] public Rule Rule { get; set; }
+    [Required] public string PluginId { get; set; }
+    [Required] public string Message { get; set; }
+    [Required] public string TargetLanguage { get; set; }
+    [Required] public Location Location { get; set; }
     public Severity Severity { get; set; }
 
     public AnalysisResult(Rule rule, string pluginId, string message, string targetLanguage, Location location,
