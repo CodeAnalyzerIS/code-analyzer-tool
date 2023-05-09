@@ -9,6 +9,7 @@ public class Location {
     public string FileExtension { get; set; } = null!;
     
     // Only meant for Entity Framework
+    // ReSharper disable once UnusedMember.Local
     private Location() {}
 
     public Location(string path, int startLine, int endLine, string fileExtension)

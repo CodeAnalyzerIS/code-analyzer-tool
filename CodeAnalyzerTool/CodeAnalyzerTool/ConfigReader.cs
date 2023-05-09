@@ -2,7 +2,6 @@ using CAT_API.ConfigModel;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Schema;
-using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace CodeAnalyzerTool;
 
@@ -12,7 +11,7 @@ public static class ConfigReader
     {
         var workingDir = Directory.GetCurrentDirectory();
         var configPath = Path.Combine(workingDir, StringResources.ConfigFileName);
-        var schemaPath = Path.Combine(AppContext.BaseDirectory, StringResources.SchemaFileName);
+        var schemaPath = Path.Combine(workingDir, StringResources.SchemaFileName);
 
         var schema = JSchema.Parse(await File.ReadAllTextAsync(schemaPath));
         var config = JObject.Parse(await File.ReadAllTextAsync(configPath));
