@@ -1,6 +1,8 @@
 ﻿namespace RoslynPlugin; 
 
-public static class StringResources {
+public static class StringResources
+{
+    public const string PluginId = "Roslyn"; 
     public const string FileExtension = ".cs";
     public const string TargetLanguage = "C#";
     public const string RulesFolderName = "rules";

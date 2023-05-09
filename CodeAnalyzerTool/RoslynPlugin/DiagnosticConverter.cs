@@ -31,10 +31,9 @@ public static class DiagnosticConverter
         );
 
         var sev = ConvertDiagnosticSeverity(diagnostic.Severity);
-        // TODO not hardcoded PluginId
         var result = new AnalysisResult(
             rule: rule, 
-            pluginId: "Roslyn", 
+            pluginId: StringResources.PluginId, 
             message: diagnostic.GetMessage(), 
             targetLanguage: StringResources.TargetLanguage, 
             location: location, 
