@@ -67,7 +67,7 @@ public static class PluginLoader
             .SelectMany(p =>
             {
                 if (p.AssemblyName == null)
-                    throw new JsonException( // todo move this validation to ConfigReader?
+                    throw new JsonException( // todo make loading external plugins NOT fail because of single invalid plugin config
                         "Invalid config file: AssemblyName is a required field for non built-in plugins (external plugins).");
                 var pluginPath = Path.Combine(globalConfig.PluginsPath, p.FolderName, p.AssemblyName);
                 Assembly pluginAssembly = LoadPlugin(pluginPath);
@@ -100,7 +100,7 @@ public static class PluginLoader
             }
         }
 
-        // todo maybe don't throw exception and stop application when a single plugin can't be loaded
+        // todo maybe don't throw exception and stop application when a single plugin can't be created
         string availableTypes = string.Join(",", assembly.GetTypes().Select(t => t.FullName));
         throw new ApplicationException(
             $"Can't find any type which implements IPlugin in {assembly} from {assembly.Location}.\n" +

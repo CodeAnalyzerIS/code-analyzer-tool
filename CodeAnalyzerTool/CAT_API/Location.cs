@@ -14,4 +14,9 @@ public class Location {
         EndLine = endLine;
         FileExtension = fileExtension;
     }
+
+    public override string ToString()
+    {
+        return $"In file: {Path}, at line: {StartLine}";
+    }
 }
