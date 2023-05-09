@@ -9,7 +9,6 @@
         <ToolCommandName>code_analyzer_tool</ToolCommandName>
         <PackageOutputPath>./nupkg</PackageOutputPath>
         <RootNamespace>CodeAnalyzerTool</RootNamespace>
-        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     </PropertyGroup>
 
     <ItemGroup>
@@ -20,9 +19,4 @@
         <ProjectReference Include="..\CAT_API\CAT_API.csproj" />
         <ProjectReference Include="..\RoslynPlugin\RoslynPlugin.csproj" />
     </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="nupkg" />
-    </ItemGroup>
-
 </Project>
