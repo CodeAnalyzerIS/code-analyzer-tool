@@ -3,17 +3,13 @@
 public class AnalysisResult
 {
     public int Id { get; set; }
-    // Normally only possible to create AnalysisResult instance with public constructor so Rule, PluginId, etc. cannot be null
-    public Rule Rule { get; set; } = null!;
-    public string PluginId { get; set; } = null!;
-    public string Message { get; set; } = null!;
+    public Rule Rule { get; set; }
+    public string PluginId { get; set; }
+    public string Message { get; set; }
     // What (programming) language the analyzer is analysing (i.e. c#, markdown, etc.)
-    public string TargetLanguage { get; set; } = null!;
-    public Location Location { get; set; } = null!;
+    public string TargetLanguage { get; set; }
+    public Location Location { get; set; }
     public Severity Severity { get; set; }
-    
-    // Only meant for Entity Framework
-    private AnalysisResult() {}
 
     public AnalysisResult(Rule rule, string pluginId, string message, string targetLanguage, Location location, Severity severity)
     {
