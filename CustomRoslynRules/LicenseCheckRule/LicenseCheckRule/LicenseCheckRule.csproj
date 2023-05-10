@@ -4,7 +4,17 @@
         <TargetFramework>net7.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
+        <EnableDynamicLoading>true</EnableDynamicLoading>
     </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="CodeAnalyzerTool.RoslynPlugin.API" Version="0.0.5" >
+            <ExcludeAssets>runtime</ExcludeAssets>
+        </PackageReference>
+        <PackageReference Include="Microsoft.CodeAnalysis" Version="4.5.0" >
+            <ExcludeAssets>runtime</ExcludeAssets>
+        </PackageReference>
+    </ItemGroup>
 
     <ItemGroup>
       <EmbeddedResource Update="Resources.resx">
@@ -19,11 +29,6 @@
         <AutoGen>True</AutoGen>
         <DependentUpon>Resources.resx</DependentUpon>
       </Compile>
-    </ItemGroup>
-
-    <ItemGroup>
-        <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.5.0" />
-        <PackageReference Include="CodeAnalyzerTool.RoslynPlugin.API" Version="0.0.1" />
     </ItemGroup>
 
 </Project>
