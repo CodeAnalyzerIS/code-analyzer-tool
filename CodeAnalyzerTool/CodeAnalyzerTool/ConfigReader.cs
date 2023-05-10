@@ -2,6 +2,7 @@ using CAT_API.ConfigModel;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Schema;
+using Serilog;
 
 namespace CodeAnalyzerTool;
 
@@ -20,7 +21,7 @@ public static class ConfigReader
         if (isValid) return config.ToObject<GlobalConfig>() ?? throw new JsonException(StringResources.NullConfigMsg);
         foreach (var errorMessage in errorMessages)
         {
-            Console.WriteLine(errorMessage);
+            Log.Error("{ErrorMessage}",errorMessage);
         }
         throw new JsonException(StringResources.IncorrectConfigMsg);
 
