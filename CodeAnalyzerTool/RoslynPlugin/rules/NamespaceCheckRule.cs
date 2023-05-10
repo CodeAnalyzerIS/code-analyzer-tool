@@ -1,5 +1,4 @@
 ﻿using System.Collections.Immutable;
-using Microsoft.Build.Framework;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -41,12 +40,11 @@ public class NamespaceCheckRule : RoslynRule
 
     public override void Initialize(AnalysisContext context)
     {
-        context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.Analyze |
-                                               GeneratedCodeAnalysisFlags.ReportDiagnostics);
+        context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
         context.EnableConcurrentExecution();
         
         //Maybe not with console.writeline?
-        if (!Options.TryGetValue("namespace", out var nameSpaceValue))
+        if (!Options.TryGetValue("namespace", out _))
         {
             Console.WriteLine(StringResources.NoNameSpaceOptionMsg);
             return;

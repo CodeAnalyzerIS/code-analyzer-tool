@@ -18,13 +18,13 @@
     <resheader name="writer">
         <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
     </resheader>
-    <data name="BraceAnalyzerDescription" xml:space="preserve">
-        <value>Enclose statement with curly braces.</value>
+    <data name="LicenseCheckTitle" xml:space="preserve">
+        <value>License should be present and formed according to the company guidelines</value>
     </data>
-    <data name="BraceAnalyzerMessageFormat" xml:space="preserve">
-        <value>'{' brace expected</value>
+    <data name="LicenceCheckDescription" xml:space="preserve">
+        <value>A license should be present in every file and should be formed according to company guidelines</value>
     </data>
-    <data name="BraceAnalyzerTitle" xml:space="preserve">
-        <value>Enclose statement with curly braces</value>
+    <data name="LicenceCheckMessageFormat" xml:space="preserve">
+        <value>License missing or unused company guidelines</value>
     </data>
 </root>

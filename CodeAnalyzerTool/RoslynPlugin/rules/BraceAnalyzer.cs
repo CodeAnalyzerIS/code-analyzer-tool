@@ -4,7 +4,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 using RoslynPlugin_API;
 
-namespace BraceAnalyzerPlugin;
+namespace RoslynPlugin.rules;
 
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public class BraceAnalyzer : RoslynRule

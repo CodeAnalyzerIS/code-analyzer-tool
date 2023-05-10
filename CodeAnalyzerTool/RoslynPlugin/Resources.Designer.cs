@@ -60,6 +60,33 @@ namespace RoslynPlugin {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Enclose statement with curly braces..
+        /// </summary>
+        internal static string BraceAnalyzerDescription {
+            get {
+                return ResourceManager.GetString("BraceAnalyzerDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &apos;{&apos; brace expected.
+        /// </summary>
+        internal static string BraceAnalyzerMessageFormat {
+            get {
+                return ResourceManager.GetString("BraceAnalyzerMessageFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enclose statement with curly braces.
+        /// </summary>
+        internal static string BraceAnalyzerTitle {
+            get {
+                return ResourceManager.GetString("BraceAnalyzerTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Namespaces should be part of the parent namespace..
         /// </summary>
         internal static string NamespaceCheckDescription {

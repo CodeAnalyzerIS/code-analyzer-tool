@@ -7,7 +7,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace BraceAnalyzerPlugin {
+namespace LicenseCheckRule {
     using System;
     
     
@@ -38,7 +38,7 @@ namespace BraceAnalyzerPlugin {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("BraceAnalyzerPlugin.Resources", typeof(Resources).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("LicenseCheckRule.Resources", typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -60,29 +60,29 @@ namespace BraceAnalyzerPlugin {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Enclose statement with curly braces..
+        ///   Looks up a localized string similar to A license should be present in every file and should be formed according to company guidelines.
         /// </summary>
-        internal static string BraceAnalyzerDescription {
+        internal static string LicenceCheckDescription {
             get {
-                return ResourceManager.GetString("BraceAnalyzerDescription", resourceCulture);
+                return ResourceManager.GetString("LicenceCheckDescription", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &apos;{&apos; brace expected.
+        ///   Looks up a localized string similar to License missing or unused company guidelines.
         /// </summary>
-        internal static string BraceAnalyzerMessageFormat {
+        internal static string LicenceCheckMessageFormat {
             get {
-                return ResourceManager.GetString("BraceAnalyzerMessageFormat", resourceCulture);
+                return ResourceManager.GetString("LicenceCheckMessageFormat", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Enclose statement with curly braces.
+        ///   Looks up a localized string similar to License should be present and formed according to the company guidelines.
         /// </summary>
-        internal static string BraceAnalyzerTitle {
+        internal static string LicenseCheckTitle {
             get {
-                return ResourceManager.GetString("BraceAnalyzerTitle", resourceCulture);
+                return ResourceManager.GetString("LicenseCheckTitle", resourceCulture);
             }
         }
     }

@@ -36,4 +36,13 @@
     <data name="NamespaceCheckMessageFormat" xml:space="preserve">
         <value>Namespace should be part of the '{0}' parent namespace</value>
     </data>
+    <data name="BraceAnalyzerDescription" xml:space="preserve">
+        <value>Enclose statement with curly braces.</value>
+    </data>
+    <data name="BraceAnalyzerMessageFormat" xml:space="preserve">
+        <value>'{' brace expected</value>
+    </data>
+    <data name="BraceAnalyzerTitle" xml:space="preserve">
+        <value>Enclose statement with curly braces</value>
+    </data>
 </root>
