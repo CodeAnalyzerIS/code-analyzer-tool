@@ -1,7 +1,5 @@
 using CAT_API.ConfigModel;
 using Newtonsoft.Json.Schema.Generation;
-using Serilog;
-using Serilog.Events;
 
 namespace CodeAnalyzerTool;
 
