@@ -4,7 +4,6 @@ namespace CAT_API.ConfigModel;
 
 public class GlobalConfig
 {
-    // todo update Config wiki page
     [JsonProperty("apiUrl", Required = Required.Always)]
     public string ApiUrl { get; set; }
 

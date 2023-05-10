@@ -9,8 +9,6 @@ public static class SchemaGenerator
 {
     public static async Task GenerateSchema()
     {
-        Log.Warning("GENERATING SCHEMA!!!!!");
-        Log.Write(LogEventLevel.Information, "I am testing this");
         var generator = new JSchemaGenerator();
         generator.GenerationProviders.Add(new StringEnumGenerationProvider());
         var schema = generator.Generate(typeof(GlobalConfig));
