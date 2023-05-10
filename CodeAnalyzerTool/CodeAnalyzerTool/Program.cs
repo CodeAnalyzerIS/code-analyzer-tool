@@ -9,7 +9,6 @@ public class Program
     {
         try
         {
-            // todo maybe extension method instead of toString inside Domain models?
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Debug()
                 .WriteTo.Console()
@@ -20,16 +19,14 @@ public class Program
             var globalConfig = await ConfigReader.ReadAsync();
 
             var analysisResults = await PluginLoader.LoadAndRunPlugins(globalConfig);
-            if (analysisResults.Count > 0) analysisResults.ForEach(r => 
-                Log.Write(LogHelper.SeverityToLogLevel(r.Severity), "{Message}",r.Message));
-            else Log.Information("No problems found! (no analysis results)");
+            LogHelper.LogAnalysisResults(analysisResults);
 
             // todo pass result to backend API (C.A.S.)
         }
         catch (Exception ex)
         {
             // todo fix exception handling
-            Log.Fatal("Application has encountered a fatal error: {Message}",ex.Message);
+            Log.Fatal("Application has encountered a fatal error: {ErrorMessage}", ex.Message);
         }
     }
 }
