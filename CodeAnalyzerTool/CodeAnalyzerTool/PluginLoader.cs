@@ -4,6 +4,7 @@ using System.Text.Json;
 using CAT_API;
 using CAT_API.ConfigModel;
 using RoslynPlugin;
+using Serilog;
 
 namespace CodeAnalyzerTool;
 
@@ -38,10 +39,9 @@ public static class PluginLoader
                 validationResults, true);
             if (!valid)
             {
-                 // todo convert to log
-                Console.Write("\n[WARNING] INVALID AnalysisResult detected: |");
-                validationResults.ForEach(vr => Console.Write($" {vr} |"));
-                Console.Write("\n");
+                var errorMessages = string.Join(" | ", validationResults.Select(vr => vr.ToString()));
+                Log.Warning("Invalid {AnalysisResult} detected: {ErrorMessages}", nameof(AnalysisResult),
+                    errorMessages);
             }
 
             return valid;
@@ -68,14 +68,14 @@ public static class PluginLoader
         var builtInPlugins = new Dictionary<string, IPlugin>();
         foreach (var pluginConfig in globalConfig.BuiltInPlugins.Where(p => p.Enabled))
         {
+            Log.Information("Loading built-in plugin: {PluginName}", pluginConfig.PluginName);
             switch (pluginConfig.PluginName)
             {
                 case StringResources.RoslynPluginName:
                     builtInPlugins[pluginConfig.PluginName] = new RoslynMain();
                     break;
                 default:
-                    Console.WriteLine(
-                        $"WARNING: {pluginConfig.PluginName} is not a recognized built-in plugin!"); // todo switch to log instead of console print
+                    Log.Error("Loading built-in plugin FAILED: {PluginName} is not a recognized built-in plugin!", pluginConfig.PluginName);
                     break;
             }
         }
@@ -89,6 +89,7 @@ public static class PluginLoader
             .Where(p => p.Enabled)
             .SelectMany(p =>
             {
+                Log.Information("Loading external plugin: {PluginName}", p.PluginName);
                 if (p.AssemblyName == null)
                     throw new
                         JsonException( // todo make loading external plugins NOT fail because of single invalid plugin config
@@ -102,7 +103,6 @@ public static class PluginLoader
 
     private static Assembly LoadPlugin(string path)
     {
-        Console.WriteLine($"Loading plugin from: {path}");
         var loadContext = new PluginLoadContext(path);
         return loadContext.LoadFromAssemblyName(new AssemblyName(Path.GetFileNameWithoutExtension(path)));
     }
