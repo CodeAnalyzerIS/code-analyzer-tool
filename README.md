@@ -42,7 +42,10 @@ https://github.com/CodeAnalyzerIS/code-analyzer-service
 
 ## Usage
 
-The most common usage will be running the tool in the pipeline in combination with a hosted Code Analyzer Service
+The most common usage will be running the tool in the pipeline in combination with a hosted Code Analyzer Service 
+   
+The tool requires a config file which should be placed in the root of the repository (or directory) that will be analysed  
+Explanation to set-up the config file can be found in the wiki: https://github.com/CodeAnalyzerIS/code-analyzer-tool/wiki/Configuration
 
 ## Example for Custom plugins
 
