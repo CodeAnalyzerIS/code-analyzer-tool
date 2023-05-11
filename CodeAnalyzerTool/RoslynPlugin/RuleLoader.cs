@@ -12,7 +12,7 @@ public static class RuleLoader
     public static ImmutableArray<DiagnosticAnalyzer> LoadRules(string workingDir, PluginConfig pluginConfig,
         string pluginsPath)
     {
-        var enabledRuleNames = EnabledRuleNames(pluginConfig).ToList();
+        var enabledRuleNames = GetNamesOfEnabledRulesFromConfig(pluginConfig).ToList();
 
         var analyzers = new List<DiagnosticAnalyzer>();
         var externalAnalyzers = LoadExternalRules(workingDir, enabledRuleNames, pluginConfig, pluginsPath);
@@ -73,11 +73,12 @@ public static class RuleLoader
             .Where(type => typeof(DiagnosticAnalyzer).IsAssignableFrom(type) && !type.IsAbstract)
             .Select(type => Activator.CreateInstance(type) as RoslynRule)
             .Where(r => r?.DiagnosticId != null && enabledNames.Contains(r.DiagnosticId)).ToList();
+        
         return SetRuleConfiguration(roslynRules, pluginConfig)
             .Select(r => r as DiagnosticAnalyzer).ToList();
     }
 
-    private static IEnumerable<string> EnabledRuleNames(PluginConfig pluginConfig)
+    private static IEnumerable<string> GetNamesOfEnabledRulesFromConfig(PluginConfig pluginConfig)
     {
         return pluginConfig.Rules.Where(r => r.Enabled).Select(r => r.RuleName);
     }

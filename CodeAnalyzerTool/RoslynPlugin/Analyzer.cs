@@ -27,8 +27,16 @@ public static class Analyzer
 
             foreach (var project in projects)
             {
-                var diagnostics = await AnalyseProject(project, analyzers);
-                if (!diagnostics.IsEmpty) diagnosticResults.AddRange(diagnostics);
+                try
+                {
+                    var diagnostics = await AnalyseProject(project, analyzers);
+                    if (!diagnostics.IsEmpty) diagnosticResults.AddRange(diagnostics);
+                }
+                catch (Exception ex)
+                {
+                    Log.Error("[{PluginName}]Analyzing project {ProjectName} FAILED, error message: {ErrorMessage}",
+                        pluginConfig.PluginName, project.Name, ex.Message);
+                }
             }
         }
 
@@ -43,8 +51,8 @@ public static class Analyzer
 
         if (analyzers.IsEmpty) return new List<Diagnostic>().ToImmutableArray();
 
-        var diagnosticResults = compilation.WithAnalyzers(analyzers)
-            .GetAnalyzerDiagnosticsAsync().Result;
+        var diagnosticResults = await compilation.WithAnalyzers(analyzers)
+            .GetAnalyzerDiagnosticsAsync();
 
         Log.Information("{DiagnosticCount} rule violations detected in project:  {ProjectName}",
             $"{diagnosticResults.Length,-4}", project.Name);
