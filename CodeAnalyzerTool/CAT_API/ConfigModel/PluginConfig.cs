@@ -8,7 +8,7 @@ public class PluginConfig
     public string PluginName { get; set; }
 
     [JsonProperty("assemblyName", Required = Required.Default)]
-    public string? AssemblyName { get; set; } // todo validate that assemblyName is present if plugin is external
+    public string? AssemblyName { get; set; }
 
     [JsonProperty("folderName", Required = Required.Always)]
     public string FolderName { get; set; }

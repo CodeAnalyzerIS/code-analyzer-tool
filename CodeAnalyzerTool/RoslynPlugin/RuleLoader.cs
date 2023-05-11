@@ -28,7 +28,7 @@ public static class RuleLoader
     {
         var rules = new List<string>();
         var result = new List<DiagnosticAnalyzer>();
-        foreach (var ruleConfig in pluginConfig.Rules.Where(r => r.Enabled))
+        foreach (var ruleConfig in pluginConfig.Rules.Where(r => enabledRuleNames.Contains(r.RuleName)))
         {
             // todo maybe change ruleName to rulePath in config?
             var externalRules =

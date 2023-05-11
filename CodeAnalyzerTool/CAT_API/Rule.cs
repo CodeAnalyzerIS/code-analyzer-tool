@@ -1,19 +1,18 @@
-﻿namespace CAT_API;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace CAT_API;
 
 public class Rule
 {
-    // Normally only possible to create AnalysisResult instance with public constructor so Id, Title, etc. cannot be null
-    public string Id { get; set; } = null!;
-    public string Title { get; set; } = null!;
-    public string Description { get; set; } = null!;
-    public string Category { get; set; } = null!;
+    [Required] public string Id { get; set; }
+    [Required] public string Title { get; set; }
+    [Required] [MinLength(10)] public string Description { get; set; }
+    [Required] public string Category { get; set; }
     public bool IsEnabledByDefault { get; set; }
     public Severity DefaultSeverity { get; set; }
-    
-    // Only meant for Entity Framework
-    private Rule() {}
 
-    public Rule(string id, string title, string description, string category, bool isEnabledByDefault, Severity defaultSeverity)
+    public Rule(string id, string title, string description, string category, bool isEnabledByDefault,
+        Severity defaultSeverity)
     {
         Id = id;
         Title = title;

@@ -1,8 +1,10 @@
-﻿using System.Reflection;
+﻿using System.ComponentModel.DataAnnotations;
+using System.Reflection;
 using System.Text.Json;
 using CAT_API;
 using CAT_API.ConfigModel;
 using RoslynPlugin;
+using Serilog;
 
 namespace CodeAnalyzerTool;
 
@@ -15,15 +17,36 @@ public static class PluginLoader
             pluginsDictionary: LoadExternalPlugins(globalConfig),
             pluginConfigs: globalConfig.ExternalPlugins.ToList(),
             pluginsPath: globalConfig.PluginsPath);
-        
+
         var builtInPluginResults = await RunPlugins(
             pluginsDictionary: LoadBuiltInPlugins(globalConfig),
             pluginConfigs: globalConfig.BuiltInPlugins.ToList(),
             pluginsPath: globalConfig.PluginsPath);
-        
-        analysisResults.AddRange(externalPluginResults);
-        analysisResults.AddRange(builtInPluginResults);
+
+        AddValidatedResults(externalPluginResults, analysisResults);
+        AddValidatedResults(builtInPluginResults, analysisResults);
+
         return analysisResults;
+    }
+
+    private static void AddValidatedResults(IEnumerable<AnalysisResult> resultsToValidate,
+        List<AnalysisResult> listToAddResultsTo)
+    {
+        var validatedResults = resultsToValidate.Where(result =>
+        {
+            var validationResults = new List<ValidationResult>();
+            var valid = Validator.TryValidateObject(result, new ValidationContext(result),
+                validationResults, true);
+            if (!valid)
+            {
+                var errorMessages = string.Join(" | ", validationResults.Select(vr => vr.ToString()));
+                Log.Warning("Invalid {AnalysisResult} detected: {ErrorMessages}", nameof(AnalysisResult),
+                    errorMessages);
+            }
+
+            return valid;
+        });
+        listToAddResultsTo.AddRange(validatedResults);
     }
 
     private static async Task<IEnumerable<AnalysisResult>> RunPlugins(Dictionary<string, IPlugin> pluginsDictionary,
@@ -45,14 +68,14 @@ public static class PluginLoader
         var builtInPlugins = new Dictionary<string, IPlugin>();
         foreach (var pluginConfig in globalConfig.BuiltInPlugins.Where(p => p.Enabled))
         {
+            Log.Information("Loading built-in plugin: {PluginName}", pluginConfig.PluginName);
             switch (pluginConfig.PluginName)
             {
                 case StringResources.RoslynPluginName:
                     builtInPlugins[pluginConfig.PluginName] = new RoslynMain();
                     break;
                 default:
-                    Console.WriteLine(
-                        $"WARNING: {pluginConfig.PluginName} is not a recognized built-in plugin!"); // todo switch to log instead of console print
+                    Log.Error("Loading built-in plugin FAILED: {PluginName} is not a recognized built-in plugin!", pluginConfig.PluginName);
                     break;
             }
         }
@@ -66,9 +89,11 @@ public static class PluginLoader
             .Where(p => p.Enabled)
             .SelectMany(p =>
             {
+                Log.Information("Loading external plugin: {PluginName}", p.PluginName);
                 if (p.AssemblyName == null)
-                    throw new JsonException( // todo move this validation to ConfigReader?
-                        "Invalid config file: AssemblyName is a required field for non built-in plugins (external plugins).");
+                    throw new
+                        JsonException( // todo make loading external plugins NOT fail because of single invalid plugin config
+                            "Invalid config file: AssemblyName is a required field for non built-in plugins (external plugins).");
                 var pluginPath = Path.Combine(globalConfig.PluginsPath, p.FolderName, p.AssemblyName);
                 Assembly pluginAssembly = LoadPlugin(pluginPath);
                 return CreatePlugin(pluginAssembly, p.PluginName);
@@ -78,7 +103,6 @@ public static class PluginLoader
 
     private static Assembly LoadPlugin(string path)
     {
-        Console.WriteLine($"Loading plugin from: {path}");
         var loadContext = new PluginLoadContext(path);
         return loadContext.LoadFromAssemblyName(new AssemblyName(Path.GetFileNameWithoutExtension(path)));
     }
@@ -100,7 +124,7 @@ public static class PluginLoader
             }
         }
 
-        // todo maybe don't throw exception and stop application when a single plugin can't be loaded
+        // todo maybe don't throw exception and stop application when a single plugin can't be created
         string availableTypes = string.Join(",", assembly.GetTypes().Select(t => t.FullName));
         throw new ApplicationException(
             $"Can't find any type which implements IPlugin in {assembly} from {assembly.Location}.\n" +

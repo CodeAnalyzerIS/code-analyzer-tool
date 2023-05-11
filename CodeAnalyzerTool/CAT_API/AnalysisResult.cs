@@ -1,21 +1,19 @@
-﻿namespace CAT_API;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace CAT_API;
 
 public class AnalysisResult
 {
-    public int Id { get; set; }
-    // Normally only possible to create AnalysisResult instance with public constructor so Rule, PluginId, etc. cannot be null
-    public Rule Rule { get; set; } = null!;
-    public string PluginId { get; set; } = null!;
-    public string Message { get; set; } = null!;
-    // What (programming) language the analyzer is analysing (i.e. c#, markdown, etc.)
-    public string TargetLanguage { get; set; } = null!;
-    public Location Location { get; set; } = null!;
+    [Required] public int Id { get; set; }
+    [Required] public Rule Rule { get; set; }
+    [Required] public string PluginId { get; set; }
+    [Required] public string Message { get; set; }
+    [Required] public string TargetLanguage { get; set; }
+    [Required] public Location Location { get; set; }
     public Severity Severity { get; set; }
-    
-    // Only meant for Entity Framework
-    private AnalysisResult() {}
 
-    public AnalysisResult(Rule rule, string pluginId, string message, string targetLanguage, Location location, Severity severity)
+    public AnalysisResult(Rule rule, string pluginId, string message, string targetLanguage, Location location,
+        Severity severity)
     {
         Rule = rule;
         PluginId = pluginId;
@@ -27,6 +25,8 @@ public class AnalysisResult
 
     public override string ToString()
     {
-        return $"{nameof(Id)}: {Id}, {nameof(Rule)}: {Rule}, {nameof(PluginId)}: {PluginId}, {nameof(Message)}: {Message}, {nameof(TargetLanguage)}: {TargetLanguage}, {nameof(Location)}: {Location}, {nameof(Severity)}: {Severity}";
+        return
+            $"[{Severity.ToString().ToUpper()}] {nameof(Rule)}: {Rule.Id}, {nameof(PluginId)}: {PluginId}, " +
+            $"{nameof(Message)}: {Message}\n\t{Location}";
     }
 }
