@@ -11,3 +11,10 @@ public static class StringResources
     public const string NullCompilationMsg = "Compilation was null";
     public const string NoNameSpaceOptionMsg = "No namespace option has been provided";
 }
+
+public static class RuleCategories
+{
+    public const string Style = "Style";
+    public const string Naming = "Naming";
+    public const string Maintainability = "Maintainability";
+}

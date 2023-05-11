@@ -8,14 +8,12 @@ using RoslynPlugin_API;
 namespace RoslynPlugin.rules;
 
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
-public class TestMethodWithoutAssertionAnalyzer : RoslynRule
+public class TestMethodWithoutAssertionRule : RoslynRule
 {
-    // ReSharper disable once MemberCanBePrivate.Global
-    // public const string DiagnosticId = "NoAssertion";
-    public sealed override string DiagnosticId => "NoAssertion";
+    public sealed override string DiagnosticId => "TestWithoutAssertion";
     public sealed override DiagnosticSeverity Severity { get; set; }
     public sealed override Dictionary<string, string> Options { get; set; }
-    private const string Category = "Syntax";
+    private const string Category = RuleCategories.Maintainability;
     private readonly DiagnosticDescriptor _rule;
 
     private static readonly LocalizableString Title = new LocalizableResourceString(nameof(Resources.NoAssertionTitle),
@@ -29,7 +27,7 @@ public class TestMethodWithoutAssertionAnalyzer : RoslynRule
         new LocalizableResourceString(nameof(Resources.NoAssertionDescription), Resources.ResourceManager,
             typeof(Resources));
 
-    public TestMethodWithoutAssertionAnalyzer()
+    public TestMethodWithoutAssertionRule()
     {
         Options = new Dictionary<string, string>();
         Severity = DiagnosticSeverity.Warning;
@@ -42,7 +40,8 @@ public class TestMethodWithoutAssertionAnalyzer : RoslynRule
 
     public override void Initialize(AnalysisContext context)
     {
-        context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.Analyze | GeneratedCodeAnalysisFlags.ReportDiagnostics);
+        context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.Analyze |
+                                               GeneratedCodeAnalysisFlags.ReportDiagnostics);
         context.EnableConcurrentExecution();
         context.RegisterSyntaxNodeAction(AnalyzeMethod, SyntaxKind.MethodDeclaration);
     }
@@ -54,7 +53,7 @@ public class TestMethodWithoutAssertionAnalyzer : RoslynRule
         if (!IsTestMethod(methodDeclaration)) return;
         if (ContainsAssertion(methodDeclaration)) return;
 
-        var diagnostic = Diagnostic.Create(_rule, 
+        var diagnostic = Diagnostic.Create(_rule,
             methodDeclaration.GetFirstToken().GetLocation(),
             effectiveSeverity: Severity,
             null,

@@ -7,16 +7,14 @@ using RoslynPlugin_API;
 namespace RoslynPlugin.rules;
 
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
-public class BraceAnalyzer : RoslynRule
+public class RequireBracesInBlockRule : RoslynRule
 {
-    public sealed override string DiagnosticId => "BraceAnalyzer";
+    public sealed override string DiagnosticId => "RequireBracesInBlock";
     public sealed override DiagnosticSeverity Severity { get; set; }
     public sealed override Dictionary<string, string> Options { get; set; }
-    private const string Category = "Style";
+    private const string Category = RuleCategories.Style;
     private readonly DiagnosticDescriptor _rule;
-
-    // You can change these strings in the Resources.resx file. If you do not want your analyzer to be localize-able, you can use regular strings for Title and MessageFormat.
-    // See https://github.com/dotnet/roslyn/blob/main/docs/analyzers/Localizing%20Analyzers.md for more on localization
+    
     private static readonly LocalizableString Title = new LocalizableResourceString(nameof(Resources.BraceAnalyzerTitle),
         Resources.ResourceManager, typeof(Resources));
 
@@ -30,7 +28,7 @@ public class BraceAnalyzer : RoslynRule
 
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get; }
 
-    public BraceAnalyzer()
+    public RequireBracesInBlockRule()
     {
         Options = new Dictionary<string, string>();
         Severity = DiagnosticSeverity.Warning;

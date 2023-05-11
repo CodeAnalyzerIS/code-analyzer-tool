@@ -4,17 +4,18 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 using RoslynPlugin_API;
+using Serilog;
 
 namespace RoslynPlugin.rules;
 
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
-public class NamespaceCheckRule : RoslynRule
+public class NamespaceRule : RoslynRule
 {
-    public sealed override string DiagnosticId => "NamespaceCheck";
+    public sealed override string DiagnosticId => "NamespaceContains";
     public sealed override DiagnosticSeverity Severity { get; set; }
     public sealed override Dictionary<string, string> Options { get; set; }
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get; }
-    private const string Category = "Naming";
+    private const string Category = RuleCategories.Naming;
     private readonly DiagnosticDescriptor _rule;
 
     private static readonly LocalizableString Title = new LocalizableResourceString(
@@ -29,7 +30,7 @@ public class NamespaceCheckRule : RoslynRule
         new LocalizableResourceString(nameof(Resources.NamespaceCheckDescription), Resources.ResourceManager,
             typeof(Resources));
 
-    public NamespaceCheckRule()
+    public NamespaceRule()
     {
         _rule = new DiagnosticDescriptor(DiagnosticId, Title, MessageFormat, Category,
             DiagnosticSeverity.Warning, isEnabledByDefault: true, description: Description);
@@ -42,13 +43,13 @@ public class NamespaceCheckRule : RoslynRule
     {
         context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
         context.EnableConcurrentExecution();
-        
-        //Maybe not with console.writeline?
+
         if (!Options.TryGetValue("namespace", out _))
         {
-            Console.WriteLine(StringResources.NoNameSpaceOptionMsg);
+            Log.Warning(StringResources.NoNameSpaceOptionMsg);
             return;
         }
+
         context.RegisterSyntaxNodeAction(CheckNamespace, SyntaxKind.NamespaceDeclaration);
     }
 
