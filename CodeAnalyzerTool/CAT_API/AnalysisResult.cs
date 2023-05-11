@@ -4,7 +4,7 @@ namespace CAT_API;
 
 public class AnalysisResult
 {
-    [Required] public int Id { get; set; }
+    public int Id { get; set; }
     [Required] public Rule Rule { get; set; }
     [Required] public string PluginId { get; set; }
     [Required] public string Message { get; set; }
