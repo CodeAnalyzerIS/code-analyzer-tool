@@ -6,6 +6,14 @@ namespace CodeAnalyzerTool.util;
 
 public static class LogHelper
 {
+    public static void InitLogging()
+    {
+        Log.Logger = new LoggerConfiguration()
+            .MinimumLevel.Debug()
+            .WriteTo.Console()
+            .CreateLogger();
+    }
+
     public static void LogAnalysisResults(List<AnalysisResult> results)
     {
         if (results.Count == 0) Log.Information("No rule violations found (no analysis results)");
@@ -15,6 +23,7 @@ public static class LogHelper
                     "[{Category}]({PluginId}, {RuleId}) {Message} | Path: {Path} at line: {Line}",
                     r.Rule.Category, r.PluginId, r.Rule.Id, r.Message, r.Location.Path, r.Location.StartLine));
     }
+
     private static LogEventLevel SeverityToLogLevel(Severity severity)
     {
         return severity switch
