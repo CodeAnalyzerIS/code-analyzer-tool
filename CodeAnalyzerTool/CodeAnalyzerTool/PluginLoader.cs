@@ -75,7 +75,8 @@ public static class PluginLoader
                     builtInPlugins[pluginConfig.PluginName] = new RoslynMain();
                     break;
                 default:
-                    Log.Error("Loading built-in plugin FAILED: {PluginName} is not a recognized built-in plugin!", pluginConfig.PluginName);
+                    Log.Error("Loading built-in plugin failed: {PluginName} is not a recognized built-in plugin",
+                        pluginConfig.PluginName);
                     break;
             }
         }
@@ -86,48 +87,54 @@ public static class PluginLoader
     private static Dictionary<string, IPlugin> LoadExternalPlugins(GlobalConfig globalConfig)
     {
         return globalConfig.ExternalPlugins
-            .Where(p => p.Enabled)
-            .SelectMany(p =>
-            {
-                Log.Information("Loading external plugin: {PluginName}", p.PluginName);
-                if (p.AssemblyName == null)
-                    throw new
-                        JsonException( // todo make loading external plugins NOT fail because of single invalid plugin config
-                            "Invalid config file: AssemblyName is a required field for non built-in plugins (external plugins).");
-                var pluginPath = Path.Combine(globalConfig.PluginsPath, p.FolderName, p.AssemblyName);
-                Assembly pluginAssembly = LoadPlugin(pluginPath);
-                return CreatePlugin(pluginAssembly, p.PluginName);
-            })
+            .Where(pluginConfig => pluginConfig.Enabled)
+            .Select(pluginConfig => LoadExternalPlugin(globalConfig.PluginsPath, pluginConfig))
+            .Where(dictionary => dictionary != null)
+            .SelectMany(dictionary => dictionary!)
             .ToDictionary(pair => pair.Key, pair => pair.Value);
     }
 
-    private static Assembly LoadPlugin(string path)
+    private static Dictionary<string, IPlugin>? LoadExternalPlugin(string pluginsPath, PluginConfig config)
     {
-        var loadContext = new PluginLoadContext(path);
-        return loadContext.LoadFromAssemblyName(new AssemblyName(Path.GetFileNameWithoutExtension(path)));
+        try
+        {
+            Log.Information("Loading external plugin: {PluginName}", config.PluginName);
+            if (config.AssemblyName == null)
+                throw new JsonException("Invalid config file: AssemblyName is a required field for external plugins.");
+            var pluginAssemblyPath = Path.Combine(pluginsPath, config.FolderName, config.AssemblyName);
+            Assembly pluginAssembly = LoadPlugin(pluginAssemblyPath);
+            return CreateExternalPlugin(pluginAssembly, config.PluginName);
+        }
+        catch (Exception ex)
+        {
+            Log.Error("Loading external plugin failed: {ErrorMessage}", ex.Message);
+            return null;
+        }
     }
 
+    private static Assembly LoadPlugin(string assemblyPath)
+    {
+        var loadContext = new PluginLoadContext(assemblyPath);
+        var assemblyName = new AssemblyName(Path.GetFileNameWithoutExtension(assemblyPath));
+        return loadContext.LoadFromAssemblyName(assemblyName);
+    }
 
-    private static Dictionary<string, IPlugin> CreatePlugin(Assembly assembly, string pluginName)
+    private static Dictionary<string, IPlugin> CreateExternalPlugin(Assembly assembly, string pluginName)
     {
         foreach (var type in assembly.GetTypes())
         {
-            if (typeof(IPlugin).IsAssignableFrom(type))
+            if (!typeof(IPlugin).IsAssignableFrom(type)) continue;
+
+            IPlugin? result = Activator.CreateInstance(type) as IPlugin;
+            if (result != null)
             {
-                IPlugin? result = Activator.CreateInstance(type) as IPlugin;
-                if (result != null)
+                return new Dictionary<string, IPlugin>
                 {
-                    var dic = new Dictionary<string, IPlugin>();
-                    dic[pluginName] = result;
-                    return dic;
-                }
+                    [pluginName] = result
+                };
             }
         }
 
-        // todo maybe don't throw exception and stop application when a single plugin can't be created
-        string availableTypes = string.Join(",", assembly.GetTypes().Select(t => t.FullName));
-        throw new ApplicationException(
-            $"Can't find any type which implements IPlugin in {assembly} from {assembly.Location}.\n" +
-            $"Available types: {availableTypes}");
+        throw new TypeLoadException($"Can't find any type which implements IPlugin in {assembly.Location}.");
     }
 }
