@@ -7,6 +7,7 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeAnalyzerTool.Api", "CodeAnalyzerTool.Api\CodeAnalyzerTool.Api.csproj", "{4763FD32-0071-4116-A5F5-F9CC35DF0FE1}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RoslynPlugin.API", "RoslynPlugin.API\RoslynPlugin.API.csproj", "{8B5CD133-C716-4AFB-B993-D9067094E157}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CAS_Backend", "CAS_Backend\CAS_Backend.csproj", "{034BF5CD-E966-43F1-A221-EE36E4324173}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -30,5 +31,12 @@ Global
 		{8B5CD133-C716-4AFB-B993-D9067094E157}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8B5CD133-C716-4AFB-B993-D9067094E157}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8B5CD133-C716-4AFB-B993-D9067094E157}.Release|Any CPU.Build.0 = Release|Any CPU
+		{034BF5CD-E966-43F1-A221-EE36E4324173}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{034BF5CD-E966-43F1-A221-EE36E4324173}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{034BF5CD-E966-43F1-A221-EE36E4324173}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{034BF5CD-E966-43F1-A221-EE36E4324173}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
 	EndGlobalSection
 EndGlobal
