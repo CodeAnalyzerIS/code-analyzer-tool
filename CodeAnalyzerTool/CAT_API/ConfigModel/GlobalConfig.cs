@@ -5,8 +5,8 @@ namespace CAT_API.ConfigModel;
 public class GlobalConfig
 {
 
-    [JsonProperty("projectId", Required = Required.Always)]
-    public string ProjectId { get; set; }
+    [JsonProperty("projectName", Required = Required.Always)]
+    public string ProjectName { get; set; }
     [JsonProperty("apiUrl", Required = Required.Always)]
     public string ApiUrl { get; set; }
 
@@ -16,9 +16,9 @@ public class GlobalConfig
     [JsonProperty("plugins", Required = Required.Always)]
     public IEnumerable<PluginConfig> Plugins { get; set; }
 
-    public GlobalConfig( string projectId, string apiUrl, string pluginsPath, IEnumerable<PluginConfig> plugins)
+    public GlobalConfig( string projectName, string apiUrl, string pluginsPath, IEnumerable<PluginConfig> plugins)
     {
-        ProjectId = projectId;
+        ProjectName = projectName;
         ApiUrl = apiUrl;
         PluginsPath = pluginsPath;
         Plugins = plugins;

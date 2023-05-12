@@ -4,12 +4,12 @@ namespace CAT_API;
 
 public class ProjectAnalysis
 {
-    [Required] public string ProjectId { get; set; }
+    [Required] public string ProjectName { get; set; }
     [Required] public IEnumerable<AnalysisResult> AnalysisResults { get; set; }
 
-    public ProjectAnalysis(string projectId, IEnumerable<AnalysisResult> analysisResults)
+    public ProjectAnalysis(string projectName, IEnumerable<AnalysisResult> analysisResults)
     {
-        ProjectId = projectId;
+        ProjectName = projectName;
         AnalysisResults = analysisResults;
     }
 }

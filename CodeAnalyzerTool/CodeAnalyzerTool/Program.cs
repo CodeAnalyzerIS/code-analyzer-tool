@@ -20,7 +20,7 @@ public class Program
             var analysisResults = await pluginLoader.LoadAndRunPlugins();
             LogHelper.LogAnalysisResults(analysisResults);
 
-            var projectAnalysis = new ProjectAnalysis(globalConfig.ProjectId, analysisResults);
+            var projectAnalysis = new ProjectAnalysis(globalConfig.ProjectName, analysisResults);
             // todo pass projectAnalysis to backend API (C.A.S.)
         }
         catch (Exception ex)
