@@ -32,7 +32,8 @@ public class Analyzer
             Log.Information("Loading solution: {SolutionPath}", solutionPath);
 
             var solution = await _workspace.OpenSolutionAsync(solutionPath, new ProgressReporter());
-            var analyzers = RuleLoader.LoadRules(workingDirectory, _pluginConfig, _pluginsPath);
+            var ruleLoader = new RuleLoader(workingDirectory, _pluginConfig, _pluginsPath);
+            var analyzers = ruleLoader.LoadRules();
             var projects = solution.Projects;
 
             foreach (var project in projects)
