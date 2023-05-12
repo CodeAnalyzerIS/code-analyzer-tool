@@ -1,4 +1,5 @@
 using CAS_Backend;
+using CAS_Backend.EF;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.EntityFrameworkCore;
 
