@@ -9,10 +9,7 @@ public class Program
     {
         try
         {
-            Log.Logger = new LoggerConfiguration()
-                .MinimumLevel.Debug()
-                .WriteTo.Console()
-                .CreateLogger();
+            LogHelper.InitLogging();
             Log.Information("Generating JSON.NET schema");
             await SchemaGenerator.GenerateSchema();
             Log.Information("Reading CAT Config file");
@@ -25,8 +22,8 @@ public class Program
         }
         catch (Exception ex)
         {
-            // todo fix exception handling
             Log.Fatal("Application has encountered a fatal error: {ErrorMessage}", ex.Message);
+            throw;
         }
     }
 }
