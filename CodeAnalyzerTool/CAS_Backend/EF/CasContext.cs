@@ -1,7 +1,7 @@
-﻿using CAT_API;
+﻿using CAS_Backend.EF.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace CAS_Backend;
+namespace CAS_Backend.EF;
 
 public class CasContext : DbContext
 {
@@ -18,6 +18,7 @@ public class CasContext : DbContext
         base.OnModelCreating(modelBuilder);
         
         ConfigureAnalysisResults(modelBuilder);
+        ConfigureRule(modelBuilder);
     }
 
     private void ConfigureAnalysisResults(ModelBuilder modelBuilder)
@@ -29,5 +30,12 @@ public class CasContext : DbContext
             .HasOne(ar => ar.Rule)
             .WithMany(r => r.AnalysisResults)
             .HasForeignKey("FK_AnalysisResult_Rule");
+    }
+
+    private void ConfigureRule(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<Rule>()
+            .HasIndex(r => r.RuleName)
+            .IsUnique();
     }
 }

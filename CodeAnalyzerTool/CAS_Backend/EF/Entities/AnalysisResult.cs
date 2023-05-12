@@ -1,15 +1,21 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
+using CAT_API;
 
-namespace CAT_API;
+namespace CAS_Backend.EF.Entities;
 
 public class AnalysisResult
 {
-    [Required] public Rule Rule { get; set; }
-    [Required] public string PluginId { get; set; }
-    [Required] public string Message { get; set; }
-    [Required] public string TargetLanguage { get; set; }
-    [Required] public Location Location { get; set; }
+    public int Id { get; set; }
+    [Required] public Rule Rule { get; set; } = null!;
+    [Required] public string PluginId { get; set; } = null!;
+    [Required] public string Message { get; set; } = null!;
+    [Required] public string TargetLanguage { get; set; } = null!;
+    [Required] public Location Location { get; set; } = null!;
     public Severity Severity { get; set; }
+
+    private AnalysisResult()
+    {
+    }
 
     public AnalysisResult(Rule rule, string pluginId, string message, string targetLanguage, Location location,
         Severity severity)
