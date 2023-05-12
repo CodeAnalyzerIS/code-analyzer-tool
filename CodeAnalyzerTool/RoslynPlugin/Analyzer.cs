@@ -7,10 +7,20 @@ using Serilog;
 
 namespace RoslynPlugin;
 
-public static class Analyzer
+public class Analyzer
 {
-    internal static async Task<ImmutableArray<Diagnostic>> StartAnalysis(MSBuildWorkspace workspace,
-        PluginConfig pluginConfig, string pluginsPath)
+    private readonly MSBuildWorkspace _workspace;
+    private readonly PluginConfig _pluginConfig;
+    private readonly string _pluginsPath;
+
+    public Analyzer(MSBuildWorkspace workspace, PluginConfig pluginConfig, string pluginsPath)
+    {
+        _workspace = workspace;
+        _pluginConfig = pluginConfig;
+        _pluginsPath = pluginsPath;
+    }
+
+    internal async Task<ImmutableArray<Diagnostic>> StartAnalysis()
     {
         var workingDirectory = Directory.GetCurrentDirectory();
         var solutionPaths = Directory.GetFiles(workingDirectory, StringResources.SolutionSearchPattern,
@@ -21,8 +31,8 @@ public static class Analyzer
         {
             Log.Information("Loading solution: {SolutionPath}", solutionPath);
 
-            var solution = await workspace.OpenSolutionAsync(solutionPath, new ProgressReporter());
-            var analyzers = RuleLoader.LoadRules(workingDirectory, pluginConfig, pluginsPath);
+            var solution = await _workspace.OpenSolutionAsync(solutionPath, new ProgressReporter());
+            var analyzers = RuleLoader.LoadRules(workingDirectory, _pluginConfig, _pluginsPath);
             var projects = solution.Projects;
 
             foreach (var project in projects)
@@ -35,7 +45,7 @@ public static class Analyzer
                 catch (Exception ex)
                 {
                     Log.Error("[{PluginName}]Analyzing project {ProjectName} FAILED, error message: {ErrorMessage}",
-                        pluginConfig.PluginName, project.Name, ex.Message);
+                        _pluginConfig.PluginName, project.Name, ex.Message);
                 }
             }
         }
@@ -43,7 +53,7 @@ public static class Analyzer
         return diagnosticResults.ToImmutableArray();
     }
 
-    private static async Task<ImmutableArray<Diagnostic>> AnalyseProject(Project project,
+    private async Task<ImmutableArray<Diagnostic>> AnalyseProject(Project project,
         ImmutableArray<DiagnosticAnalyzer> analyzers)
     {
         var compilation = await project.GetCompilationAsync();
