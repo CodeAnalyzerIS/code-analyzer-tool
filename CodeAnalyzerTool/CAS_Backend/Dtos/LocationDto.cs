@@ -4,7 +4,6 @@ namespace CAS_Backend.Dtos;
 
 public class LocationDto
 {
-    public int Id { get; set; }
     [Required] public string Path { get; set; }
     [Range(0, int.MaxValue)] public int StartLine { get; set; }
     [Range(0, int.MaxValue)] public int EndLine { get; set; }

@@ -5,7 +5,6 @@ namespace CAS_Backend.Dtos;
 
 public class AnalysisResultDto
 {
-    [Required] public int Id { get; set; }
     [Required] public RuleDto Rule { get; set; }
     [Required] public string PluginId { get; set; }
     [Required] public string Message { get; set; }

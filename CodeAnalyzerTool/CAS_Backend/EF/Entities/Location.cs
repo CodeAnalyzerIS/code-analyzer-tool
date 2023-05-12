@@ -1,9 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 
-namespace CodeAnalyzerTool.Api;
+namespace CAS_Backend.EF.Entities;
 
 public class Location
 {
+    public int Id { get; set; }
     [Required] public string Path { get; set; }
     [Range(0, int.MaxValue)] public int StartLine { get; set; }
     [Range(0, int.MaxValue)] public int EndLine { get; set; }

@@ -21,7 +21,7 @@ public static class LogHelper
             results.ForEach(r =>
                 Log.Write(SeverityToLogLevel(r.Severity),
                     "[{Category}]({PluginId}, {RuleId}) {Message} | Path: {Path} at line: {Line}",
-                    r.Rule.Category, r.PluginId, r.Rule.Id, r.Message, r.Location.Path, r.Location.StartLine));
+                    r.Rule.Category, r.PluginId, r.Rule.RuleName, r.Message, r.Location.Path, r.Location.StartLine));
     }
 
     private static LogEventLevel SeverityToLogLevel(Severity severity)
