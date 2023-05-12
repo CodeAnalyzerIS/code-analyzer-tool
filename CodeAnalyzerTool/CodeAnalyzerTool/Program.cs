@@ -1,4 +1,5 @@
-﻿using CodeAnalyzerTool.util;
+﻿using CAT_API;
+using CodeAnalyzerTool.util;
 using Serilog;
 
 namespace CodeAnalyzerTool;
@@ -19,7 +20,8 @@ public class Program
             var analysisResults = await pluginLoader.LoadAndRunPlugins();
             LogHelper.LogAnalysisResults(analysisResults);
 
-            // todo pass result to backend API (C.A.S.)
+            var projectAnalysis = new ProjectAnalysis(globalConfig.ProjectId, analysisResults);
+            // todo pass projectAnalysis to backend API (C.A.S.)
         }
         catch (Exception ex)
         {
