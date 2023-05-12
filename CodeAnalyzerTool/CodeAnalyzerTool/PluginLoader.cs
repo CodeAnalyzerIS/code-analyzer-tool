@@ -21,13 +21,13 @@ public class PluginLoader
     {
         var analysisResults = new List<AnalysisResult>();
         var externalPluginResults = await RunPlugins(
-            pluginsDictionary: LoadExternalPlugins(_globalConfig),
-            pluginConfigs: _globalConfig.ExternalPlugins.ToList(),
+            pluginsDictionary: LoadExternalPlugins(),
+            pluginConfigs: GetExternalPluginConfigs().ToList(),
             pluginsPath: _globalConfig.PluginsPath);
 
         var builtInPluginResults = await RunPlugins(
-            pluginsDictionary: LoadBuiltInPlugins(_globalConfig),
-            pluginConfigs: _globalConfig.BuiltInPlugins.ToList(),
+            pluginsDictionary: LoadBuiltInPlugins(),
+            pluginConfigs: GetBuiltInPluginConfigs().ToList(),
             pluginsPath: _globalConfig.PluginsPath);
 
         AddValidatedResults(externalPluginResults, analysisResults);
@@ -70,10 +70,10 @@ public class PluginLoader
         return analysisResults;
     }
 
-    private Dictionary<string, IPlugin> LoadBuiltInPlugins(GlobalConfig globalConfig)
+    private Dictionary<string, IPlugin> LoadBuiltInPlugins()
     {
         var builtInPlugins = new Dictionary<string, IPlugin>();
-        foreach (var pluginConfig in globalConfig.BuiltInPlugins.Where(p => p.Enabled))
+        foreach (var pluginConfig in GetBuiltInPluginConfigs())
         {
             Log.Information("Loading built-in plugin: {PluginName}", pluginConfig.PluginName);
             switch (pluginConfig.PluginName)
@@ -91,17 +91,14 @@ public class PluginLoader
         return builtInPlugins;
     }
 
-    private Dictionary<string, IPlugin> LoadExternalPlugins(GlobalConfig globalConfig)
+    private Dictionary<string, IPlugin> LoadExternalPlugins()
     {
-        return globalConfig.ExternalPlugins
-            .Where(pluginConfig => pluginConfig.Enabled)
-            .Select(pluginConfig => LoadExternalPlugin(globalConfig.PluginsPath, pluginConfig))
-            .Where(dictionary => dictionary != null)
-            .SelectMany(dictionary => dictionary!)
+        return GetExternalPluginConfigs()
+            .SelectMany(pluginConfig => LoadExternalPlugin(_globalConfig.PluginsPath, pluginConfig))
             .ToDictionary(pair => pair.Key, pair => pair.Value);
     }
 
-    private Dictionary<string, IPlugin>? LoadExternalPlugin(string pluginsPath, PluginConfig config)
+    private Dictionary<string, IPlugin> LoadExternalPlugin(string pluginsPath, PluginConfig config)
     {
         try
         {
@@ -115,7 +112,7 @@ public class PluginLoader
         catch (Exception ex)
         {
             Log.Error("Loading external plugin failed: {ErrorMessage}", ex.Message);
-            return null;
+            return new Dictionary<string, IPlugin>();
         }
     }
 
@@ -143,5 +140,15 @@ public class PluginLoader
         }
 
         throw new TypeLoadException($"Can't find any type which implements IPlugin in {assembly.Location}.");
+    }
+
+    private IEnumerable<PluginConfig> GetExternalPluginConfigs()
+    {
+        return _globalConfig.Plugins.Where(p => p is { Enabled: true, AssemblyName: not null });
+    }
+
+    private IEnumerable<PluginConfig> GetBuiltInPluginConfigs()
+    {
+        return _globalConfig.Plugins.Where(p => p is { Enabled: true, AssemblyName: null });
     }
 }
