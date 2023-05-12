@@ -10,18 +10,13 @@ public class GlobalConfig
     [JsonProperty("pluginsPath", Required = Required.Always)]
     public string PluginsPath { get; set; }
 
-    [JsonProperty("builtInPlugins", Required = Required.Always)]
-    public IEnumerable<PluginConfig> BuiltInPlugins { get; set; }
-
     [JsonProperty("plugins", Required = Required.Always)]
-    public IEnumerable<PluginConfig> ExternalPlugins { get; set; }
+    public IEnumerable<PluginConfig> Plugins { get; set; }
 
-    public GlobalConfig(string apiUrl, string pluginsPath, IEnumerable<PluginConfig> builtInPlugins,
-        IEnumerable<PluginConfig> externalPlugins)
+    public GlobalConfig(string apiUrl, string pluginsPath, IEnumerable<PluginConfig> plugins)
     {
         ApiUrl = apiUrl;
         PluginsPath = pluginsPath;
-        BuiltInPlugins = builtInPlugins;
-        ExternalPlugins = externalPlugins;
+        Plugins = plugins;
     }
 }
