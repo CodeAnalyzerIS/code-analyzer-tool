@@ -13,7 +13,7 @@ public class RuleConfig
     [JsonProperty("severity", Required = Required.Always)]
     public Severity Severity { get; set; }
 
-    [JsonProperty("options")]
+    [JsonProperty("options", Required = Required.Default)]
     public Dictionary<string, string> Options { get; set; }
 
     public RuleConfig(string ruleName, bool enabled, Dictionary<string, string> options)

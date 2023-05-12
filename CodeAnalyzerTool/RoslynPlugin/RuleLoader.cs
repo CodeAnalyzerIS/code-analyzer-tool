@@ -7,32 +7,41 @@ using RoslynPlugin_API;
 
 namespace RoslynPlugin;
 
-public static class RuleLoader
+public class RuleLoader
 {
-    public static ImmutableArray<DiagnosticAnalyzer> LoadRules(string workingDir, PluginConfig pluginConfig,
-        string pluginsPath)
+    private readonly string _workingDir;
+    private readonly PluginConfig _pluginConfig;
+    private readonly string _pluginsPath;
+
+    public RuleLoader(string workingDir, PluginConfig pluginConfig, string pluginsPath)
     {
-        var enabledRuleNames = GetNamesOfEnabledRulesFromConfig(pluginConfig).ToList();
+        _workingDir = workingDir;
+        _pluginConfig = pluginConfig;
+        _pluginsPath = pluginsPath;
+    }
+
+    public ImmutableArray<DiagnosticAnalyzer> LoadRules()
+    {
+        var enabledRuleNames = GetNamesOfEnabledRulesFromConfig().ToList();
 
         var analyzers = new List<DiagnosticAnalyzer>();
-        var externalAnalyzers = LoadExternalRules(workingDir, enabledRuleNames, pluginConfig, pluginsPath);
-        var internalAnalyzers = LoadInternalRules(enabledRuleNames, pluginConfig);
+        var externalAnalyzers = LoadExternalRules(enabledRuleNames);
+        var internalAnalyzers = LoadInternalRules(enabledRuleNames);
         analyzers.AddRange(externalAnalyzers.ToList());
         analyzers.AddRange(internalAnalyzers.ToList());
 
         return analyzers.ToImmutableArray();
     }
 
-    private static IEnumerable<DiagnosticAnalyzer> LoadExternalRules(string workingDir,
-        ICollection<string> enabledRuleNames, PluginConfig pluginConfig, string pluginsPath)
+    private IEnumerable<DiagnosticAnalyzer> LoadExternalRules(ICollection<string> enabledRuleNames)
     {
         var rules = new List<string>();
         var result = new List<DiagnosticAnalyzer>();
-        foreach (var ruleConfig in pluginConfig.Rules.Where(r => enabledRuleNames.Contains(r.RuleName)))
+        foreach (var ruleConfig in _pluginConfig.Rules.Where(r => enabledRuleNames.Contains(r.RuleName)))
         {
             // todo maybe change ruleName to rulePath in config?
             var externalRules =
-                Path.Combine(workingDir, pluginsPath, pluginConfig.PluginName, StringResources.RulesFolderName, ruleConfig.RuleName);
+                Path.Combine(_workingDir, _pluginsPath, _pluginConfig.PluginName, StringResources.RulesFolderName, ruleConfig.RuleName);
 
             if (Directory.Exists(externalRules))
                 rules.AddRange(Directory.GetFiles(externalRules, StringResources.ExternalRuleSearchPattern));
@@ -41,7 +50,7 @@ public static class RuleLoader
         foreach (var rulePath in rules)
         {
             var a = Assembly.LoadFrom(rulePath);
-            var analyzers = LoadAnalyzersFromAssembly(a, enabledRuleNames, pluginConfig);
+            var analyzers = LoadAnalyzersFromAssembly(a, enabledRuleNames);
 
             if (analyzers.Any())
                 result.AddRange(analyzers.Where(analyzer => analyzer != null)!);
@@ -50,14 +59,13 @@ public static class RuleLoader
         return result;
     }
 
-    private static IEnumerable<DiagnosticAnalyzer> LoadInternalRules(ICollection<string> enabledRuleNames,
-        PluginConfig pluginConfig)
+    private IEnumerable<DiagnosticAnalyzer> LoadInternalRules(ICollection<string> enabledRuleNames)
     {
         var result = new List<DiagnosticAnalyzer>();
 
         foreach (var a in AppDomain.CurrentDomain.GetAssemblies())
         {
-            var analyzers = LoadAnalyzersFromAssembly(a, enabledRuleNames, pluginConfig);
+            var analyzers = LoadAnalyzersFromAssembly(a, enabledRuleNames);
 
             if (analyzers.Any())
                 result.AddRange(analyzers.Where(analyzer => analyzer != null)!);
@@ -66,42 +74,42 @@ public static class RuleLoader
         return result;
     }
     
-    private static List<DiagnosticAnalyzer?> LoadAnalyzersFromAssembly(Assembly assembly,
-        ICollection<string> enabledNames, PluginConfig pluginConfig)
+    private List<DiagnosticAnalyzer?> LoadAnalyzersFromAssembly(Assembly assembly,
+        ICollection<string> enabledNames)
     {
         var roslynRules = assembly.GetExportedTypes()
             .Where(type => typeof(DiagnosticAnalyzer).IsAssignableFrom(type) && !type.IsAbstract)
             .Select(type => Activator.CreateInstance(type) as RoslynRule)
             .Where(r => r?.DiagnosticId != null && enabledNames.Contains(r.DiagnosticId)).ToList();
         
-        return SetRuleConfiguration(roslynRules, pluginConfig)
+        return SetRuleConfiguration(roslynRules)
             .Select(r => r as DiagnosticAnalyzer).ToList();
     }
 
-    private static IEnumerable<string> GetNamesOfEnabledRulesFromConfig(PluginConfig pluginConfig)
+    private IEnumerable<string> GetNamesOfEnabledRulesFromConfig()
     {
-        return pluginConfig.Rules.Where(r => r.Enabled).Select(r => r.RuleName);
+        return _pluginConfig.Rules.Where(r => r.Enabled).Select(r => r.RuleName);
     }
 
-    private static DiagnosticSeverity GetSeverityFromRuleConfig(string? ruleName, PluginConfig plugConf)
+    private DiagnosticSeverity GetSeverityFromRuleConfig(string? ruleName)
     {
-        var ruleConfig = plugConf.Rules.Single(r => r.RuleName.Equals(ruleName));
+        var ruleConfig = _pluginConfig.Rules.Single(r => r.RuleName.Equals(ruleName));
         return DiagnosticConverter.ConvertSeverity(ruleConfig.Severity);
     }
 
-    private static Dictionary<string, string> GetOptionsFromRuleConfig(string? ruleName, PluginConfig pluginConfig)
+    private Dictionary<string, string> GetOptionsFromRuleConfig(string? ruleName)
     {
-        var ruleConfig = pluginConfig.Rules.Single(r => r.RuleName.Equals(ruleName));
+        var ruleConfig = _pluginConfig.Rules.Single(r => r.RuleName.Equals(ruleName));
         return ruleConfig.Options;
     }
 
-    private static List<RoslynRule?> SetRuleConfiguration(IList<RoslynRule?> rules, PluginConfig pluginConfig)
+    private List<RoslynRule?> SetRuleConfiguration(IList<RoslynRule?> rules)
     {
         foreach (var rule in rules)
         {
             if (rule == null) continue;
-            rule.Severity = GetSeverityFromRuleConfig(rule.DiagnosticId, pluginConfig);
-            rule.Options = GetOptionsFromRuleConfig(rule.DiagnosticId, pluginConfig);
+            rule.Severity = GetSeverityFromRuleConfig(rule.DiagnosticId);
+            rule.Options = GetOptionsFromRuleConfig(rule.DiagnosticId);
         }
 
         return rules.ToList();
