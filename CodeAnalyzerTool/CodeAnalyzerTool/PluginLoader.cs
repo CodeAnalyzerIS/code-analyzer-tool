@@ -8,20 +8,27 @@ using Serilog;
 
 namespace CodeAnalyzerTool;
 
-public static class PluginLoader
+public class PluginLoader
 {
-    public static async Task<List<AnalysisResult>> LoadAndRunPlugins(GlobalConfig globalConfig)
+    private readonly GlobalConfig _globalConfig;
+
+    public PluginLoader(GlobalConfig globalConfig)
+    {
+        _globalConfig = globalConfig;
+    }
+    
+    public async Task<List<AnalysisResult>> LoadAndRunPlugins()
     {
         var analysisResults = new List<AnalysisResult>();
         var externalPluginResults = await RunPlugins(
-            pluginsDictionary: LoadExternalPlugins(globalConfig),
-            pluginConfigs: globalConfig.ExternalPlugins.ToList(),
-            pluginsPath: globalConfig.PluginsPath);
+            pluginsDictionary: LoadExternalPlugins(_globalConfig),
+            pluginConfigs: _globalConfig.ExternalPlugins.ToList(),
+            pluginsPath: _globalConfig.PluginsPath);
 
         var builtInPluginResults = await RunPlugins(
-            pluginsDictionary: LoadBuiltInPlugins(globalConfig),
-            pluginConfigs: globalConfig.BuiltInPlugins.ToList(),
-            pluginsPath: globalConfig.PluginsPath);
+            pluginsDictionary: LoadBuiltInPlugins(_globalConfig),
+            pluginConfigs: _globalConfig.BuiltInPlugins.ToList(),
+            pluginsPath: _globalConfig.PluginsPath);
 
         AddValidatedResults(externalPluginResults, analysisResults);
         AddValidatedResults(builtInPluginResults, analysisResults);
@@ -29,7 +36,7 @@ public static class PluginLoader
         return analysisResults;
     }
 
-    private static void AddValidatedResults(IEnumerable<AnalysisResult> resultsToValidate,
+    private void AddValidatedResults(IEnumerable<AnalysisResult> resultsToValidate,
         List<AnalysisResult> listToAddResultsTo)
     {
         var validatedResults = resultsToValidate.Where(result =>
@@ -49,7 +56,7 @@ public static class PluginLoader
         listToAddResultsTo.AddRange(validatedResults);
     }
 
-    private static async Task<IEnumerable<AnalysisResult>> RunPlugins(Dictionary<string, IPlugin> pluginsDictionary,
+    private async Task<IEnumerable<AnalysisResult>> RunPlugins(Dictionary<string, IPlugin> pluginsDictionary,
         ICollection<PluginConfig> pluginConfigs, string pluginsPath)
     {
         var analysisResults = new List<AnalysisResult>();
@@ -63,7 +70,7 @@ public static class PluginLoader
         return analysisResults;
     }
 
-    private static Dictionary<string, IPlugin> LoadBuiltInPlugins(GlobalConfig globalConfig)
+    private Dictionary<string, IPlugin> LoadBuiltInPlugins(GlobalConfig globalConfig)
     {
         var builtInPlugins = new Dictionary<string, IPlugin>();
         foreach (var pluginConfig in globalConfig.BuiltInPlugins.Where(p => p.Enabled))
@@ -84,7 +91,7 @@ public static class PluginLoader
         return builtInPlugins;
     }
 
-    private static Dictionary<string, IPlugin> LoadExternalPlugins(GlobalConfig globalConfig)
+    private Dictionary<string, IPlugin> LoadExternalPlugins(GlobalConfig globalConfig)
     {
         return globalConfig.ExternalPlugins
             .Where(pluginConfig => pluginConfig.Enabled)
@@ -94,7 +101,7 @@ public static class PluginLoader
             .ToDictionary(pair => pair.Key, pair => pair.Value);
     }
 
-    private static Dictionary<string, IPlugin>? LoadExternalPlugin(string pluginsPath, PluginConfig config)
+    private Dictionary<string, IPlugin>? LoadExternalPlugin(string pluginsPath, PluginConfig config)
     {
         try
         {
@@ -112,14 +119,14 @@ public static class PluginLoader
         }
     }
 
-    private static Assembly LoadPlugin(string assemblyPath)
+    private Assembly LoadPlugin(string assemblyPath)
     {
         var loadContext = new PluginLoadContext(assemblyPath);
         var assemblyName = new AssemblyName(Path.GetFileNameWithoutExtension(assemblyPath));
         return loadContext.LoadFromAssemblyName(assemblyName);
     }
 
-    private static Dictionary<string, IPlugin> CreateExternalPlugin(Assembly assembly, string pluginName)
+    private Dictionary<string, IPlugin> CreateExternalPlugin(Assembly assembly, string pluginName)
     {
         foreach (var type in assembly.GetTypes())
         {
