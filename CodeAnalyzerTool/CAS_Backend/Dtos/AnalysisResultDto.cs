@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using CAT_API;
 
 namespace CAS_Backend.Dtos;
 

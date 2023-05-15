@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace CAS_Backend.EF.Entities;
+namespace CAS_Backend.DAL.EF.Entities;
 
 public class Location
 {

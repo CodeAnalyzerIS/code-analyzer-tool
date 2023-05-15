@@ -1,16 +1,19 @@
-﻿using CAS_Backend.EF.Entities;
+﻿using CAS_Backend.DAL.EF.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace CAS_Backend.EF;
+namespace CAS_Backend.DAL.EF;
 
-public class CasContext : DbContext
+public class CasDbContext : DbContext
 {
-    public CasContext(DbContextOptions<CasContext> options) : base(options)
+    public CasDbContext()
+    {
+    }
+    
+    public CasDbContext(DbContextOptions<CasDbContext> options) : base(options)
     {
     }
 
     public DbSet<AnalysisResult> AnalysisResults { get; set; } = null!;
-    public DbSet<Location> Locations { get; set; } = null!;
     public DbSet<Rule> Rules { get; set; } = null!;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
