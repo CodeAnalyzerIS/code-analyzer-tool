@@ -20,32 +20,32 @@ public class ExternalPluginLoader : PluginLoaderBase
         return _globalConfig.Plugins.Where(p => p is { Enabled: true, AssemblyName: not null });
     }
 
-    public override Dictionary<string, IPlugin> LoadPlugins()
+    public override Dictionary<PluginConfig, IPlugin> LoadPlugins()
     {
         return GetPluginConfigs()
-            .SelectMany(pluginConfig => LoadExternalPlugin(_globalConfig.PluginsPath, pluginConfig))
+            .SelectMany(LoadExternalPlugin)
             .ToDictionary(pair => pair.Key, pair => pair.Value);
     }
     
-    private Dictionary<string, IPlugin> LoadExternalPlugin(string pluginsPath, PluginConfig config)
+    private Dictionary<PluginConfig, IPlugin> LoadExternalPlugin(PluginConfig config)
     {
         try
         {
             Log.Information("Loading external plugin: {PluginName}", config.PluginName);
             if (config.AssemblyName == null)
                 throw new ConfigException(StringResources.ASSEMBLY_NAME_MISSING_MESSAGE);
-            var pluginAssemblyPath = Path.Combine(pluginsPath, config.FolderName, config.AssemblyName);
+            var pluginAssemblyPath = Path.Combine(_globalConfig.PluginsPath, config.FolderName, config.AssemblyName);
             Assembly pluginAssembly = LoadPlugin(pluginAssemblyPath);
-            return CreateExternalPlugin(pluginAssembly, config.PluginName);
+            return GetPluginWithConfig(pluginAssembly, config);
         }
         catch (Exception ex)
         {
             Log.Error("Loading external plugin failed: {ErrorMessage}", ex.Message);
-            return new Dictionary<string, IPlugin>();
+            return new Dictionary<PluginConfig, IPlugin>();
         }
     }
     
-    private Dictionary<string, IPlugin> CreateExternalPlugin(Assembly assembly, string pluginName)
+    private Dictionary<PluginConfig, IPlugin> GetPluginWithConfig(Assembly assembly, PluginConfig config)
     {
         foreach (var type in assembly.GetTypes())
         {
@@ -54,9 +54,9 @@ public class ExternalPluginLoader : PluginLoaderBase
             IPlugin? result = Activator.CreateInstance(type) as IPlugin;
             if (result != null)
             {
-                return new Dictionary<string, IPlugin>
+                return new Dictionary<PluginConfig, IPlugin>
                 {
-                    [pluginName] = result
+                    [config] = result
                 };
             }
         }

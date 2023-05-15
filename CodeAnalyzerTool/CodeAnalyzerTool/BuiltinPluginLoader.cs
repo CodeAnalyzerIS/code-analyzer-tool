@@ -18,16 +18,16 @@ public class BuiltinPluginLoader : PluginLoaderBase
         return _globalConfig.Plugins.Where(p => p is { Enabled: true, AssemblyName: null });
     }
 
-    public override Dictionary<string, IPlugin> LoadPlugins()
+    public override Dictionary<PluginConfig, IPlugin> LoadPlugins()
     {
-        var builtInPlugins = new Dictionary<string, IPlugin>();
+        var builtInPlugins = new Dictionary<PluginConfig, IPlugin>();
         foreach (var pluginConfig in GetPluginConfigs())
         {
             Log.Information("Loading built-in plugin: {PluginName}", pluginConfig.PluginName);
             switch (pluginConfig.PluginName)
             {
                 case StringResources.ROSLYN_PLUGIN_NAME:
-                    builtInPlugins[pluginConfig.PluginName] = new RoslynPlugin.RoslynPlugin(); // todo ??
+                    builtInPlugins[pluginConfig] = new RoslynPlugin.RoslynPlugin();
                     break;
                 default:
                     Log.Error("Loading built-in plugin failed: {PluginName} is not a recognized built-in plugin",

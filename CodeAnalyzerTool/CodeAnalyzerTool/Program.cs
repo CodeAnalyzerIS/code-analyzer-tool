@@ -26,7 +26,7 @@ public class Program
             var loadedPlugins = plc.LoadPlugins();
 
             var pluginRunner = new PluginRunner();
-            var ruleViolations = await pluginRunner.RunPlugins(loadedPlugins, globalConfig.Plugins, globalConfig.PluginsPath);
+            var ruleViolations = await pluginRunner.RunPlugins(loadedPlugins, globalConfig.PluginsPath);
 
             // var pluginLoader = new PluginLoader(globalConfig);
             // var analysisResults = await pluginLoader.LoadAndRunPlugins();

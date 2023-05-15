@@ -30,7 +30,7 @@ public class PluginLoaderComposite : PluginLoaderBase
         return _globalConfig.Plugins.Where(p => p is { Enabled: true, AssemblyName: not null });
     }
 
-    public override Dictionary<string, IPlugin> LoadPlugins()
+    public override Dictionary<PluginConfig, IPlugin> LoadPlugins()
     {
         return PluginLoaders.SelectMany(pl => pl.LoadPlugins())
             .ToDictionary(pair => pair.Key, pair => pair.Value);

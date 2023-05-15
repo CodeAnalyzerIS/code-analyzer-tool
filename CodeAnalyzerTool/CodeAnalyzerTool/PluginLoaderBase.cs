@@ -7,7 +7,7 @@ namespace CodeAnalyzerTool;
 public abstract class PluginLoaderBase
 {
     protected abstract IEnumerable<PluginConfig> GetPluginConfigs();
-    public abstract Dictionary<string, IPlugin> LoadPlugins();
+    public abstract Dictionary<PluginConfig, IPlugin> LoadPlugins();
     
     private protected Assembly LoadPlugin(string assemblyPath)
     {

@@ -5,16 +5,12 @@ namespace CodeAnalyzerTool;
 
 public class PluginRunner
 {
-
-    public async Task<IEnumerable<RuleViolation>> RunPlugins(Dictionary<string, IPlugin> pluginsDictionary,
-        IEnumerable<PluginConfig> pluginConfigs, string pluginsPath)
+    public async Task<IEnumerable<RuleViolation>> RunPlugins(Dictionary<PluginConfig, IPlugin> pluginsDictionary, string pluginsPath)
     {
-        var configs = pluginConfigs;
         var analysisResults = new List<RuleViolation>();
-        foreach (var kv in pluginsDictionary)
+        foreach (var (config, plugin) in pluginsDictionary)
         {
-            var pluginConfig = configs.Single(p => p.PluginName == kv.Key);
-            var pluginResults = await kv.Value.Analyze(pluginConfig, pluginsPath);
+            var pluginResults = await plugin.Analyze(config, pluginsPath);
             analysisResults.AddRange(pluginResults);
         }
 
