@@ -77,8 +77,8 @@ public class PluginLoader
             Log.Information("Loading built-in plugin: {PluginName}", pluginConfig.PluginName);
             switch (pluginConfig.PluginName)
             {
-                case StringResources.RoslynPluginName:
-                    builtInPlugins[pluginConfig.PluginName] = new RoslynPlugin.RoslynPlugin();
+                case StringResources.ROSLYN_PLUGIN_NAME:
+                    builtInPlugins[pluginConfig.PluginName] = new RoslynPlugin.RoslynPlugin(); // todo ??
                     break;
                 default:
                     Log.Error("Loading built-in plugin failed: {PluginName} is not a recognized built-in plugin",

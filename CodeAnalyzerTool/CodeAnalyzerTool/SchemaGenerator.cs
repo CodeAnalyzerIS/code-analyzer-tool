@@ -10,6 +10,6 @@ public static class SchemaGenerator
         var generator = new JSchemaGenerator();
         generator.GenerationProviders.Add(new StringEnumGenerationProvider());
         var schema = generator.Generate(typeof(GlobalConfig));
-        await File.WriteAllTextAsync(StringResources.SchemaFileName, schema.ToString());
+        await File.WriteAllTextAsync(StringResources.SCHEMA_FILE_NAME, schema.ToString());
     }
 }
