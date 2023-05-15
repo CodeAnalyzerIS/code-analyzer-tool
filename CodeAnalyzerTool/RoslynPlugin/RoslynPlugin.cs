@@ -17,8 +17,8 @@ public class RoslynPlugin : IPlugin
         workspace.WorkspaceFailed += (_, e) => Log.Error("{Message}", e.Diagnostic.Message);
 
         var analyzer = new Analyzer(workspace, pluginConfig, pluginsPath);
-        var diagnostics = await analyzer.StartAnalysis();
+        var ruleViolations = await analyzer.StartAnalysis();
         Log.Information("========================== Roslyn Plugin End ==========================");
-        return diagnostics;
+        return ruleViolations;
     }
 }

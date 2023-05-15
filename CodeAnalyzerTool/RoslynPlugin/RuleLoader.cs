@@ -1,7 +1,5 @@
-﻿using System.Collections.Immutable;
-using System.Reflection;
+﻿using System.Reflection;
 using CAT_API.ConfigModel;
-using Microsoft.CodeAnalysis.Diagnostics;
 using RoslynPlugin.API;
 
 namespace RoslynPlugin;
