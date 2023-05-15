@@ -14,14 +14,21 @@ public static class LogHelper
             .CreateLogger();
     }
 
-    public static void LogAnalysisResults(List<RuleViolation> results)
+    public static void LogAnalysisResults(IEnumerable<RuleViolation> results)
     {
-        if (results.Count == 0) Log.Information("No rule violations found (no analysis results)");
-        else
-            results.ForEach(r =>
-                Log.Write(SeverityToLogLevel(r.Severity),
-                    "[{Category}]({PluginId}, {RuleId}) {Message} | Path: {Path} at line: {Line}",
-                    r.Rule.Category, r.PluginId, r.Rule.Id, r.Message, r.Location.Path, r.Location.StartLine));
+        var res = results.ToList();
+        if (!res.Any())
+        {
+            Log.Information("No rule violations found");
+            return;
+        }
+
+        foreach (var r in res)
+        {
+            Log.Write(SeverityToLogLevel(r.Severity),
+                "[{Category}]({PluginId}, {RuleId}) {Message} | Path: {Path} at line: {Line}",
+                r.Rule.Category, r.PluginId, r.Rule.Id, r.Message, r.Location.Path, r.Location.StartLine);
+        }
     }
 
     private static LogEventLevel SeverityToLogLevel(Severity severity)

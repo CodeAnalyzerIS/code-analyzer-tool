@@ -17,11 +17,22 @@ public class Program
             var configReader = new ConfigReader();
             var globalConfig = await configReader.ReadAsync();
 
-            var pluginLoader = new PluginLoader(globalConfig);
-            var analysisResults = await pluginLoader.LoadAndRunPlugins();
-            LogHelper.LogAnalysisResults(analysisResults);
+            var epl = new ExternalPluginLoader(globalConfig);
+            var bipl = new BuiltinPluginLoader(globalConfig);
+            var plc = new PluginLoaderComposite(globalConfig);
+            
+            plc.AddPluginLoader(epl);
+            plc.AddPluginLoader(bipl);
+            var loadedPlugins = plc.LoadPlugins();
 
-            var projectAnalysis = new ProjectAnalysis(globalConfig.ProjectName, analysisResults);
+            var pluginRunner = new PluginRunner();
+            var ruleViolations = await pluginRunner.RunPlugins(loadedPlugins, globalConfig.Plugins, globalConfig.PluginsPath);
+
+            // var pluginLoader = new PluginLoader(globalConfig);
+            // var analysisResults = await pluginLoader.LoadAndRunPlugins();
+            LogHelper.LogAnalysisResults(ruleViolations);
+
+            var projectAnalysis = new ProjectAnalysis(globalConfig.ProjectName, ruleViolations);
             // todo pass projectAnalysis to backend API (C.A.S.)
         }
         catch (Exception ex)
