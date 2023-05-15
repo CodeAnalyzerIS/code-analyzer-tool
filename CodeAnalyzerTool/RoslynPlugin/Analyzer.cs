@@ -37,7 +37,7 @@ public class Analyzer
         return analysisResults;
     }
 
-    private async Task<IEnumerable<AnalysisResult>> AnalyzeSolutions(string[] solutionPaths)
+    private async Task<IEnumerable<AnalysisResult>> AnalyzeSolutions(IEnumerable<string> solutionPaths)
     {
         var analysisResults = new List<AnalysisResult>();
         foreach (var solutionPath in solutionPaths)
