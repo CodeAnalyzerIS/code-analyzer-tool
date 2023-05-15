@@ -1,7 +1,7 @@
-using CAS_Backend.DAL.EF.Entities;
+using CodeAnalyzerService.Backend.DAL.EF.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace CAS_Backend.DAL.EF;
+namespace CodeAnalyzerService.Backend.DAL.EF;
 
 public class AnalysisRepository : IAnalysisRepository
 {

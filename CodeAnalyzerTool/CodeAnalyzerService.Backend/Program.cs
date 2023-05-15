@@ -1,4 +1,4 @@
-using CAS_Backend.DAL.EF;
+using CodeAnalyzerService.Backend.DAL.EF;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);

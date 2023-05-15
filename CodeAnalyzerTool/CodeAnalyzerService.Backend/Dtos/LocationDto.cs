@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace CAS_Backend.Dtos;
+namespace CodeAnalyzerService.Backend.Dtos;
 
 public class LocationDto
 {
