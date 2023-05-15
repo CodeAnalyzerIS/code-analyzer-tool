@@ -5,12 +5,10 @@ namespace CodeAnalyzerTool;
 
 public class PluginLoaderComposite : PluginLoaderBase
 {
-    private readonly GlobalConfig _globalConfig;
     public ICollection<PluginLoaderBase> PluginLoaders { get; }
 
-    public PluginLoaderComposite(GlobalConfig globalConfig)
+    public PluginLoaderComposite()
     {
-        _globalConfig = globalConfig;
         PluginLoaders = new List<PluginLoaderBase>();
     }
 
@@ -22,12 +20,6 @@ public class PluginLoaderComposite : PluginLoaderBase
     public void RemovePluginLoader(PluginLoaderBase pluginLoaderBase)
     {
         PluginLoaders.Remove(pluginLoaderBase);
-    }
-
-
-    protected override IEnumerable<PluginConfig> GetPluginConfigs()
-    {
-        return _globalConfig.Plugins.Where(p => p is { Enabled: true, AssemblyName: not null });
     }
 
     public override Dictionary<PluginConfig, IPlugin> LoadPlugins()

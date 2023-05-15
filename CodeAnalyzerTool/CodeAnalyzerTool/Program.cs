@@ -17,10 +17,10 @@ public class Program
             var configReader = new ConfigReader();
             var globalConfig = await configReader.ReadAsync();
 
+            // todo - maybe dependency injection - or (register all that implements interface)
             var epl = new ExternalPluginLoader(globalConfig);
             var bipl = new BuiltinPluginLoader(globalConfig);
-            var plc = new PluginLoaderComposite(globalConfig);
-            
+            var plc = new PluginLoaderComposite();
             plc.AddPluginLoader(epl);
             plc.AddPluginLoader(bipl);
             var loadedPlugins = plc.LoadPlugins();

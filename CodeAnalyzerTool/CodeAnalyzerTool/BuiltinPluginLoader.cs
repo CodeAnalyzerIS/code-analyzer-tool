@@ -12,16 +12,11 @@ public class BuiltinPluginLoader : PluginLoaderBase
     {
         _globalConfig = globalConfig;
     }
-    
-    protected override IEnumerable<PluginConfig> GetPluginConfigs()
-    {
-        return _globalConfig.Plugins.Where(p => p is { Enabled: true, AssemblyName: null });
-    }
 
     public override Dictionary<PluginConfig, IPlugin> LoadPlugins()
     {
         var builtInPlugins = new Dictionary<PluginConfig, IPlugin>();
-        foreach (var pluginConfig in GetPluginConfigs())
+        foreach (var pluginConfig in GetBuiltInConfigs())
         {
             Log.Information("Loading built-in plugin: {PluginName}", pluginConfig.PluginName);
             switch (pluginConfig.PluginName)
@@ -37,5 +32,10 @@ public class BuiltinPluginLoader : PluginLoaderBase
         }
 
         return builtInPlugins;
+    }
+    
+    private IEnumerable<PluginConfig> GetBuiltInConfigs()
+    {
+        return _globalConfig.Plugins.Where(p => p is { Enabled: true, AssemblyName: null });
     }
 }

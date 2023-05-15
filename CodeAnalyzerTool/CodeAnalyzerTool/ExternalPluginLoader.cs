@@ -14,17 +14,17 @@ public class ExternalPluginLoader : PluginLoaderBase
     {
         _globalConfig = globalConfig;
     }
-    
-    protected override IEnumerable<PluginConfig> GetPluginConfigs()
-    {
-        return _globalConfig.Plugins.Where(p => p is { Enabled: true, AssemblyName: not null });
-    }
 
     public override Dictionary<PluginConfig, IPlugin> LoadPlugins()
     {
-        return GetPluginConfigs()
+        return GetExternalConfigs()
             .SelectMany(LoadExternalPlugin)
             .ToDictionary(pair => pair.Key, pair => pair.Value);
+    }
+
+    private IEnumerable<PluginConfig> GetExternalConfigs()
+    {
+        return _globalConfig.Plugins.Where(p => p is { Enabled: true, AssemblyName: not null });
     }
     
     private Dictionary<PluginConfig, IPlugin> LoadExternalPlugin(PluginConfig config)
