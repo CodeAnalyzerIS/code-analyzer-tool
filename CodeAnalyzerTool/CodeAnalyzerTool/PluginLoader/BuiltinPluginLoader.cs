@@ -2,7 +2,7 @@
 using CodeAnalyzerTool.Api.ConfigModel;
 using Serilog;
 
-namespace CodeAnalyzerTool;
+namespace CodeAnalyzerTool.PluginLoader;
 
 public class BuiltinPluginLoader : PluginLoaderBase
 {

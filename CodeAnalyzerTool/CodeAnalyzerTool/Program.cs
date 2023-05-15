@@ -1,4 +1,5 @@
 ﻿using CodeAnalyzerTool.Api;
+using CodeAnalyzerTool.PluginLoader;
 using CodeAnalyzerTool.util;
 using Serilog;
 

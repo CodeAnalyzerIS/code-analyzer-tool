@@ -2,7 +2,7 @@
 using CodeAnalyzerTool.Api;
 using CodeAnalyzerTool.Api.ConfigModel;
 
-namespace CodeAnalyzerTool;
+namespace CodeAnalyzerTool.PluginLoader;
 
 public abstract class PluginLoaderBase
 {

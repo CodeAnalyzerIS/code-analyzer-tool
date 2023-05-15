@@ -25,8 +25,4 @@
         <ProjectReference Include="..\CodeAnalyzerTool.Api\CodeAnalyzerTool.Api.csproj" />
         <ProjectReference Include="..\RoslynPlugin\RoslynPlugin.csproj" />
     </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="PluginLoader\" />
-    </ItemGroup>
 </Project>

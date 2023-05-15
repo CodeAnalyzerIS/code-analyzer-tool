@@ -4,7 +4,7 @@ using CodeAnalyzerTool.Api.ConfigModel;
 using CodeAnalyzerTool.Api.Exceptions;
 using Serilog;
 
-namespace CodeAnalyzerTool;
+namespace CodeAnalyzerTool.PluginLoader;
 
 public class ExternalPluginLoader : PluginLoaderBase
 {
