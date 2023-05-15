@@ -1,6 +1,4 @@
-using CAS_Backend;
-using CAS_Backend.EF;
-using Microsoft.CodeAnalysis.Diagnostics;
+using CAS_Backend.DAL.EF;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -9,7 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 var connectionString = builder.Configuration.GetConnectionString("Default");
 builder.Services.AddControllers();
-builder.Services.AddDbContext<CasContext>(opt =>
+builder.Services.AddDbContext<CasDbContext>(opt =>
     opt.UseSqlite(connectionString!));
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
