@@ -44,10 +44,10 @@ public class RuleLoader
         {
             // todo maybe change ruleName to rulePath in config?
             var externalRules =
-                Path.Combine(_workingDir, _pluginsPath, _pluginConfig.PluginName, StringResources.RulesFolderName, ruleConfig.RuleName);
+                Path.Combine(_workingDir, _pluginsPath, _pluginConfig.PluginName, StringResources.RULES_FOLDER_NAME, ruleConfig.RuleName);
 
             if (Directory.Exists(externalRules))
-                rules.AddRange(Directory.GetFiles(externalRules, StringResources.ExternalRuleSearchPattern));
+                rules.AddRange(Directory.GetFiles(externalRules, StringResources.EXTERNAL_RULE_SEARCH_PATTERN));
         }
 
         return rules.Select(Assembly.LoadFrom)

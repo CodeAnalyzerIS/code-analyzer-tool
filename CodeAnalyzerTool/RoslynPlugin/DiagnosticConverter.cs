@@ -27,15 +27,15 @@ public static class DiagnosticConverter
             path: diagnostic.Location.GetLineSpan().Path,
             startLine: diagnostic.Location.GetLineSpan().StartLinePosition.Line,
             endLine: diagnostic.Location.GetLineSpan().EndLinePosition.Line,
-            fileExtension: StringResources.FileExtension
+            fileExtension: StringResources.FILE_EXTENSION
         );
 
         var sev = ConvertDiagnosticSeverity(diagnostic.Severity);
         var result = new AnalysisResult(
             rule: rule, 
-            pluginId: StringResources.PluginId, 
+            pluginId: StringResources.PLUGIN_ID, 
             message: diagnostic.GetMessage(), 
-            targetLanguage: StringResources.TargetLanguage, 
+            targetLanguage: StringResources.TARGET_LANGUAGE, 
             location: location, 
             severity: sev);
 

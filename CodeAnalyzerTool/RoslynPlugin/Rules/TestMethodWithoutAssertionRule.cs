@@ -13,7 +13,7 @@ public class TestMethodWithoutAssertionRule : RoslynRule
     public sealed override string DiagnosticId => "TestWithoutAssertion";
     public sealed override DiagnosticSeverity Severity { get; set; }
     public sealed override Dictionary<string, string> Options { get; set; }
-    private const string Category = RuleCategories.Maintainability;
+    private const string Category = RuleCategories.MAINTAINABILITY;
     private readonly DiagnosticDescriptor _rule;
 
     private static readonly LocalizableString Title = new LocalizableResourceString(nameof(Resources.NoAssertionTitle),

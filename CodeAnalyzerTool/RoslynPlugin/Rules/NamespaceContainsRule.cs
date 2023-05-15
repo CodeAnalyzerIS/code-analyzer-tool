@@ -15,7 +15,7 @@ public class NamespaceRule : RoslynRule
     public sealed override DiagnosticSeverity Severity { get; set; }
     public sealed override Dictionary<string, string> Options { get; set; }
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get; }
-    private const string Category = RuleCategories.Naming;
+    private const string Category = RuleCategories.NAMING;
     private readonly DiagnosticDescriptor _rule;
 
     private static readonly LocalizableString Title = new LocalizableResourceString(
@@ -46,7 +46,7 @@ public class NamespaceRule : RoslynRule
 
         if (!Options.TryGetValue("namespace", out _))
         {
-            Log.Warning(StringResources.NoNameSpaceOptionMsg);
+            Log.Warning(StringResources.NO_NAME_SPACE_OPTION_MSG);
             return;
         }
 

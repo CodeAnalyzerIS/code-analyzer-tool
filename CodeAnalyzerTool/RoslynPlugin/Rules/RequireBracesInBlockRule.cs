@@ -12,7 +12,7 @@ public class RequireBracesInBlockRule : RoslynRule
     public sealed override string DiagnosticId => "RequireBracesInBlock";
     public sealed override DiagnosticSeverity Severity { get; set; }
     public sealed override Dictionary<string, string> Options { get; set; }
-    private const string Category = RuleCategories.Style;
+    private const string Category = RuleCategories.STYLE;
     private readonly DiagnosticDescriptor _rule;
     
     private static readonly LocalizableString Title = new LocalizableResourceString(nameof(Resources.BraceAnalyzerTitle),

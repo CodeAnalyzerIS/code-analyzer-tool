@@ -27,7 +27,7 @@ public class Analyzer
 
     internal async Task<IEnumerable<AnalysisResult>> StartAnalysis()
     {
-        var solutionPaths = Directory.GetFiles(_workingDirectory, StringResources.SolutionSearchPattern,
+        var solutionPaths = Directory.GetFiles(_workingDirectory, StringResources.SOLUTION_SEARCH_PATTERN,
             SearchOption.AllDirectories);
         var analysisResults = new List<AnalysisResult>();
         
@@ -74,7 +74,7 @@ public class Analyzer
     private async Task<IEnumerable<AnalysisResult>> AnalyseProject(Project project)
     {
         var compilation = await project.GetCompilationAsync();
-        if (compilation == null) throw new CompilationNotSupportedException(StringResources.NullCompilationMsg);
+        if (compilation == null) throw new CompilationNotSupportedException(StringResources.NULL_COMPILATION_MSG);
 
         var diagnosticResults = await compilation.WithAnalyzers(_rules)
             .GetAnalyzerDiagnosticsAsync();
