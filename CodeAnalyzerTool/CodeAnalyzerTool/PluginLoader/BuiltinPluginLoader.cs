@@ -4,7 +4,7 @@ using Serilog;
 
 namespace CodeAnalyzerTool.PluginLoader;
 
-public class BuiltinPluginLoader : PluginLoaderBase
+public class BuiltinPluginLoader : IPluginLoader
 {
     private readonly GlobalConfig _globalConfig;
 
@@ -13,7 +13,7 @@ public class BuiltinPluginLoader : PluginLoaderBase
         _globalConfig = globalConfig;
     }
 
-    public override Dictionary<PluginConfig, IPlugin> LoadPlugins()
+    public Dictionary<PluginConfig, IPlugin> LoadPlugins()
     {
         var builtInPlugins = new Dictionary<PluginConfig, IPlugin>();
         foreach (var pluginConfig in GetBuiltInConfigs())

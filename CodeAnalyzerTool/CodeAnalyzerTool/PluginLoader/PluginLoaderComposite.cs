@@ -3,26 +3,26 @@ using CodeAnalyzerTool.Api.ConfigModel;
 
 namespace CodeAnalyzerTool.PluginLoader;
 
-public class PluginLoaderComposite : PluginLoaderBase
+public class PluginLoaderComposite : IPluginLoader
 {
-    public ICollection<PluginLoaderBase> PluginLoaders { get; }
+    public ICollection<IPluginLoader> PluginLoaders { get; }
 
     public PluginLoaderComposite()
     {
-        PluginLoaders = new List<PluginLoaderBase>();
+        PluginLoaders = new List<IPluginLoader>();
     }
 
-    public void AddPluginLoader(PluginLoaderBase pluginLoaderBase)
+    public void AddPluginLoader(IPluginLoader pluginLoader)
     {
-        PluginLoaders.Add(pluginLoaderBase);
+        PluginLoaders.Add(pluginLoader);
     }
 
-    public void RemovePluginLoader(PluginLoaderBase pluginLoaderBase)
+    public void RemovePluginLoader(IPluginLoader pluginLoader)
     {
-        PluginLoaders.Remove(pluginLoaderBase);
+        PluginLoaders.Remove(pluginLoader);
     }
 
-    public override Dictionary<PluginConfig, IPlugin> LoadPlugins()
+    public Dictionary<PluginConfig, IPlugin> LoadPlugins()
     {
         return PluginLoaders.SelectMany(pl => pl.LoadPlugins())
             .ToDictionary(pair => pair.Key, pair => pair.Value);

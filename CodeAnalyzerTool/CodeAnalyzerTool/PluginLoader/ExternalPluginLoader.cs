@@ -6,7 +6,7 @@ using Serilog;
 
 namespace CodeAnalyzerTool.PluginLoader;
 
-public class ExternalPluginLoader : PluginLoaderBase
+public class ExternalPluginLoader : IPluginLoader
 {
     private readonly GlobalConfig _globalConfig;
 
@@ -15,7 +15,7 @@ public class ExternalPluginLoader : PluginLoaderBase
         _globalConfig = globalConfig;
     }
 
-    public override Dictionary<PluginConfig, IPlugin> LoadPlugins()
+    public Dictionary<PluginConfig, IPlugin> LoadPlugins()
     {
         return GetExternalConfigs()
             .SelectMany(LoadExternalPlugin)
@@ -35,7 +35,7 @@ public class ExternalPluginLoader : PluginLoaderBase
             if (config.AssemblyName == null)
                 throw new ConfigException(StringResources.ASSEMBLY_NAME_MISSING_MESSAGE);
             var pluginAssemblyPath = Path.Combine(_globalConfig.PluginsPath, config.FolderName, config.AssemblyName);
-            Assembly pluginAssembly = LoadPlugin(pluginAssemblyPath);
+            Assembly pluginAssembly = LoadWithContext(pluginAssemblyPath);
             return GetPluginWithConfig(pluginAssembly, config);
         }
         catch (Exception ex)
@@ -43,6 +43,13 @@ public class ExternalPluginLoader : PluginLoaderBase
             Log.Error("Loading external plugin failed: {ErrorMessage}", ex.Message);
             return new Dictionary<PluginConfig, IPlugin>();
         }
+    }
+    
+    private Assembly LoadWithContext(string assemblyPath)
+    {
+        var loadContext = new PluginLoadContext(assemblyPath);
+        var assemblyName = new AssemblyName(Path.GetFileNameWithoutExtension(assemblyPath));
+        return loadContext.LoadFromAssemblyName(assemblyName);
     }
     
     private Dictionary<PluginConfig, IPlugin> GetPluginWithConfig(Assembly assembly, PluginConfig config)
