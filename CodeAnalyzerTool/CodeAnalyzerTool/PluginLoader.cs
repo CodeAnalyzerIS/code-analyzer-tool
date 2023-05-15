@@ -78,7 +78,7 @@ public class PluginLoader
             Log.Information("Loading built-in plugin: {PluginName}", pluginConfig.PluginName);
             switch (pluginConfig.PluginName)
             {
-                case StringResources.RoslynPluginName:
+                case StringResources.ROSLYN_PLUGIN_NAME:
                     builtInPlugins[pluginConfig.PluginName] = new RoslynMain();
                     break;
                 default:
