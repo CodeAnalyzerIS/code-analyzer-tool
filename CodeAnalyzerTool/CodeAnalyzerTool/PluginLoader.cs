@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Reflection;
-using System.Text.Json;
 using CAT_API;
 using CAT_API.ConfigModel;
+using CAT_API.Exceptions;
 using RoslynPlugin;
 using Serilog;
 
@@ -104,7 +104,7 @@ public class PluginLoader
         {
             Log.Information("Loading external plugin: {PluginName}", config.PluginName);
             if (config.AssemblyName == null)
-                throw new JsonException("Invalid config file: AssemblyName is a required field for external plugins.");
+                throw new ConfigException(StringResources.ASSEMBLY_NAME_MISSING_MESSAGE);
             var pluginAssemblyPath = Path.Combine(pluginsPath, config.FolderName, config.AssemblyName);
             Assembly pluginAssembly = LoadPlugin(pluginAssemblyPath);
             return CreateExternalPlugin(pluginAssembly, config.PluginName);
