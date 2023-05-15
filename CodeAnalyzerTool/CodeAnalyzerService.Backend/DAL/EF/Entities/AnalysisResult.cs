@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
-using CAT_API;
+using CodeAnalyzerTool.Api;
+using Rule = CodeAnalyzerService.Backend.DAL.EF.Entities.Rule;
 
 namespace CAS_Backend.DAL.EF.Entities;
 
