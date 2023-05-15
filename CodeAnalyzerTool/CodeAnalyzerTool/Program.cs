@@ -14,7 +14,8 @@ public class Program
             Log.Information("Generating JSON.NET schema");
             await SchemaGenerator.GenerateSchema();
             Log.Information("Reading CAT Config file");
-            var globalConfig = await ConfigReader.ReadAsync();
+            var configReader = new ConfigReader();
+            var globalConfig = await configReader.ReadAsync();
 
             var pluginLoader = new PluginLoader(globalConfig);
             var analysisResults = await pluginLoader.LoadAndRunPlugins();
