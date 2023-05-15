@@ -1,10 +1,10 @@
 ﻿using System.Collections.Immutable;
 using CodeAnalyzerTool.Api;
 using CodeAnalyzerTool.Api.ConfigModel;
-using CodeAnalyzerTool.Api.Exceptions;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.CodeAnalysis.MSBuild;
+using RoslynPlugin.Exceptions;
 using Serilog;
 
 namespace RoslynPlugin;

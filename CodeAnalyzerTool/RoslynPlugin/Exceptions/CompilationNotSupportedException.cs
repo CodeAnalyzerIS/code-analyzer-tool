@@ -1,4 +1,4 @@
-namespace CodeAnalyzerTool.Api.Exceptions;
+namespace RoslynPlugin.Exceptions;
 
 [Serializable]
 public class CompilationNotSupportedException : Exception
