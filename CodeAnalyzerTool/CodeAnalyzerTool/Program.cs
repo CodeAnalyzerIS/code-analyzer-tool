@@ -2,6 +2,7 @@
 using CodeAnalyzerTool.PluginLoader;
 using CodeAnalyzerTool.util;
 using Serilog;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace CodeAnalyzerTool;
 
@@ -11,26 +12,29 @@ public class Program
     {
         try
         {
+            var services = new ServiceCollection();
+            
+            services.AddSingleton<IPlugin, RoslynPlugin.RoslynPlugin>();
+            var serviceProvider = services.BuildServiceProvider();
+
             LogHelper.InitLogging();
             Log.Information("Generating JSON.NET schema");
             await SchemaGenerator.GenerateSchema();
             Log.Information("Reading CAT Config file");
             var configReader = new ConfigReader();
             var globalConfig = await configReader.ReadAsync();
-
-            // todo - maybe dependency injection - or (register all that implements interface)
-            var epl = new ExternalPluginLoader(globalConfig);
-            var bipl = new BuiltinPluginLoader(globalConfig);
-            var plc = new PluginLoaderComposite();
-            plc.AddPluginLoader(epl);
-            plc.AddPluginLoader(bipl);
-            var loadedPlugins = plc.LoadPlugins();
+            
+            var externalPluginLoader = new ExternalPluginLoader(globalConfig);
+            var builtInPlugins = serviceProvider.GetServices<IPlugin>();
+            var builtinPluginLoader = new BuiltinPluginLoader(globalConfig, builtInPlugins);
+            var pluginLoaderComposite = new PluginLoaderComposite();
+            pluginLoaderComposite.AddPluginLoader(externalPluginLoader);
+            pluginLoaderComposite.AddPluginLoader(builtinPluginLoader);
+            var loadedPlugins = pluginLoaderComposite.LoadPlugins();
 
             var pluginRunner = new PluginRunner();
             var ruleViolations = await pluginRunner.RunPlugins(loadedPlugins, globalConfig.PluginsPath);
-
-            // var pluginLoader = new PluginLoader(globalConfig);
-            // var analysisResults = await pluginLoader.LoadAndRunPlugins();
+            
             LogHelper.LogAnalysisResults(ruleViolations);
 
             var projectAnalysis = new ProjectAnalysis(globalConfig.ProjectName, ruleViolations);

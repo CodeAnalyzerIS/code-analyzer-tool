@@ -9,6 +9,8 @@ namespace RoslynPlugin;
 public class RoslynPlugin : IPlugin
 {
     //This main method will be called in the analyzerToolProgram
+    public string PluginName => StringResources.PLUGIN_ID;
+
     public async Task<IEnumerable<RuleViolation>> Analyze(PluginConfig pluginConfig, string pluginsPath) {
         Log.Information("========================== Roslyn Plugin Start ==========================");
         MSBuildLocator.RegisterDefaults();
