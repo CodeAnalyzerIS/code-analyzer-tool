@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using CAT_API;
 
-namespace CAS_Backend.EF.Entities;
+namespace CAS_Backend.DAL.EF.Entities;
 
 public class Rule
 {
