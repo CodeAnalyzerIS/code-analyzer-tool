@@ -22,7 +22,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\CAT_API\CAT_API.csproj" />
+        <ProjectReference Include="..\CodeAnalyzerTool.Api\CodeAnalyzerTool.Api.csproj" />
         <ProjectReference Include="..\RoslynPlugin\RoslynPlugin.csproj" />
     </ItemGroup>
 </Project>

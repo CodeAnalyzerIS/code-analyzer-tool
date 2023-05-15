@@ -1,7 +1,5 @@
-﻿using System.Collections.Immutable;
-using System.Reflection;
-using CAT_API.ConfigModel;
-using Microsoft.CodeAnalysis.Diagnostics;
+﻿using System.Reflection;
+using CodeAnalyzerTool.Api.ConfigModel;
 using RoslynPlugin.API;
 
 namespace RoslynPlugin;
@@ -37,20 +35,21 @@ public class RuleLoader
     
     private IEnumerable<RoslynRule> LoadExternalRules(RuleActivator ruleActivator)
     {
-        var rules = new List<string>();
+        var rulePaths = new List<string>();
+        var ruleConfigs = _pluginConfig.Rules.Where(r => GetNamesOfEnabledRulesFromConfig().Contains(r.RuleName));
         
         //todo: Do this higher up (in CodeAnalyzerTool)
-        foreach (var ruleConfig in _pluginConfig.Rules.Where(r => GetNamesOfEnabledRulesFromConfig().Contains(r.RuleName)))
+        foreach (var ruleConfig in ruleConfigs)
         {
             // todo maybe change ruleName to rulePath in config?
             var externalRules =
                 Path.Combine(_workingDir, _pluginsPath, _pluginConfig.PluginName, StringResources.RULES_FOLDER_NAME, ruleConfig.RuleName);
 
             if (Directory.Exists(externalRules))
-                rules.AddRange(Directory.GetFiles(externalRules, StringResources.EXTERNAL_RULE_SEARCH_PATTERN));
+                rulePaths.AddRange(Directory.GetFiles(externalRules, StringResources.EXTERNAL_RULE_SEARCH_PATTERN));
         }
 
-        return rules.Select(Assembly.LoadFrom)
+        return rulePaths.Select(Assembly.LoadFrom)
             .SelectMany(ruleActivator.ActivateRulesFromAssembly);
     }
 

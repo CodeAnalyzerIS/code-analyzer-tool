@@ -1,8 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Reflection;
-using System.Text.Json;
-using CAT_API;
-using CAT_API.ConfigModel;
+using CodeAnalyzerTool.Api;
+using CodeAnalyzerTool.Api.ConfigModel;
+using CodeAnalyzerTool.Api.Exceptions;
+using RoslynPlugin;
 using Serilog;
 
 namespace CodeAnalyzerTool;
@@ -16,9 +17,9 @@ public class PluginLoader
         _globalConfig = globalConfig;
     }
     
-    public async Task<List<AnalysisResult>> LoadAndRunPlugins()
+    public async Task<List<RuleViolation>> LoadAndRunPlugins()
     {
-        var analysisResults = new List<AnalysisResult>();
+        var analysisResults = new List<RuleViolation>();
         var externalPluginResults = await RunPlugins(
             pluginsDictionary: LoadExternalPlugins(),
             pluginConfigs: GetExternalPluginConfigs().ToList(),
@@ -35,8 +36,8 @@ public class PluginLoader
         return analysisResults;
     }
 
-    private void AddValidatedResults(IEnumerable<AnalysisResult> resultsToValidate,
-        List<AnalysisResult> listToAddResultsTo)
+    private void AddValidatedResults(IEnumerable<RuleViolation> resultsToValidate,
+        List<RuleViolation> listToAddResultsTo)
     {
         var validatedResults = resultsToValidate.Where(result =>
         {
@@ -46,7 +47,7 @@ public class PluginLoader
             if (!valid)
             {
                 var errorMessages = string.Join(" | ", validationResults.Select(vr => vr.ToString()));
-                Log.Warning("Invalid {AnalysisResult} detected: {ErrorMessages}", nameof(AnalysisResult),
+                Log.Warning("Invalid {AnalysisResult} detected: {ErrorMessages}", nameof(RuleViolation),
                     errorMessages);
             }
 
@@ -55,10 +56,10 @@ public class PluginLoader
         listToAddResultsTo.AddRange(validatedResults);
     }
 
-    private async Task<IEnumerable<AnalysisResult>> RunPlugins(Dictionary<string, IPlugin> pluginsDictionary,
+    private async Task<IEnumerable<RuleViolation>> RunPlugins(Dictionary<string, IPlugin> pluginsDictionary,
         ICollection<PluginConfig> pluginConfigs, string pluginsPath)
     {
-        var analysisResults = new List<AnalysisResult>();
+        var analysisResults = new List<RuleViolation>();
         foreach (var kv in pluginsDictionary)
         {
             var pluginConfig = pluginConfigs.Single(p => p.PluginName == kv.Key);
@@ -77,8 +78,8 @@ public class PluginLoader
             Log.Information("Loading built-in plugin: {PluginName}", pluginConfig.PluginName);
             switch (pluginConfig.PluginName)
             {
-                case StringResources.RoslynPluginName:
-                    builtInPlugins[pluginConfig.PluginName] = new RoslynPlugin.RoslynPlugin();
+                case StringResources.ROSLYN_PLUGIN_NAME:
+                    builtInPlugins[pluginConfig.PluginName] = new RoslynPlugin.RoslynPlugin(); // todo ??
                     break;
                 default:
                     Log.Error("Loading built-in plugin failed: {PluginName} is not a recognized built-in plugin",
@@ -103,7 +104,7 @@ public class PluginLoader
         {
             Log.Information("Loading external plugin: {PluginName}", config.PluginName);
             if (config.AssemblyName == null)
-                throw new JsonException("Invalid config file: AssemblyName is a required field for external plugins.");
+                throw new ConfigException(StringResources.ASSEMBLY_NAME_MISSING_MESSAGE);
             var pluginAssemblyPath = Path.Combine(pluginsPath, config.FolderName, config.AssemblyName);
             Assembly pluginAssembly = LoadPlugin(pluginAssemblyPath);
             return CreateExternalPlugin(pluginAssembly, config.PluginName);

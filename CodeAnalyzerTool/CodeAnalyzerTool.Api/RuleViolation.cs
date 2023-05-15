@@ -1,10 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace CAT_API;
+namespace CodeAnalyzerTool.Api;
 
-public class AnalysisResult
+public class RuleViolation
 {
-    [Required] public int Id { get; set; }
     [Required] public Rule Rule { get; set; }
     [Required] public string PluginId { get; set; }
     [Required] public string Message { get; set; }
@@ -12,7 +11,7 @@ public class AnalysisResult
     [Required] public Location Location { get; set; }
     public Severity Severity { get; set; }
 
-    public AnalysisResult(Rule rule, string pluginId, string message, string targetLanguage, Location location,
+    public RuleViolation(Rule rule, string pluginId, string message, string targetLanguage, Location location,
         Severity severity)
     {
         Rule = rule;

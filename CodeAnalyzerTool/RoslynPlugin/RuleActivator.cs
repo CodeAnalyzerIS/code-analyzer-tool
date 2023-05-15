@@ -1,5 +1,5 @@
 using System.Reflection;
-using CAT_API.ConfigModel;
+using CodeAnalyzerTool.Api.ConfigModel;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
 using RoslynPlugin.API;
@@ -38,6 +38,14 @@ public class RuleActivator
         return Activator.CreateInstance(type) as RoslynRule;
     }
 
+    
+    private RoslynRule SetRuleConfiguration(RoslynRule r)
+    {
+        r.Severity = GetSeverityFromRuleConfig(r.RuleName);
+        r.Options = GetOptionsFromRuleConfig(r.RuleName);
+        return r;
+    }
+    
     private static bool IsEnabled(IEnumerable<string> enabledRuleNames, RoslynRule r)
     {
         return enabledRuleNames.Contains(r.RuleName);
@@ -53,12 +61,5 @@ public class RuleActivator
     {
         var ruleConfig = _pluginConfig.Rules.Single(r => r.RuleName.Equals(ruleName));
         return ruleConfig.Options;
-    }
-    
-    private RoslynRule SetRuleConfiguration(RoslynRule r)
-    {
-        r.Severity = GetSeverityFromRuleConfig(r.RuleName);
-        r.Options = GetOptionsFromRuleConfig(r.RuleName);
-        return r;
     }
 }

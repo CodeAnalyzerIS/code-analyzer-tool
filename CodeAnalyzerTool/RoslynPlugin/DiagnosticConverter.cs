@@ -1,18 +1,18 @@
 using System.Collections.Immutable;
-using CAT_API;
+using CodeAnalyzerTool.Api;
 using Microsoft.CodeAnalysis;
-using Location = CAT_API.Location;
+using Location = CodeAnalyzerTool.Api.Location;
 
 namespace RoslynPlugin;
 
 public static class DiagnosticConverter
 {
-    public static IEnumerable<AnalysisResult> ConvertDiagnostics(ImmutableArray<Diagnostic> diagnostics)
+    public static IEnumerable<RuleViolation> ConvertDiagnostics(ImmutableArray<Diagnostic> diagnostics)
     {
         return diagnostics.Select(ConvertDiagnostic).ToList();
     }
 
-    private static AnalysisResult ConvertDiagnostic(Diagnostic diagnostic)
+    private static RuleViolation ConvertDiagnostic(Diagnostic diagnostic)
     {
         var rule = new Rule(
             id: diagnostic.Descriptor.Id,
@@ -31,7 +31,7 @@ public static class DiagnosticConverter
         );
 
         var sev = ConvertDiagnosticSeverity(diagnostic.Severity);
-        var result = new AnalysisResult(
+        var result = new RuleViolation(
             rule: rule, 
             pluginId: StringResources.PLUGIN_ID, 
             message: diagnostic.GetMessage(), 
