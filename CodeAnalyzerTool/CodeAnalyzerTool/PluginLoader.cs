@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Reflection;
-using CAT_API;
-using CAT_API.ConfigModel;
-using CAT_API.Exceptions;
+using CodeAnalyzerTool.Api;
+using CodeAnalyzerTool.Api.ConfigModel;
+using CodeAnalyzerTool.Api.Exceptions;
 using RoslynPlugin;
 using Serilog;
 

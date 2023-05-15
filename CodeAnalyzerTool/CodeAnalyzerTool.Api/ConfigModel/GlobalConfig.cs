@@ -1,6 +1,6 @@
 using Newtonsoft.Json;
 
-namespace CAT_API.ConfigModel;
+namespace CodeAnalyzerTool.Api.ConfigModel;
 
 public class GlobalConfig
 {

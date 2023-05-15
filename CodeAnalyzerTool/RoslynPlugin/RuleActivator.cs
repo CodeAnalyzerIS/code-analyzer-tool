@@ -1,5 +1,5 @@
 using System.Reflection;
-using CAT_API.ConfigModel;
+using CodeAnalyzerTool.Api.ConfigModel;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
 using RoslynPlugin.API;

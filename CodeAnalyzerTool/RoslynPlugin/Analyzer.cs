@@ -1,7 +1,7 @@
 ﻿using System.Collections.Immutable;
-using CAT_API;
-using CAT_API.ConfigModel;
-using CAT_API.Exceptions;
+using CodeAnalyzerTool.Api;
+using CodeAnalyzerTool.Api.ConfigModel;
+using CodeAnalyzerTool.Api.Exceptions;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.CodeAnalysis.MSBuild;

@@ -1,4 +1,4 @@
-﻿namespace CAT_API;
+﻿namespace CodeAnalyzerTool.Api;
 
 public enum Severity
 {

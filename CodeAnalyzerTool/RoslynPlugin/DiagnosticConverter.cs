@@ -1,7 +1,7 @@
 using System.Collections.Immutable;
-using CAT_API;
+using CodeAnalyzerTool.Api;
 using Microsoft.CodeAnalysis;
-using Location = CAT_API.Location;
+using Location = CodeAnalyzerTool.Api.Location;
 
 namespace RoslynPlugin;
 

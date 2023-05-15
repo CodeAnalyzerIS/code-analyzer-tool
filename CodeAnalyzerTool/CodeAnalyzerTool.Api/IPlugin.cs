@@ -1,6 +1,6 @@
-﻿using CAT_API.ConfigModel;
+﻿using CodeAnalyzerTool.Api.ConfigModel;
 
-namespace CAT_API;
+namespace CodeAnalyzerTool.Api;
 
 public interface IPlugin
 {

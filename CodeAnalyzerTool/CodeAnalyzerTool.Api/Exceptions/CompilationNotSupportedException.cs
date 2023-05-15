@@ -1,4 +1,4 @@
-namespace CAT_API.Exceptions;
+namespace CodeAnalyzerTool.Api.Exceptions;
 
 [Serializable]
 public class CompilationNotSupportedException : Exception

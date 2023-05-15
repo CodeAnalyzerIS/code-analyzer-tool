@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace CAT_API;
+namespace CodeAnalyzerTool.Api;
 
 public class RuleViolation
 {
