@@ -3,7 +3,6 @@ using System.Reflection;
 using System.Text.Json;
 using CAT_API;
 using CAT_API.ConfigModel;
-using RoslynPlugin;
 using Serilog;
 
 namespace CodeAnalyzerTool;
@@ -79,7 +78,7 @@ public class PluginLoader
             switch (pluginConfig.PluginName)
             {
                 case StringResources.RoslynPluginName:
-                    builtInPlugins[pluginConfig.PluginName] = new RoslynMain();
+                    builtInPlugins[pluginConfig.PluginName] = new RoslynPlugin.RoslynPlugin();
                     break;
                 default:
                     Log.Error("Loading built-in plugin failed: {PluginName} is not a recognized built-in plugin",

@@ -3,17 +3,17 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
-using RoslynPlugin_API;
+using RoslynPlugin.API;
 
 namespace RoslynPlugin.rules;
 
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public class TestMethodWithoutAssertionRule : RoslynRule
 {
-    public sealed override string DiagnosticId => "TestWithoutAssertion";
+    public sealed override string RuleName => "TestWithoutAssertion";
     public sealed override DiagnosticSeverity Severity { get; set; }
     public sealed override Dictionary<string, string> Options { get; set; }
-    private const string Category = RuleCategories.Maintainability;
+    private const string Category = RuleCategories.MAINTAINABILITY;
     private readonly DiagnosticDescriptor _rule;
 
     private static readonly LocalizableString Title = new LocalizableResourceString(nameof(Resources.NoAssertionTitle),
@@ -31,8 +31,8 @@ public class TestMethodWithoutAssertionRule : RoslynRule
     {
         Options = new Dictionary<string, string>();
         Severity = DiagnosticSeverity.Warning;
-        _rule = new DiagnosticDescriptor(DiagnosticId, Title, MessageFormat, Category,
-            DiagnosticSeverity.Warning, isEnabledByDefault: true, description: Description);
+        _rule = new DiagnosticDescriptor(RuleName, Title, MessageFormat, Category,
+            Severity, isEnabledByDefault: true, description: Description);
         SupportedDiagnostics = ImmutableArray.Create(_rule);
     }
 
