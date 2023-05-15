@@ -11,7 +11,7 @@ namespace RoslynPlugin.rules;
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public class NamespaceRule : RoslynRule
 {
-    public sealed override string DiagnosticId => "NamespaceContains";
+    public sealed override string RuleName => "NamespaceContains";
     public sealed override DiagnosticSeverity Severity { get; set; }
     public sealed override Dictionary<string, string> Options { get; set; }
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get; }
@@ -32,11 +32,11 @@ public class NamespaceRule : RoslynRule
 
     public NamespaceRule()
     {
-        _rule = new DiagnosticDescriptor(DiagnosticId, Title, MessageFormat, Category,
-            DiagnosticSeverity.Warning, isEnabledByDefault: true, description: Description);
-        SupportedDiagnostics = ImmutableArray.Create(_rule);
-        Severity = DiagnosticSeverity.Info;
         Options = new Dictionary<string, string>();
+        Severity = DiagnosticSeverity.Info;
+        _rule = new DiagnosticDescriptor(RuleName, Title, MessageFormat, Category,
+            Severity, isEnabledByDefault: true, description: Description);
+        SupportedDiagnostics = ImmutableArray.Create(_rule);
     }
 
     public override void Initialize(AnalysisContext context)

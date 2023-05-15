@@ -40,7 +40,7 @@ public class RuleActivator
 
     private static bool IsEnabled(IEnumerable<string> enabledRuleNames, RoslynRule r)
     {
-        return enabledRuleNames.Contains(r.DiagnosticId);
+        return enabledRuleNames.Contains(r.RuleName);
     }
 
     private DiagnosticSeverity GetSeverityFromRuleConfig(string? ruleName)
@@ -57,8 +57,8 @@ public class RuleActivator
     
     private RoslynRule SetRuleConfiguration(RoslynRule r)
     {
-        r.Severity = GetSeverityFromRuleConfig(r.DiagnosticId);
-        r.Options = GetOptionsFromRuleConfig(r.DiagnosticId);
+        r.Severity = GetSeverityFromRuleConfig(r.RuleName);
+        r.Options = GetOptionsFromRuleConfig(r.RuleName);
         return r;
     }
 }

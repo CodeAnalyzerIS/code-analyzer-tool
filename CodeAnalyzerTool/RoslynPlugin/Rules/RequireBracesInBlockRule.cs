@@ -9,7 +9,7 @@ namespace RoslynPlugin.rules;
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public class RequireBracesInBlockRule : RoslynRule
 {
-    public sealed override string DiagnosticId => "RequireBracesInBlock";
+    public sealed override string RuleName => "RequireBracesInBlock";
     public sealed override DiagnosticSeverity Severity { get; set; }
     public sealed override Dictionary<string, string> Options { get; set; }
     private const string Category = RuleCategories.STYLE;
@@ -32,8 +32,8 @@ public class RequireBracesInBlockRule : RoslynRule
     {
         Options = new Dictionary<string, string>();
         Severity = DiagnosticSeverity.Warning;
-        _rule = new DiagnosticDescriptor(DiagnosticId, Title, MessageFormat, Category,
-            DiagnosticSeverity.Warning, isEnabledByDefault: true, description: Description);
+        _rule = new DiagnosticDescriptor(RuleName, Title, MessageFormat, Category,
+            Severity, isEnabledByDefault: true, description: Description);
         SupportedDiagnostics = ImmutableArray.Create(_rule);
     }
 
