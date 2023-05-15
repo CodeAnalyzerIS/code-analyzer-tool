@@ -14,7 +14,7 @@ public static class LogHelper
             .CreateLogger();
     }
 
-    public static void LogAnalysisResults(List<AnalysisResult> results)
+    public static void LogAnalysisResults(List<RuleViolation> results)
     {
         if (results.Count == 0) Log.Information("No rule violations found (no analysis results)");
         else

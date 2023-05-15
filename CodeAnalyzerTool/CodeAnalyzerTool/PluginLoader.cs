@@ -17,9 +17,9 @@ public class PluginLoader
         _globalConfig = globalConfig;
     }
     
-    public async Task<List<AnalysisResult>> LoadAndRunPlugins()
+    public async Task<List<RuleViolation>> LoadAndRunPlugins()
     {
-        var analysisResults = new List<AnalysisResult>();
+        var analysisResults = new List<RuleViolation>();
         var externalPluginResults = await RunPlugins(
             pluginsDictionary: LoadExternalPlugins(),
             pluginConfigs: GetExternalPluginConfigs().ToList(),
@@ -36,8 +36,8 @@ public class PluginLoader
         return analysisResults;
     }
 
-    private void AddValidatedResults(IEnumerable<AnalysisResult> resultsToValidate,
-        List<AnalysisResult> listToAddResultsTo)
+    private void AddValidatedResults(IEnumerable<RuleViolation> resultsToValidate,
+        List<RuleViolation> listToAddResultsTo)
     {
         var validatedResults = resultsToValidate.Where(result =>
         {
@@ -47,7 +47,7 @@ public class PluginLoader
             if (!valid)
             {
                 var errorMessages = string.Join(" | ", validationResults.Select(vr => vr.ToString()));
-                Log.Warning("Invalid {AnalysisResult} detected: {ErrorMessages}", nameof(AnalysisResult),
+                Log.Warning("Invalid {AnalysisResult} detected: {ErrorMessages}", nameof(RuleViolation),
                     errorMessages);
             }
 
@@ -56,10 +56,10 @@ public class PluginLoader
         listToAddResultsTo.AddRange(validatedResults);
     }
 
-    private async Task<IEnumerable<AnalysisResult>> RunPlugins(Dictionary<string, IPlugin> pluginsDictionary,
+    private async Task<IEnumerable<RuleViolation>> RunPlugins(Dictionary<string, IPlugin> pluginsDictionary,
         ICollection<PluginConfig> pluginConfigs, string pluginsPath)
     {
-        var analysisResults = new List<AnalysisResult>();
+        var analysisResults = new List<RuleViolation>();
         foreach (var kv in pluginsDictionary)
         {
             var pluginConfig = pluginConfigs.Single(p => p.PluginName == kv.Key);
