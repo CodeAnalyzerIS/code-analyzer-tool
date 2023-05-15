@@ -3,7 +3,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
-using RoslynPlugin_API;
+using RoslynPlugin.API;
 using Serilog;
 
 namespace RoslynPlugin.rules;

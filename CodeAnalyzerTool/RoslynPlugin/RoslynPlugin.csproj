@@ -32,7 +32,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\CAT_API\CAT_API.csproj" />
-      <ProjectReference Include="..\RoslynPlugin_API\RoslynPlugin_API.csproj" />
+      <ProjectReference Include="..\RoslynPlugin.API\RoslynPlugin.API.csproj" />
     </ItemGroup>
 
 </Project>

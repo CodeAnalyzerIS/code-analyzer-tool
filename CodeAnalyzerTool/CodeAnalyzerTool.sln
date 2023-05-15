@@ -6,7 +6,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RoslynPlugin", "RoslynPlugi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CAT_API", "CAT_API\CAT_API.csproj", "{4763FD32-0071-4116-A5F5-F9CC35DF0FE1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RoslynPlugin_API", "RoslynPlugin_API\RoslynPlugin_API.csproj", "{8B5CD133-C716-4AFB-B993-D9067094E157}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RoslynPlugin.API", "RoslynPlugin.API\RoslynPlugin.API.csproj", "{8B5CD133-C716-4AFB-B993-D9067094E157}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

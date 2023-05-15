@@ -1,7 +1,7 @@
 ﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
 
-namespace RoslynPlugin_API;
+namespace RoslynPlugin.API;
 
 public abstract class RoslynRule : DiagnosticAnalyzer
 {

@@ -6,19 +6,10 @@ using Serilog;
 
 namespace RoslynPlugin;
 
-public class RoslynMain : IPlugin
+public class RoslynPlugin : IPlugin
 {
-    private static void InitLogger()
-    {
-        Log.Logger = new LoggerConfiguration()
-            .MinimumLevel.Debug()
-            .WriteTo.Console()
-            .CreateLogger();
-    }
-    
     //This main method will be called in the analyzerToolProgram
     public async Task<IEnumerable<AnalysisResult>> Analyze(PluginConfig pluginConfig, string pluginsPath) {
-        InitLogger();
         Log.Information("========================== Roslyn Plugin Start ==========================");
         MSBuildLocator.RegisterDefaults();
 
@@ -28,6 +19,6 @@ public class RoslynMain : IPlugin
         var analyzer = new Analyzer(workspace, pluginConfig, pluginsPath);
         var diagnostics = await analyzer.StartAnalysis();
         Log.Information("========================== Roslyn Plugin End ==========================");
-        return DiagnosticConverter.ConvertDiagnostics(diagnostics);
+        return diagnostics;
     }
 }

@@ -3,7 +3,9 @@ using CAT_API.ConfigModel;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.CodeAnalysis.MSBuild;
+using RoslynPlugin.API;
 using Serilog;
+using AnalysisResult = CAT_API.AnalysisResult;
 
 namespace RoslynPlugin;
 
@@ -20,28 +22,28 @@ public class Analyzer
         _pluginsPath = pluginsPath;
     }
 
-    internal async Task<ImmutableArray<Diagnostic>> StartAnalysis()
+    internal async Task<IEnumerable<AnalysisResult>> StartAnalysis()
     {
         var workingDirectory = Directory.GetCurrentDirectory();
         var solutionPaths = Directory.GetFiles(workingDirectory, StringResources.SolutionSearchPattern,
             SearchOption.AllDirectories);
-        var diagnosticResults = new List<Diagnostic>();
+        var diagnosticResults = new List<AnalysisResult>();
+        var ruleLoader = new RuleLoader(workingDirectory, _pluginConfig, _pluginsPath);
+        var rules = ruleLoader.LoadRules();
 
         foreach (var solutionPath in solutionPaths)
         {
             Log.Information("Loading solution: {SolutionPath}", solutionPath);
 
             var solution = await _workspace.OpenSolutionAsync(solutionPath, new ProgressReporter());
-            var ruleLoader = new RuleLoader(workingDirectory, _pluginConfig, _pluginsPath);
-            var analyzers = ruleLoader.LoadRules();
             var projects = solution.Projects;
 
             foreach (var project in projects)
             {
                 try
                 {
-                    var diagnostics = await AnalyseProject(project, analyzers);
-                    if (!diagnostics.IsEmpty) diagnosticResults.AddRange(diagnostics);
+                    var diagnostics = await AnalyseProject(project, rules);
+                    if (diagnostics.Any()) diagnosticResults.AddRange(diagnostics);
                 }
                 catch (Exception ex)
                 {
@@ -51,22 +53,22 @@ public class Analyzer
             }
         }
 
-        return diagnosticResults.ToImmutableArray();
+        return diagnosticResults;
     }
 
-    private async Task<ImmutableArray<Diagnostic>> AnalyseProject(Project project,
-        ImmutableArray<DiagnosticAnalyzer> analyzers)
+    private async Task<IEnumerable<AnalysisResult>> AnalyseProject(Project project, IEnumerable<RoslynRule> rules)
     {
         var compilation = await project.GetCompilationAsync();
         if (compilation == null) throw new NullReferenceException(StringResources.NullCompilationMsg);
 
-        if (analyzers.IsEmpty) return new List<Diagnostic>().ToImmutableArray();
+        var rulesAsDiagnosticAnalyzer = rules.Cast<DiagnosticAnalyzer>().ToImmutableArray();
 
-        var diagnosticResults = await compilation.WithAnalyzers(analyzers)
+        var diagnosticResults = await compilation.WithAnalyzers(rulesAsDiagnosticAnalyzer)
             .GetAnalyzerDiagnosticsAsync();
+        var results = DiagnosticConverter.ConvertDiagnostics(diagnosticResults);
 
         Log.Information("{DiagnosticCount} rule violations detected in project:  {ProjectName}",
             $"{diagnosticResults.Length,-4}", project.Name);
-        return diagnosticResults;
+        return results;
     }
 }
