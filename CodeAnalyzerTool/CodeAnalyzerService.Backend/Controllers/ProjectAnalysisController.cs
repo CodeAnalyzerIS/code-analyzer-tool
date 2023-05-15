@@ -6,11 +6,11 @@ namespace CodeAnalyzerService.Backend.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AnalysisController : ControllerBase
+    public class ProjectAnalysisController : ControllerBase
     {
         private readonly IAnalysisManager _manager;
 
-        public AnalysisController(IAnalysisManager manager)
+        public ProjectAnalysisController(IAnalysisManager manager)
         {
             _manager = manager;
         }

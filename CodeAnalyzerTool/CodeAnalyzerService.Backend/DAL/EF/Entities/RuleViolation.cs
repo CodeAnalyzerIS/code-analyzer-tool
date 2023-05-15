@@ -3,7 +3,7 @@ using CodeAnalyzerTool.Api;
 
 namespace CodeAnalyzerService.Backend.DAL.EF.Entities;
 
-public class AnalysisResult
+public class RuleViolation
 {
     public int Id { get; set; }
     [Required] public Rule Rule { get; set; } = null!;
@@ -12,13 +12,14 @@ public class AnalysisResult
     [Required] public string TargetLanguage { get; set; } = null!;
     [Required] public Location Location { get; set; } = null!;
     public Severity Severity { get; set; }
+    public Analysis Analysis { get; set; } = null!;
 
-    private AnalysisResult()
+    private RuleViolation()
     {
     }
 
-    public AnalysisResult(Rule rule, string pluginId, string message, string targetLanguage, Location location,
-        Severity severity)
+    public RuleViolation(Rule rule, string pluginId, string message, string targetLanguage, Location location,
+        Severity severity, Analysis analysis)
     {
         Rule = rule;
         PluginId = pluginId;
@@ -26,6 +27,7 @@ public class AnalysisResult
         TargetLanguage = targetLanguage;
         Location = location;
         Severity = severity;
+        Analysis = analysis;
     }
 
     public override string ToString()

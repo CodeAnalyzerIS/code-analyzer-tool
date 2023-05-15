@@ -12,7 +12,7 @@ public class Rule
     [Required] public string Category { get; set; }
     public bool IsEnabledByDefault { get; set; }
     public Severity DefaultSeverity { get; set; }
-    public IEnumerable<AnalysisResult> AnalysisResults { get; set; }
+    public IEnumerable<RuleViolation> RuleViolations { get; set; }
 
     public Rule(string ruleName, string title, string description, string category, bool isEnabledByDefault,
         Severity defaultSeverity)
@@ -23,6 +23,6 @@ public class Rule
         Category = category;
         IsEnabledByDefault = isEnabledByDefault;
         DefaultSeverity = defaultSeverity;
-        AnalysisResults = new List<AnalysisResult>();
+        RuleViolations = new List<RuleViolation>();
     }
 }

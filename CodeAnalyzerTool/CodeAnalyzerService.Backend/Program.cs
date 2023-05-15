@@ -7,7 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 var connectionString = builder.Configuration.GetConnectionString("Default");
 builder.Services.AddControllers();
-builder.Services.AddDbContext<CasDbContext>(opt =>
+builder.Services.AddDbContext<CodeAnalyzerServiceDbContext>(opt =>
     opt.UseSqlite(connectionString!));
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
