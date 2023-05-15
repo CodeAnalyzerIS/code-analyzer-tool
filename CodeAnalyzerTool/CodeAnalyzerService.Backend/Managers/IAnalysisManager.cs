@@ -1,4 +1,4 @@
-namespace CAS_Backend.Managers;
+namespace CodeAnalyzerService.Backend.Managers;
 
 public interface IAnalysisManager
 {

@@ -1,5 +1,4 @@
 using System.ComponentModel.DataAnnotations;
-using CAS_Backend.DAL.EF.Entities;
 using CodeAnalyzerTool.Api;
 
 namespace CodeAnalyzerService.Backend.DAL.EF.Entities;

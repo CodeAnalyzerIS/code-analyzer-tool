@@ -1,8 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using CodeAnalyzerTool.Api;
-using Rule = CodeAnalyzerService.Backend.DAL.EF.Entities.Rule;
 
-namespace CAS_Backend.DAL.EF.Entities;
+namespace CodeAnalyzerService.Backend.DAL.EF.Entities;
 
 public class AnalysisResult
 {

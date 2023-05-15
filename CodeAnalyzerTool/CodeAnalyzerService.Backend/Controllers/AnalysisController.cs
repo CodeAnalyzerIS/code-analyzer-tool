@@ -1,8 +1,8 @@
-using CAS_Backend.Dtos;
-using CAS_Backend.Managers;
+using CodeAnalyzerService.Backend.Dtos;
+using CodeAnalyzerService.Backend.Managers;
 using Microsoft.AspNetCore.Mvc;
 
-namespace CAS_Backend.Controllers
+namespace CodeAnalyzerService.Backend.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

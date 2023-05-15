@@ -1,6 +1,6 @@
-using CAS_Backend.DAL.EF.Entities;
+using CodeAnalyzerService.Backend.DAL.EF.Entities;
 
-namespace CAS_Backend.DAL;
+namespace CodeAnalyzerService.Backend.DAL;
 
 public interface IAnalysisRepository
 {
