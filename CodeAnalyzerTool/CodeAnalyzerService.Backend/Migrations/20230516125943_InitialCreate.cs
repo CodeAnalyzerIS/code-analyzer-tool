@@ -71,7 +71,6 @@ namespace CodeAnalyzerService.Backend.Migrations
                     PluginId = table.Column<string>(type: "TEXT", nullable: false),
                     Message = table.Column<string>(type: "TEXT", nullable: false),
                     TargetLanguage = table.Column<string>(type: "TEXT", nullable: false),
-                    Location_Id = table.Column<int>(type: "INTEGER", nullable: false),
                     Location_Path = table.Column<string>(type: "TEXT", nullable: false),
                     Location_StartLine = table.Column<int>(type: "INTEGER", nullable: false),
                     Location_EndLine = table.Column<int>(type: "INTEGER", nullable: false),

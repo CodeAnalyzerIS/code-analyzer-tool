@@ -4,13 +4,20 @@ public class Analysis
 {
     public int Id { get; set; }
     public DateTime CreatedOn { get; set; }
-    public IEnumerable<RuleViolation> RuleViolations { get; set; } = null!;
+    public IEnumerable<RuleViolation> RuleViolations { get; set; }
     public Project Project { get; set; } = null!;
 
     private Analysis()
     {
+        RuleViolations = new List<RuleViolation>();
     }
     
+    public Analysis(DateTime createdOn)
+    {
+        CreatedOn = createdOn;
+        RuleViolations = new List<RuleViolation>();
+    }
+
     public Analysis(DateTime createdOn, Project project)
     {
         CreatedOn = createdOn;

@@ -165,9 +165,6 @@ namespace CodeAnalyzerService.Backend.Migrations
                                 .IsRequired()
                                 .HasColumnType("TEXT");
 
-                            b1.Property<int>("Id")
-                                .HasColumnType("INTEGER");
-
                             b1.Property<string>("Path")
                                 .IsRequired()
                                 .HasColumnType("TEXT");

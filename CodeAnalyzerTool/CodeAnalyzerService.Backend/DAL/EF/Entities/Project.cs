@@ -6,10 +6,11 @@ public class Project
 {
     public int Id { get; set; }
     [Required] public string ProjectName { get; set; } = null!;
-    [Required] public ICollection<Analysis> Analyses { get; set; } = null!;
+    [Required] public ICollection<Analysis> Analyses { get; set; }
 
     private Project()
     {
+        Analyses = new List<Analysis>();
     }
 
     public Project(string projectName)
