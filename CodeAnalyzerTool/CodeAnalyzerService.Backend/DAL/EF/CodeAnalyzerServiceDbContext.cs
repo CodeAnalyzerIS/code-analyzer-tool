@@ -13,8 +13,10 @@ public class CodeAnalyzerServiceDbContext : DbContext
     {
     }
 
-    public DbSet<RuleViolation> AnalysisResults { get; set; } = null!;
+    public DbSet<RuleViolation> RuleViolations { get; set; } = null!;
     public DbSet<Rule> Rules { get; set; } = null!;
+    public DbSet<Project> Projects { get; set; } = null!;
+    public DbSet<Analysis> Analyses { get; set; } = null!;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

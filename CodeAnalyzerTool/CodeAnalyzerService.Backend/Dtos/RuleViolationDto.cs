@@ -2,7 +2,7 @@
 
 namespace CodeAnalyzerService.Backend.Dtos;
 
-public class AnalysisResultDto
+public class RuleViolationDto
 {
     [Required] public RuleDto Rule { get; set; }
     [Required] public string PluginId { get; set; }
@@ -11,7 +11,7 @@ public class AnalysisResultDto
     [Required] public LocationDto Location { get; set; }
     public string Severity { get; set; }
     
-    public AnalysisResultDto(RuleDto rule, string pluginId, string message, string targetLanguage, LocationDto location,
+    public RuleViolationDto(RuleDto rule, string pluginId, string message, string targetLanguage, LocationDto location,
         string severity)
     {
         Rule = rule;

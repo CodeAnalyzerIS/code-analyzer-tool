@@ -8,9 +8,9 @@ namespace CodeAnalyzerService.Backend.Controllers
     [ApiController]
     public class ProjectAnalysisController : ControllerBase
     {
-        private readonly IAnalysisManager _manager;
+        private readonly IProjectAnalysisManager _manager;
 
-        public ProjectAnalysisController(IAnalysisManager manager)
+        public ProjectAnalysisController(IProjectAnalysisManager manager)
         {
             _manager = manager;
         }
@@ -74,10 +74,10 @@ namespace CodeAnalyzerService.Backend.Controllers
         // POST: api/Analysis
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<AnalysisResultDto>> PostAnalysisResult(AnalysisResultDto analysisResult)
+        public async Task<ActionResult<RuleViolationDto>> PostAnalysisResult(RuleViolationDto ruleViolation)
         {
-            Console.WriteLine(analysisResult.Message);
-            return analysisResult;
+            Console.WriteLine(ruleViolation.Message);
+            return ruleViolation;
         }
 
         // // DELETE: api/Analysis/5

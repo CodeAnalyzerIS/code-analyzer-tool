@@ -1,6 +1,6 @@
 namespace CodeAnalyzerService.Backend.Managers;
 
-public class AnalysisManager
+public interface IProjectAnalysisManager
 {
     
 }

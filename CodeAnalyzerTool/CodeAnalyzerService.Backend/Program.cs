@@ -1,4 +1,6 @@
+using CodeAnalyzerService.Backend.DAL;
 using CodeAnalyzerService.Backend.DAL.EF;
+using CodeAnalyzerService.Backend.Managers;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,6 +14,12 @@ builder.Services.AddDbContext<CodeAnalyzerServiceDbContext>(opt =>
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddScoped<IRuleViolationRepository, RuleViolationRepository>();
+builder.Services.AddScoped<IRuleRepository, RuleRepository>();
+builder.Services.AddScoped<IProjectRepository, ProjectRepository>();
+builder.Services.AddScoped<IAnalysisRepository, AnalysisRepository>();
+builder.Services.AddScoped<IProjectAnalysisManager, ProjectAnalysisManager>();
 
 var app = builder.Build();
 
