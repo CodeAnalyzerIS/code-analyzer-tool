@@ -1,17 +1,23 @@
-﻿using CodeAnalyzerTool.Api;
+﻿using System.Collections;
+using CodeAnalyzerTool.Api;
 using CodeAnalyzerTool.Api.ConfigModel;
 
 namespace CodeAnalyzerTool.PluginSystem.Loaders;
 
 public class BuiltinPluginLoader : IPluginLoader
 {
-    private readonly GlobalConfig _globalConfig;
+    private readonly IEnumerable<PluginConfig> _configs;
     private readonly IEnumerable<IPlugin> _builtInPlugins;
 
     public BuiltinPluginLoader(GlobalConfig globalConfig, IEnumerable<IPlugin> builtInPlugins)
     {
-        _globalConfig = globalConfig;
+        _configs = GetBuiltInConfigs(globalConfig);
         _builtInPlugins = builtInPlugins;
+    }
+    
+    private IEnumerable<PluginConfig> GetBuiltInConfigs(GlobalConfig globalConfig)
+    {
+        return globalConfig.Plugins.Where(p => p is { Enabled: true, AssemblyName: null });
     }
 
     public Dictionary<PluginConfig, IPlugin> LoadPlugins()
@@ -23,16 +29,11 @@ public class BuiltinPluginLoader : IPluginLoader
 
     private Dictionary<PluginConfig, IPlugin> GetPluginWithConfig(IPlugin plugin)
     {
-        var config = GetBuiltInPluginConfigs().SingleOrDefault(c => c.PluginName == plugin.PluginName);
+        var config = _configs.SingleOrDefault(c => c.PluginName == plugin.PluginName);
         if (config is null) return new Dictionary<PluginConfig, IPlugin>();
         return new Dictionary<PluginConfig, IPlugin>
         {
             [config] = plugin
         };
-    }
-    
-    private IEnumerable<PluginConfig> GetBuiltInPluginConfigs()
-    {
-        return _globalConfig.Plugins.Where(p => p is { Enabled: true, AssemblyName: null });
     }
 }
