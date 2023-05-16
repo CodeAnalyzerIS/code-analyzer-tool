@@ -23,11 +23,11 @@ public class BuiltinPluginLoader : IPluginLoader
     public Dictionary<PluginConfig, IPlugin> LoadPlugins()
     {
         return _builtInPlugins
-            .SelectMany(GetPluginWithConfig)
+            .SelectMany(CreateConfigPluginDictionary)
             .ToDictionary(pair => pair.Key, pair => pair.Value);
     }
 
-    private Dictionary<PluginConfig, IPlugin> GetPluginWithConfig(IPlugin plugin)
+    private Dictionary<PluginConfig, IPlugin> CreateConfigPluginDictionary(IPlugin plugin)
     {
         var config = _configs.SingleOrDefault(c => c.PluginName == plugin.PluginName);
         if (config is null) return new Dictionary<PluginConfig, IPlugin>();

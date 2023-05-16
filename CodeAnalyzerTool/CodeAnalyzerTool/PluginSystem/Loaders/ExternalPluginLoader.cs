@@ -36,7 +36,7 @@ public class ExternalPluginLoader : IPluginLoader
                 throw new ConfigException(StringResources.ASSEMBLY_NAME_MISSING_MESSAGE);
             var pluginAssemblyPath = Path.Combine(_globalConfig.PluginsPath, config.FolderName, config.AssemblyName);
             Assembly pluginAssembly = LoadWithContext(pluginAssemblyPath);
-            return GetPluginWithConfig(pluginAssembly, config);
+            return CreateConfigPluginDictionary(pluginAssembly, config);
         }
         catch (Exception ex)
         {
@@ -52,7 +52,7 @@ public class ExternalPluginLoader : IPluginLoader
         return loadContext.LoadFromAssemblyName(assemblyName);
     }
     
-    private Dictionary<PluginConfig, IPlugin> GetPluginWithConfig(Assembly assembly, PluginConfig config)
+    private Dictionary<PluginConfig, IPlugin> CreateConfigPluginDictionary(Assembly assembly, PluginConfig config)
     {
         foreach (var type in assembly.GetTypes())
         {
