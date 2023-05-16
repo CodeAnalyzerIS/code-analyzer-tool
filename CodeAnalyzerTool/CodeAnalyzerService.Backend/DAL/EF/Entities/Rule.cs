@@ -11,11 +11,11 @@ public class Rule
     [Required] [MinLength(10)] public string Description { get; set; }
     [Required] public string Category { get; set; }
     public bool IsEnabledByDefault { get; set; }
-    public Severity DefaultSeverity { get; set; }
+    public string DefaultSeverity { get; set; }
     public IEnumerable<RuleViolation> RuleViolations { get; set; }
 
     public Rule(string ruleName, string title, string description, string category, bool isEnabledByDefault,
-        Severity defaultSeverity)
+        string defaultSeverity)
     {
         RuleName = ruleName;
         Title = title;

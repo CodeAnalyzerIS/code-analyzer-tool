@@ -3,12 +3,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CodeAnalyzerService.Backend.DAL.EF;
 
-public class CodeAnalyzerServiceDbContext : DbContext
+public sealed class CodeAnalyzerServiceDbContext : DbContext
 {
-    public CodeAnalyzerServiceDbContext()
-    {
-    }
-    
     public CodeAnalyzerServiceDbContext(DbContextOptions<CodeAnalyzerServiceDbContext> options) : base(options)
     {
     }
@@ -25,6 +21,7 @@ public class CodeAnalyzerServiceDbContext : DbContext
         ConfigureRuleViolations(modelBuilder);
         ConfigureRule(modelBuilder);
         ConfigureProjectAnalysis(modelBuilder);
+        ConfigureAnalysis(modelBuilder);
     }
 
     private void ConfigureRuleViolations(ModelBuilder modelBuilder)

@@ -11,7 +11,7 @@ public class RuleViolation
     [Required] public string Message { get; set; } = null!;
     [Required] public string TargetLanguage { get; set; } = null!;
     [Required] public Location Location { get; set; } = null!;
-    public Severity Severity { get; set; }
+    public string Severity { get; set; } = null!;
     public Analysis Analysis { get; set; } = null!;
 
     private RuleViolation()
@@ -19,7 +19,7 @@ public class RuleViolation
     }
 
     public RuleViolation(Rule rule, string pluginId, string message, string targetLanguage, Location location,
-        Severity severity, Analysis analysis)
+        string severity, Analysis analysis)
     {
         Rule = rule;
         PluginId = pluginId;
@@ -33,7 +33,7 @@ public class RuleViolation
     public override string ToString()
     {
         return
-            $"[{Severity.ToString().ToUpper()}] {nameof(Rule)}: {Rule.RuleName}, {nameof(PluginId)}: {PluginId}, " +
+            $"[{Severity.ToUpper()}] {nameof(Rule)}: {Rule.RuleName}, {nameof(PluginId)}: {PluginId}, " +
             $"{nameof(Message)}: {Message}\n\t{Location}";
     }
 }

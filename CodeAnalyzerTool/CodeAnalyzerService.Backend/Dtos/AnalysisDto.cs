@@ -1,6 +1,6 @@
 namespace CodeAnalyzerService.Backend.Dtos;
 
-public class ProjectDto
+public class AnalysisDto
 {
     
 }
