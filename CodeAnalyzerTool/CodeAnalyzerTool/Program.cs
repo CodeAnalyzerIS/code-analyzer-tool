@@ -1,5 +1,7 @@
 ﻿using CodeAnalyzerTool.Api;
-using CodeAnalyzerTool.PluginLoader;
+using CodeAnalyzerTool.Api.ConfigModel;
+using CodeAnalyzerTool.PluginSystem;
+using CodeAnalyzerTool.PluginSystem.Loaders;
 using CodeAnalyzerTool.util;
 using Serilog;
 using Microsoft.Extensions.DependencyInjection;
@@ -12,29 +14,22 @@ public class Program
     {
         try
         {
+            LogHelper.InitLogging(); // todo replace with DI injected loggers
+            await SchemaGenerator.GenerateSchema(); // todo replace with hosted version
             var services = new ServiceCollection();
-            
-            services.AddSingleton<IPlugin, RoslynPlugin.RoslynPlugin>();
-            var serviceProvider = services.BuildServiceProvider();
 
-            LogHelper.InitLogging();
-            Log.Information("Generating JSON.NET schema");
-            await SchemaGenerator.GenerateSchema();
-            Log.Information("Reading CAT Config file");
+            services.AddSingleton<IPlugin, RoslynPlugin.RoslynPlugin>();
+            services.AddSingleton<IPluginLoader, ExternalPluginLoader>();
+            services.AddSingleton<IPluginLoader, BuiltinPluginLoader>();
+            services.AddSingleton<PluginRunner, PluginRunner>();
+
             var configReader = new ConfigReader();
             var globalConfig = await configReader.ReadAsync();
-            
-            var externalPluginLoader = new ExternalPluginLoader(globalConfig);
-            var builtInPlugins = serviceProvider.GetServices<IPlugin>();
-            var builtinPluginLoader = new BuiltinPluginLoader(globalConfig, builtInPlugins);
-            var pluginLoaderComposite = new PluginLoaderComposite();
-            pluginLoaderComposite.AddPluginLoader(externalPluginLoader);
-            pluginLoaderComposite.AddPluginLoader(builtinPluginLoader);
-            var loadedPlugins = pluginLoaderComposite.LoadPlugins();
+            services.AddSingleton<GlobalConfig>(globalConfig);
 
-            var pluginRunner = new PluginRunner();
-            var ruleViolations = await pluginRunner.RunPlugins(loadedPlugins, globalConfig.PluginsPath);
-            
+            var serviceProvider = services.BuildServiceProvider();
+            var pluginRunner = serviceProvider.GetRequiredService<PluginRunner>();
+            var ruleViolations = await pluginRunner.Run();
             LogHelper.LogAnalysisResults(ruleViolations);
 
             var projectAnalysis = new ProjectAnalysis(globalConfig.ProjectName, ruleViolations);

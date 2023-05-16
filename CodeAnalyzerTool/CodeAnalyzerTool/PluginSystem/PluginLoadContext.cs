@@ -1,7 +1,7 @@
 ﻿using System.Reflection;
 using System.Runtime.Loader;
 
-namespace CodeAnalyzerTool.PluginLoader;
+namespace CodeAnalyzerTool.PluginSystem;
 
 class PluginLoadContext : AssemblyLoadContext
 {

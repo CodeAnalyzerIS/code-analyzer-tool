@@ -4,7 +4,7 @@ using CodeAnalyzerTool.Api.ConfigModel;
 using CodeAnalyzerTool.Api.Exceptions;
 using Serilog;
 
-namespace CodeAnalyzerTool.PluginLoader;
+namespace CodeAnalyzerTool.PluginSystem.Loaders;
 
 public class ExternalPluginLoader : IPluginLoader
 {
@@ -17,12 +17,12 @@ public class ExternalPluginLoader : IPluginLoader
 
     public Dictionary<PluginConfig, IPlugin> LoadPlugins()
     {
-        return GetExternalConfigs()
+        return GetExternalPluginConfigs()
             .SelectMany(LoadExternalPlugin)
             .ToDictionary(pair => pair.Key, pair => pair.Value);
     }
 
-    private IEnumerable<PluginConfig> GetExternalConfigs()
+    private IEnumerable<PluginConfig> GetExternalPluginConfigs()
     {
         return _globalConfig.Plugins.Where(p => p is { Enabled: true, AssemblyName: not null });
     }

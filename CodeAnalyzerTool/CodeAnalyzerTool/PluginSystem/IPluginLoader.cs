@@ -1,8 +1,7 @@
-﻿using System.Reflection;
-using CodeAnalyzerTool.Api;
+﻿using CodeAnalyzerTool.Api;
 using CodeAnalyzerTool.Api.ConfigModel;
 
-namespace CodeAnalyzerTool.PluginLoader;
+namespace CodeAnalyzerTool.PluginSystem;
 
 public interface IPluginLoader
 {
