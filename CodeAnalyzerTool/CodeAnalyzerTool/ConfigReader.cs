@@ -10,6 +10,7 @@ public class ConfigReader
 {
     public async Task<GlobalConfig> ReadAsync()
     {
+        Log.Information("Reading CAT Config file");
         var workingDir = Directory.GetCurrentDirectory();
         var configPath = Path.Combine(workingDir, StringResources.CONFIG_FILE_NAME);
         var schemaPath = Path.Combine(workingDir, StringResources.SCHEMA_FILE_NAME);
