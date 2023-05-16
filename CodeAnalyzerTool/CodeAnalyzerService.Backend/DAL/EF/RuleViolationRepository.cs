@@ -5,27 +5,22 @@ namespace CodeAnalyzerService.Backend.DAL.EF;
 
 public class RuleViolationRepository : IRuleViolationRepository
 {
-    private readonly CodeAnalyzerServiceDbContext _context;
+    private readonly CodeAnalyzerServiceDbContext _ctx;
 
-    public RuleViolationRepository()
+    public RuleViolationRepository(CodeAnalyzerServiceDbContext context)
     {
-        _context = new CodeAnalyzerServiceDbContext();
+        _ctx = context;
     }
     
     public RuleViolation? ReadRuleViolation(int id)
     {
-        return _context.AnalysisResults.Find(id);
+        return _ctx.RuleViolations.Find(id);
     }
 
     public RuleViolation ReadRuleViolationWithRule(int id)
     {
-        return _context.AnalysisResults.Include(ar => ar.Rule)
+        return _ctx.RuleViolations.Include(ar => ar.Rule)
             .Single(ar => ar.Id == id);
-    }
-
-    public IEnumerable<RuleViolation> ReadAnalysisResultsFromProject(int projectId)
-    {
-        throw new NotImplementedException();
     }
 
     public void CreateRuleViolation(RuleViolation ruleViolation)
