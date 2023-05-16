@@ -6,7 +6,7 @@ using Serilog;
 
 namespace CodeAnalyzerTool.PluginSystem.Loaders;
 
-public class ExternalPluginLoader : IPluginLoader
+internal class ExternalPluginLoader : IPluginLoader
 {
     private readonly GlobalConfig _globalConfig;
 

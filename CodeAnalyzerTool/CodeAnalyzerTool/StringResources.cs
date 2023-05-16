@@ -1,6 +1,6 @@
 ﻿namespace CodeAnalyzerTool; 
 
-public static class StringResources
+internal static class StringResources
 {
     public const string ROSLYN_PLUGIN_NAME = "Roslyn";
     public const string SCHEMA_FILE_NAME = "CATSchema.json";

@@ -3,7 +3,7 @@ using CodeAnalyzerTool.Api.ConfigModel;
 
 namespace CodeAnalyzerTool.PluginSystem;
 
-public class PluginRunner
+internal class PluginRunner
 {
     private readonly IEnumerable<IPluginLoader> _pluginLoaders;
     private readonly GlobalConfig _globalConfig;

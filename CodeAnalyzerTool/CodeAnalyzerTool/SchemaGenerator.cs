@@ -3,7 +3,7 @@ using Newtonsoft.Json.Schema.Generation;
 
 namespace CodeAnalyzerTool;
 
-public static class SchemaGenerator
+internal static class SchemaGenerator
 {
     public static async Task GenerateSchema()
     {

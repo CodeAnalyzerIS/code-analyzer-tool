@@ -1,10 +1,9 @@
-﻿using System.Collections;
-using CodeAnalyzerTool.Api;
+﻿using CodeAnalyzerTool.Api;
 using CodeAnalyzerTool.Api.ConfigModel;
 
 namespace CodeAnalyzerTool.PluginSystem.Loaders;
 
-public class BuiltinPluginLoader : IPluginLoader
+internal class BuiltinPluginLoader : IPluginLoader
 {
     private readonly IEnumerable<PluginConfig> _configs;
     private readonly IEnumerable<IPlugin> _builtInPlugins;

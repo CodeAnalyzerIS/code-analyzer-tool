@@ -6,7 +6,7 @@ using Serilog;
 
 namespace CodeAnalyzerTool;
 
-public class ConfigReader
+internal class ConfigReader
 {
     public async Task<GlobalConfig> ReadAsync()
     {

@@ -4,7 +4,7 @@ using Serilog.Events;
 
 namespace CodeAnalyzerTool.util;
 
-public static class LogHelper
+internal static class LogHelper
 {
     public static void InitLogging()
     {

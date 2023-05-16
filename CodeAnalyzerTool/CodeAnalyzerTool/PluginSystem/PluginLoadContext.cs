@@ -3,7 +3,7 @@ using System.Runtime.Loader;
 
 namespace CodeAnalyzerTool.PluginSystem;
 
-class PluginLoadContext : AssemblyLoadContext
+internal class PluginLoadContext : AssemblyLoadContext
 {
     private AssemblyDependencyResolver _resolver;
 

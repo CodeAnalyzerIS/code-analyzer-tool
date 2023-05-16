@@ -3,7 +3,7 @@ using CodeAnalyzerTool.Api.ConfigModel;
 
 namespace CodeAnalyzerTool.PluginSystem;
 
-public interface IPluginLoader
+internal interface IPluginLoader
 {
     Dictionary<PluginConfig, IPlugin> LoadPlugins();
 }
