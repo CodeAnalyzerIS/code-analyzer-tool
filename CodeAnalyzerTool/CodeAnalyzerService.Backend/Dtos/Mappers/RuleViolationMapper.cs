@@ -2,7 +2,7 @@ using CodeAnalyzerService.Backend.DAL.EF.Entities;
 
 namespace CodeAnalyzerService.Backend.Dtos.Mappers;
 
-public class RuleViolationMapper
+public static class RuleViolationMapper
 {
     public static RuleViolationDto MapToDto(RuleViolation ruleViolation)
     {
@@ -15,10 +15,9 @@ public class RuleViolationMapper
 
     public static RuleViolation MapToModel(RuleViolationDto ruleViolationDto)
     {
-        var rule = RuleMapper.MapToModel(ruleViolationDto.Rule);
         var location = LocationMapper.MapToModel(ruleViolationDto.Location);
 
-        return new RuleViolation(rule, ruleViolationDto.PluginId, ruleViolationDto.Message,
+        return new RuleViolation(ruleViolationDto.PluginId, ruleViolationDto.Message,
             ruleViolationDto.TargetLanguage, location, ruleViolationDto.Severity);
     }
 }
