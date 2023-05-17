@@ -9,6 +9,10 @@ public sealed class CodeAnalyzerServiceDbContext : DbContext
     {
     }
 
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+    }
+
     public DbSet<RuleViolation> RuleViolations { get; set; } = null!;
     public DbSet<Rule> Rules { get; set; } = null!;
     public DbSet<Project> Projects { get; set; } = null!;
