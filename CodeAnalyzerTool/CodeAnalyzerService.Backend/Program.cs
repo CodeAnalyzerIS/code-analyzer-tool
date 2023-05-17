@@ -1,4 +1,5 @@
 using CodeAnalyzerService.Backend.DAL.EF;
+using CodeAnalyzerService.Backend.Dtos.Mappers;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);

@@ -6,11 +6,11 @@ public class ProjectMapper
 {
     public static Project MapProjectAnalysisDtoToProject(ProjectAnalysisDto projectAnalysisDto)
     {
-        var analysis = new Analysis(DateTime.Now);
-        var ruleViolations = projectAnalysisDto.RuleViolations.Select(RuleViolationMapper.MapToModel);
-        analysis.RuleViolations = ruleViolations;
+        // var analysis = new Analysis(DateTime.Now);
+        // var ruleViolations = projectAnalysisDto.RuleViolations.Select(RuleViolationMapper.MapToModel).ToList();
+        // analysis.RuleViolations = ruleViolations;
         var project = new Project(projectAnalysisDto.ProjectName);
-        project.Analyses.Add(analysis);
+        // project.Analyses.Add(analysis);
 
         return project;
     }

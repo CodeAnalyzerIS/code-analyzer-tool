@@ -18,10 +18,9 @@ public class RuleViolation
     {
     }
     
-    public RuleViolation(Rule rule, string pluginId, string message, string targetLanguage, Location location,
+    public RuleViolation(string pluginId, string message, string targetLanguage, Location location,
         string severity)
     {
-        Rule = rule;
         PluginId = pluginId;
         Message = message;
         TargetLanguage = targetLanguage;
@@ -30,8 +29,9 @@ public class RuleViolation
     }
 
     public RuleViolation(Rule rule, string pluginId, string message, string targetLanguage, Location location,
-        string severity, Analysis analysis) : this(rule, pluginId, message, targetLanguage, location, severity)
+        string severity, Analysis analysis) : this(pluginId, message, targetLanguage, location, severity)
     {
+        Rule = rule;
         Analysis = analysis;
     }
 

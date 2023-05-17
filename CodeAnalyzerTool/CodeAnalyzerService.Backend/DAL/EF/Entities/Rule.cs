@@ -12,7 +12,7 @@ public class Rule
     [Required] public string Category { get; set; }
     public bool IsEnabledByDefault { get; set; }
     public string DefaultSeverity { get; set; }
-    public IEnumerable<RuleViolation> RuleViolations { get; set; }
+    public ICollection<RuleViolation> RuleViolations { get; set; }
 
     public Rule(string ruleName, string title, string description, string category, bool isEnabledByDefault,
         string defaultSeverity)
