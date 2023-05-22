@@ -80,6 +80,7 @@ public class AddProjectAnalysisManager
         if (project is null)
         {
             project = ProjectMapper.MapProjectAnalysisDtoToProject(projectAnalysisDto);
+            project.Analyses.Add(analysis);
             project = _ctx.Projects.Add(project).Entity;
         }
         else
