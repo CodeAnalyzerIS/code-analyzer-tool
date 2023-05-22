@@ -87,6 +87,33 @@ namespace RoslynPlugin {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Checks whether lines exceeds the specified maximum amount of characters..
+        /// </summary>
+        internal static string LineTooLongDescription {
+            get {
+                return ResourceManager.GetString("LineTooLongDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Line should not exceed &apos;{0}&apos; characters.
+        /// </summary>
+        internal static string LineTooLongMessageFormat {
+            get {
+                return ResourceManager.GetString("LineTooLongMessageFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Line is too long.
+        /// </summary>
+        internal static string LineTooLongTitle {
+            get {
+                return ResourceManager.GetString("LineTooLongTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Namespaces should be part of the parent namespace..
         /// </summary>
         internal static string NamespaceCheckDescription {

@@ -45,4 +45,13 @@
     <data name="BraceAnalyzerTitle" xml:space="preserve">
         <value>Enclose statement with curly braces</value>
     </data>
+    <data name="LineTooLongTitle" xml:space="preserve">
+        <value>Line is too long</value>
+    </data>
+    <data name="LineTooLongMessageFormat" xml:space="preserve">
+        <value>Line should not exceed '{0}' characters</value>
+    </data>
+    <data name="LineTooLongDescription" xml:space="preserve">
+        <value>Checks whether lines exceeds the specified maximum amount of characters.</value>
+    </data>
 </root>
