@@ -38,8 +38,8 @@ jobs:
       working-directory: ./CodeAnalyzerTool/CodeAnalyzerTool/nupkg/
       run: dotnet nuget push CodeAnalyzerTool.${{ env.tagVersion }}.nupkg --api-key ${{secrets.NUGET_API_KEY}} --source ${{vars.NUGET_URL}}
     - name: Push CAT-API to nuget org
-      working-directory: ./CodeAnalyzerTool/CAT_API/nupkg/
+      working-directory: ./CodeAnalyzerTool/CodeAnalyzerTool.API/nupkg/
       run: dotnet nuget push CodeAnalyzerTool.API.${{ env.tagVersion }}.nupkg --api-key ${{secrets.NUGET_API_KEY}} --source ${{vars.NUGET_URL}}
     - name: Push RoslynPlugin-API to nuget org
-      working-directory: ./CodeAnalyzerTool/RoslynPlugin_API/nupkg/
+      working-directory: ./CodeAnalyzerTool/RoslynPlugin.API/nupkg/
       run: dotnet nuget push CodeAnalyzerTool.RoslynPlugin.API.${{ env.tagVersion }}.nupkg --api-key ${{secrets.NUGET_API_KEY}} --source ${{vars.NUGET_URL}}
