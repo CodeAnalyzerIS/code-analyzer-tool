@@ -63,8 +63,7 @@ namespace CodeAnalyzerService.Backend.Controllers
             return projectDto;
         }
 
-        // POST: api/ProjectAnalysis
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        // PUT: api/ProjectAnalysis
         [HttpPut]
         public async Task<ActionResult<ProjectDto>> PutProject(ProjectAnalysisDto projectAnalysisDto)
         {
