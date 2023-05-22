@@ -42,16 +42,15 @@ public class AddProjectAnalysisManager
         return project;
     }
 
-    private List<Rule> GetRulesFromProjectAnalysisDto(ProjectAnalysisDto projectAnalysisDto)
+    private IEnumerable<Rule> GetRulesFromProjectAnalysisDto(ProjectAnalysisDto projectAnalysisDto)
     {
         return projectAnalysisDto.RuleViolations
             .Select(rv => rv.Rule)
             .Select(_ruleService.GetRuleModelFromDto)
-            .Distinct()
-            .ToList();
+            .Distinct();
     }
 
-    private static IEnumerable<RuleViolation> GetRuleViolationsAndAssignRule(ProjectAnalysisDto projectAnalysisDto, List<Rule> rules)
+    private static IEnumerable<RuleViolation> GetRuleViolationsAndAssignRule(ProjectAnalysisDto projectAnalysisDto, IEnumerable<Rule> rules)
     {
         return projectAnalysisDto.RuleViolations.Select(rv =>
         {
