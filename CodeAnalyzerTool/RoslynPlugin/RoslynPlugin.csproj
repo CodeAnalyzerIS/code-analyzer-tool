@@ -31,7 +31,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\CodeAnalyzerTool.Api\CodeAnalyzerTool.Api.csproj" />
+      <ProjectReference Include="..\CodeAnalyzerTool.API\CodeAnalyzerTool.API.csproj" />
       <ProjectReference Include="..\RoslynPlugin.API\RoslynPlugin.API.csproj" />
     </ItemGroup>
 
