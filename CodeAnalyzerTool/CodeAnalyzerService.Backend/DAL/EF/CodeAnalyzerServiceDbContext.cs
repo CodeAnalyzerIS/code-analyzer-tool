@@ -35,8 +35,7 @@ public sealed class CodeAnalyzerServiceDbContext : DbContext
 
         modelBuilder.Entity<RuleViolation>()
             .HasOne(ar => ar.Rule)
-            .WithMany(r => r.RuleViolations)
-            .HasForeignKey("FK_RuleViolation_Rule");
+            .WithMany(r => r.RuleViolations);
     }
 
     private void ConfigureRule(ModelBuilder modelBuilder)
@@ -50,9 +49,8 @@ public sealed class CodeAnalyzerServiceDbContext : DbContext
     {
         modelBuilder.Entity<Project>()
             .HasMany(pa => pa.Analyses)
-            .WithOne(rv => rv.Project)
-            .HasForeignKey("FK_ProjectAnalysis_Analysis");
-
+            .WithOne(rv => rv.Project);
+        
         modelBuilder.Entity<Project>()
             .HasIndex(pa => pa.ProjectName)
             .IsUnique();
@@ -62,7 +60,6 @@ public sealed class CodeAnalyzerServiceDbContext : DbContext
     {
         modelBuilder.Entity<Analysis>()
             .HasMany(a => a.RuleViolations)
-            .WithOne(rv => rv.Analysis)
-            .HasForeignKey("FK_Analysis_RuleViolation");
+            .WithOne(rv => rv.Analysis);
     }
 }

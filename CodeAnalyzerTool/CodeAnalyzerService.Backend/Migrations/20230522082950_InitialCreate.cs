@@ -49,14 +49,14 @@ namespace CodeAnalyzerService.Backend.Migrations
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     CreatedOn = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    FK_ProjectAnalysis_Analysis = table.Column<int>(type: "INTEGER", nullable: false)
+                    ProjectId = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Analyses", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Analyses_Projects_FK_ProjectAnalysis_Analysis",
-                        column: x => x.FK_ProjectAnalysis_Analysis,
+                        name: "FK_Analyses_Projects_ProjectId",
+                        column: x => x.ProjectId,
                         principalTable: "Projects",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -67,7 +67,7 @@ namespace CodeAnalyzerService.Backend.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false),
-                    FK_RuleViolation_Rule = table.Column<int>(type: "INTEGER", nullable: false),
+                    RuleId = table.Column<int>(type: "INTEGER", nullable: false),
                     PluginId = table.Column<string>(type: "TEXT", nullable: false),
                     Message = table.Column<string>(type: "TEXT", nullable: false),
                     TargetLanguage = table.Column<string>(type: "TEXT", nullable: false),
@@ -76,29 +76,29 @@ namespace CodeAnalyzerService.Backend.Migrations
                     Location_EndLine = table.Column<int>(type: "INTEGER", nullable: false),
                     Location_FileExtension = table.Column<string>(type: "TEXT", nullable: false),
                     Severity = table.Column<string>(type: "TEXT", nullable: false),
-                    FK_Analysis_RuleViolation = table.Column<int>(type: "INTEGER", nullable: false)
+                    AnalysisId = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_RuleViolations", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_RuleViolations_Analyses_FK_Analysis_RuleViolation",
-                        column: x => x.FK_Analysis_RuleViolation,
+                        name: "FK_RuleViolations_Analyses_AnalysisId",
+                        column: x => x.AnalysisId,
                         principalTable: "Analyses",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_RuleViolations_Rules_FK_RuleViolation_Rule",
-                        column: x => x.FK_RuleViolation_Rule,
+                        name: "FK_RuleViolations_Rules_RuleId",
+                        column: x => x.RuleId,
                         principalTable: "Rules",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Analyses_FK_ProjectAnalysis_Analysis",
+                name: "IX_Analyses_ProjectId",
                 table: "Analyses",
-                column: "FK_ProjectAnalysis_Analysis");
+                column: "ProjectId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Projects_ProjectName",
@@ -113,14 +113,14 @@ namespace CodeAnalyzerService.Backend.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_RuleViolations_FK_Analysis_RuleViolation",
+                name: "IX_RuleViolations_AnalysisId",
                 table: "RuleViolations",
-                column: "FK_Analysis_RuleViolation");
+                column: "AnalysisId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_RuleViolations_FK_RuleViolation_Rule",
+                name: "IX_RuleViolations_RuleId",
                 table: "RuleViolations",
-                column: "FK_RuleViolation_Rule");
+                column: "RuleId");
         }
 
         /// <inheritdoc />

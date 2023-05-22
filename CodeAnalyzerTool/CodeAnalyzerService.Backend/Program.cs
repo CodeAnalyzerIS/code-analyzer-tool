@@ -10,7 +10,6 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddControllers();
 builder.Services.AddDbContext<CodeAnalyzerServiceDbContext>(opt =>
     opt.UseSqlite(connectionString));
-// builder.Services.AddSqlite<CodeAnalyzerServiceDbContext>(connectionString);
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

@@ -26,12 +26,12 @@ namespace CodeAnalyzerService.Backend.Migrations
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("FK_ProjectAnalysis_Analysis")
+                    b.Property<int>("ProjectId")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("FK_ProjectAnalysis_Analysis");
+                    b.HasIndex("ProjectId");
 
                     b.ToTable("Analyses");
                 });
@@ -97,10 +97,7 @@ namespace CodeAnalyzerService.Backend.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("FK_Analysis_RuleViolation")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("FK_RuleViolation_Rule")
+                    b.Property<int>("AnalysisId")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Message")
@@ -110,6 +107,9 @@ namespace CodeAnalyzerService.Backend.Migrations
                     b.Property<string>("PluginId")
                         .IsRequired()
                         .HasColumnType("TEXT");
+
+                    b.Property<int>("RuleId")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Severity")
                         .IsRequired()
@@ -121,9 +121,9 @@ namespace CodeAnalyzerService.Backend.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("FK_Analysis_RuleViolation");
+                    b.HasIndex("AnalysisId");
 
-                    b.HasIndex("FK_RuleViolation_Rule");
+                    b.HasIndex("RuleId");
 
                     b.ToTable("RuleViolations");
                 });
@@ -132,7 +132,7 @@ namespace CodeAnalyzerService.Backend.Migrations
                 {
                     b.HasOne("CodeAnalyzerService.Backend.DAL.EF.Entities.Project", "Project")
                         .WithMany("Analyses")
-                        .HasForeignKey("FK_ProjectAnalysis_Analysis")
+                        .HasForeignKey("ProjectId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -143,13 +143,13 @@ namespace CodeAnalyzerService.Backend.Migrations
                 {
                     b.HasOne("CodeAnalyzerService.Backend.DAL.EF.Entities.Analysis", "Analysis")
                         .WithMany("RuleViolations")
-                        .HasForeignKey("FK_Analysis_RuleViolation")
+                        .HasForeignKey("AnalysisId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("CodeAnalyzerService.Backend.DAL.EF.Entities.Rule", "Rule")
                         .WithMany("RuleViolations")
-                        .HasForeignKey("FK_RuleViolation_Rule")
+                        .HasForeignKey("RuleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
