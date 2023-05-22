@@ -30,14 +30,4 @@ public class RuleService
     {
         return _ctx.Rules.SingleOrDefault(r => r.RuleName.Equals(ruleName));
     }
-    
-    public void AddRuleViolationsToRule(ProjectAnalysisDto projectAnalysisDto, Rule r)
-    {
-        r.RuleViolations.AddRange(
-            projectAnalysisDto.RuleViolations
-                .Where(rv => rv.Rule.RuleName.Equals(r.RuleName))
-                .Select(RuleViolationMapper.MapToModel));
-        _ctx.Rules.Update(r);
-        _ctx.SaveChanges();
-    }
 }
