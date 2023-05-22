@@ -1,4 +1,4 @@
-﻿namespace CodeAnalyzerTool.Api.Exceptions;
+﻿namespace CodeAnalyzerTool.API.Exceptions;
 
 [Serializable]
 public class ConfigException : Exception

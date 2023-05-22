@@ -1,7 +1,7 @@
 ﻿using System.Reflection;
-using CodeAnalyzerTool.Api;
-using CodeAnalyzerTool.Api.ConfigModel;
-using CodeAnalyzerTool.Api.Exceptions;
+using CodeAnalyzerTool.API;
+using CodeAnalyzerTool.API.ConfigModel;
+using CodeAnalyzerTool.API.Exceptions;
 using Serilog;
 
 namespace CodeAnalyzerTool.PluginSystem.Loaders;

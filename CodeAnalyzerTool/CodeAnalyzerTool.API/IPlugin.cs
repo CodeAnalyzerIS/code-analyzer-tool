@@ -1,6 +1,6 @@
-﻿using CodeAnalyzerTool.Api.ConfigModel;
+﻿using CodeAnalyzerTool.API.ConfigModel;
 
-namespace CodeAnalyzerTool.Api;
+namespace CodeAnalyzerTool.API;
 
 public interface IPlugin
 {

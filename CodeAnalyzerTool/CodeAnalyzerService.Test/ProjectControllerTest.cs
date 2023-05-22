@@ -36,6 +36,5 @@ public class ProjectControllerTest : IClassFixture<TestDatabaseFixture>
         Assert.Single(context.Projects);
         
         await context.Database.EnsureDeletedAsync();
-        Debugger.Break();
     }
 }

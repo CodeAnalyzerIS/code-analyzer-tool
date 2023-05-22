@@ -1,5 +1,5 @@
-﻿using CodeAnalyzerTool.Api;
-using CodeAnalyzerTool.Api.ConfigModel;
+﻿using CodeAnalyzerTool.API;
+using CodeAnalyzerTool.API.ConfigModel;
 using CodeAnalyzerTool.PluginSystem;
 using CodeAnalyzerTool.PluginSystem.Loaders;
 using CodeAnalyzerTool.util;

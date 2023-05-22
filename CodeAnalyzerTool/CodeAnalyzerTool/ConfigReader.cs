@@ -1,5 +1,5 @@
-using CodeAnalyzerTool.Api.ConfigModel;
-using CodeAnalyzerTool.Api.Exceptions;
+using CodeAnalyzerTool.API.ConfigModel;
+using CodeAnalyzerTool.API.Exceptions;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Schema;
 using Serilog;

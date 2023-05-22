@@ -1,6 +1,6 @@
 using Newtonsoft.Json;
 
-namespace CodeAnalyzerTool.Api.ConfigModel;
+namespace CodeAnalyzerTool.API.ConfigModel;
 
 public class RuleConfig
 {

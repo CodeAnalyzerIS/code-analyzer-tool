@@ -1,4 +1,4 @@
-﻿using CodeAnalyzerTool.Api;
+﻿using CodeAnalyzerTool.API;
 using Serilog;
 using Serilog.Events;
 

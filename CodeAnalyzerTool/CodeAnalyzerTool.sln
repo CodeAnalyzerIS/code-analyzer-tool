@@ -4,7 +4,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeAnalyzerTool", "CodeAna
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RoslynPlugin", "RoslynPlugin\RoslynPlugin.csproj", "{AC4C01E6-10B4-409F-AC68-B42DE7D13AF9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeAnalyzerTool.Api", "CodeAnalyzerTool.Api\CodeAnalyzerTool.Api.csproj", "{4763FD32-0071-4116-A5F5-F9CC35DF0FE1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeAnalyzerTool.API", "CodeAnalyzerTool.API\CodeAnalyzerTool.API.csproj", "{4763FD32-0071-4116-A5F5-F9CC35DF0FE1}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RoslynPlugin.API", "RoslynPlugin.API\RoslynPlugin.API.csproj", "{8B5CD133-C716-4AFB-B993-D9067094E157}"
 EndProject

@@ -1,5 +1,5 @@
-﻿using CodeAnalyzerTool.Api;
-using CodeAnalyzerTool.Api.ConfigModel;
+﻿using CodeAnalyzerTool.API;
+using CodeAnalyzerTool.API.ConfigModel;
 using Microsoft.Build.Locator;
 using Microsoft.CodeAnalysis.MSBuild;
 using Serilog;
