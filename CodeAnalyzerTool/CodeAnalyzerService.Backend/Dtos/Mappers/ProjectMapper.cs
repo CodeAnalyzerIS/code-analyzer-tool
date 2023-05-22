@@ -6,8 +6,7 @@ public class ProjectMapper
 {
     public static Project MapProjectAnalysisDtoToProject(ProjectAnalysisDto projectAnalysisDto)
     {
-        var project = new Project(projectAnalysisDto.ProjectName);
-        return project;
+        return new Project(projectAnalysisDto.ProjectName);
     }
 
     public static ProjectDto MapToDto(Project project)
