@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace CodeAnalyzerTool.Api;
+namespace CodeAnalyzerTool.API;
 
 public class RuleViolation
 {
@@ -25,7 +25,7 @@ public class RuleViolation
     public override string ToString()
     {
         return
-            $"[{Severity.ToString().ToUpper()}] {nameof(Rule)}: {Rule.Id}, {nameof(PluginId)}: {PluginId}, " +
+            $"[{Severity.ToString().ToUpper()}] {nameof(Rule)}: {Rule.RuleName}, {nameof(PluginId)}: {PluginId}, " +
             $"{nameof(Message)}: {Message}\n\t{Location}";
     }
 }

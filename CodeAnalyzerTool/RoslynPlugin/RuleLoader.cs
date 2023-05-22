@@ -1,5 +1,5 @@
 ﻿using System.Reflection;
-using CodeAnalyzerTool.Api.ConfigModel;
+using CodeAnalyzerTool.API.ConfigModel;
 using RoslynPlugin.API;
 
 namespace RoslynPlugin;

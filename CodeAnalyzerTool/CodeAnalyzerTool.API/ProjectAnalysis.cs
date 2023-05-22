@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace CodeAnalyzerTool.Api;
+namespace CodeAnalyzerTool.API;
 
 public class ProjectAnalysis
 {

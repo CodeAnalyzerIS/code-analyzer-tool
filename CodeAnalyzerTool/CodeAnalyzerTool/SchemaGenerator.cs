@@ -1,4 +1,4 @@
-using CodeAnalyzerTool.Api.ConfigModel;
+using CodeAnalyzerTool.API.ConfigModel;
 using Newtonsoft.Json.Schema.Generation;
 
 namespace CodeAnalyzerTool;

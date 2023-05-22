@@ -1,6 +1,6 @@
 ﻿using System.Collections.Immutable;
-using CodeAnalyzerTool.Api;
-using CodeAnalyzerTool.Api.ConfigModel;
+using CodeAnalyzerTool.API;
+using CodeAnalyzerTool.API.ConfigModel;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.CodeAnalysis.MSBuild;

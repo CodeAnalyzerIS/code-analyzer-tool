@@ -1,20 +1,20 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace CodeAnalyzerTool.Api;
+namespace CodeAnalyzerService.Backend.Dtos;
 
-public class Rule
+public class RuleDto
 {
-    [Required] public string Id { get; set; }
+    [Required] public string RuleName { get; set; }
     [Required] public string Title { get; set; }
     [Required] [MinLength(10)] public string Description { get; set; }
     [Required] public string Category { get; set; }
     public bool IsEnabledByDefault { get; set; }
-    public Severity DefaultSeverity { get; set; }
-
-    public Rule(string id, string title, string description, string category, bool isEnabledByDefault,
-        Severity defaultSeverity)
+    public string DefaultSeverity { get; set; }
+    
+    public RuleDto(string ruleName, string title, string description, string category, bool isEnabledByDefault,
+        string defaultSeverity)
     {
-        Id = id;
+        RuleName = ruleName;
         Title = title;
         Description = description;
         Category = category;

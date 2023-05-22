@@ -1,7 +1,7 @@
 using System.Collections.Immutable;
-using CodeAnalyzerTool.Api;
+using CodeAnalyzerTool.API;
 using Microsoft.CodeAnalysis;
-using Location = CodeAnalyzerTool.Api.Location;
+using Location = CodeAnalyzerTool.API.Location;
 
 namespace RoslynPlugin;
 
@@ -15,7 +15,7 @@ public static class DiagnosticConverter
     private static RuleViolation ConvertDiagnostic(Diagnostic diagnostic)
     {
         var rule = new Rule(
-            id: diagnostic.Descriptor.Id,
+            ruleName: diagnostic.Descriptor.Id,
             title: diagnostic.Descriptor.Title.ToString(),
             category: diagnostic.Descriptor.Category,
             defaultSeverity: ConvertDiagnosticSeverity(diagnostic.DefaultSeverity),

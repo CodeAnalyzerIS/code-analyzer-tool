@@ -1,4 +1,4 @@
-﻿namespace CodeAnalyzerTool.Api;
+﻿namespace CodeAnalyzerTool.API;
 
 public enum Severity
 {

@@ -1,4 +1,4 @@
-﻿using CodeAnalyzerTool.Api;
+﻿using CodeAnalyzerTool.API;
 using Serilog;
 using Serilog.Events;
 
@@ -27,7 +27,7 @@ internal static class LogHelper
         {
             Log.Write(SeverityToLogLevel(r.Severity),
                 "[{Category}]({PluginId}, {RuleId}) {Message} | Path: {Path} at line: {Line}",
-                r.Rule.Category, r.PluginId, r.Rule.Id, r.Message, r.Location.Path, r.Location.StartLine);
+                r.Rule.Category, r.PluginId, r.Rule.RuleName, r.Message, r.Location.Path, r.Location.StartLine);
         }
     }
 
