@@ -9,7 +9,7 @@ using Serilog;
 namespace RoslynPlugin.rules;
 
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
-public class NamespaceRule : RoslynRule
+public class NamespaceContainsRule : RoslynRule
 {
     public sealed override string RuleName => "NamespaceContains";
     public sealed override DiagnosticSeverity Severity { get; set; }
@@ -17,7 +17,7 @@ public class NamespaceRule : RoslynRule
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get; }
     private const string CATEGORY = RuleCategories.NAMING;
     private readonly DiagnosticDescriptor _rule;
-    private const string NAMESPACE_OPTION_KEY = "namespace";
+    public const string NAMESPACE_OPTION_KEY = "namespace";
 
     private static readonly LocalizableString Title = new LocalizableResourceString(
         nameof(Resources.NamespaceCheckTitle),
@@ -31,7 +31,7 @@ public class NamespaceRule : RoslynRule
         new LocalizableResourceString(nameof(Resources.NamespaceCheckDescription), Resources.ResourceManager,
             typeof(Resources));
 
-    public NamespaceRule()
+    public NamespaceContainsRule()
     {
         Options = new Dictionary<string, string>();
         Severity = DiagnosticSeverity.Info;
