@@ -15,8 +15,7 @@ namespace Animals.Mammals.Felines {
             Console.WriteLine(""void"");
         }
     }
-}
-";
+}";
         var rule = new NamespaceContainsRule();
         rule.Severity = DiagnosticSeverity.Warning;
         rule.Options = new Dictionary<string, string> { [NamespaceContainsRule.NAMESPACE_OPTION_KEY] = "InfoSupport" };
