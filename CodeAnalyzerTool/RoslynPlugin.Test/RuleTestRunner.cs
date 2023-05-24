@@ -46,17 +46,11 @@ public static class RuleTestRunner
         return workspace;
     }
     
-    /// <summary>
-    /// Gets the <see cref="DEFAULT_PROJECT_NAME"/> project
-    /// </summary>
     private static Project GetProjectUnderTest(this AdhocWorkspace workspace)
     {
         return workspace.CurrentSolution.Projects.First(x => x.Name == DEFAULT_PROJECT_NAME);
     }
     
-    /// <summary>
-    /// Gets the <see cref="DEFAULT_DOCUMENT_NAME"/> document
-    /// </summary>
     private static Document GetDocumentUnderTest(this Project project)
     {
         return project.Documents.First(x => x.Name == DEFAULT_DOCUMENT_NAME);
