@@ -21,7 +21,7 @@ public class Analyzer
         _workspace = workspace;
         _pluginConfig = pluginConfig;
         _workingDirectory = Directory.GetCurrentDirectory();
-        var ruleLoader = new RuleLoader(_workingDirectory, _pluginConfig, pluginsPath);
+        var ruleLoader = new RuleLoader(_workingDirectory, _pluginConfig, pluginsPath); // todo DI
         _rules = ruleLoader.LoadRules().Cast<DiagnosticAnalyzer>().ToImmutableArray();
     }
 
