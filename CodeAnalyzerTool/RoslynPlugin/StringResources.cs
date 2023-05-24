@@ -18,3 +18,10 @@ public static class RuleCategories
     public const string NAMING = "Naming";
     public const string MAINTAINABILITY = "Maintainability";
 }
+
+public static class RuleNames
+{
+    public const string NAMESPACE_CONTAINS_RULE = "NamespaceContains";
+    public const string REQUIRE_BRACES_IN_BLOCK_RULE = "RequireBracesInBlock";
+    public const string TEST_METHOD_WITHOUT_ASSERTION_RULE = "TestWithoutAssertion";
+}
