@@ -10,7 +10,7 @@ namespace RoslynPlugin.rules;
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public class TestMethodWithoutAssertionRule : RoslynRule
 {
-    public sealed override string RuleName => "TestWithoutAssertion";
+    public sealed override string RuleName => RuleNames.TEST_METHOD_WITHOUT_ASSERTION_RULE;
     public sealed override DiagnosticSeverity Severity { get; set; }
     public sealed override Dictionary<string, string> Options { get; set; }
     private const string CATEGORY = RuleCategories.MAINTAINABILITY;

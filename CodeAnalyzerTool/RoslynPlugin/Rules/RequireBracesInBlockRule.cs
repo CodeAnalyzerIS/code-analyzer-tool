@@ -9,7 +9,7 @@ namespace RoslynPlugin.rules;
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public class RequireBracesInBlockRule : RoslynRule
 {
-    public sealed override string RuleName => "RequireBracesInBlock";
+    public sealed override string RuleName => RuleNames.REQUIRE_BRACES_IN_BLOCK_RULE;
     public sealed override DiagnosticSeverity Severity { get; set; }
     public sealed override Dictionary<string, string> Options { get; set; }
     private const string CATEGORY = RuleCategories.STYLE;
