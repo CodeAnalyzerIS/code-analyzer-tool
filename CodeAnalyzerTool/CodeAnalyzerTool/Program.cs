@@ -20,6 +20,12 @@ public class Program
                 return;
             }
 
+            if (args.Contains("--init"))
+            {
+                await ConfigTemplateGenerator.GenerateConfigTemplate();
+                return;
+            }
+
             LogHelper.InitLogging(); // todo replace with DI injected loggers
             var services = new ServiceCollection();
 
@@ -30,7 +36,7 @@ public class Program
 
             var configReader = new ConfigReader();
             var globalConfig = await configReader.ReadAsync();
-            services.AddSingleton<GlobalConfig>(globalConfig);
+            services.AddSingleton(globalConfig);
 
             var serviceProvider = services.BuildServiceProvider();
             var pluginRunner = serviceProvider.GetRequiredService<PluginRunner>();

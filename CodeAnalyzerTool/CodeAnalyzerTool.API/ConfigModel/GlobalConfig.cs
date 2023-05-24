@@ -10,7 +10,7 @@ public class GlobalConfig
     [JsonProperty("apiUrl", Required = Required.Default)]
     public string ApiUrl { get; set; }
 
-    [JsonProperty("pluginsPath", Required = Required.Always)]
+    [JsonProperty("pluginsPath", Required = Required.Default)]
     public string PluginsPath { get; set; }
 
     [JsonProperty("plugins", Required = Required.Always)]

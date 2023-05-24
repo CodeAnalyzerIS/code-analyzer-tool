@@ -87,7 +87,10 @@
       ]
     },
     "pluginsPath": {
-      "type": "string"
+      "type": [
+        "string",
+        "null"
+      ]
     },
     "plugins": {
       "type": "array",
@@ -98,7 +101,6 @@
   },
   "required": [
     "projectName",
-    "pluginsPath",
     "plugins"
   ]
 }
