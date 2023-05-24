@@ -1,7 +1,7 @@
 ﻿using Microsoft.CodeAnalysis;
 using RoslynPlugin.rules;
 
-namespace RoslynPlugin.Test;
+namespace RoslynPlugin.Test.Rules;
 
 public class RequireBracesInBlockTest
 {

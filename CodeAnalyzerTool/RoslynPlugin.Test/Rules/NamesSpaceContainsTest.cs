@@ -1,8 +1,7 @@
 ﻿using Microsoft.CodeAnalysis;
 using RoslynPlugin.rules;
-using Microsoft.CodeAnalysis.Text;
 
-namespace RoslynPlugin.Test;
+namespace RoslynPlugin.Test.Rules;
 
 public class NamesSpaceContainsTest
 {
