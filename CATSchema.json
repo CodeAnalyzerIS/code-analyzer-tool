@@ -81,7 +81,10 @@
       "type": "string"
     },
     "apiUrl": {
-      "type": "string"
+      "type": [
+        "string",
+        "null"
+      ]
     },
     "pluginsPath": {
       "type": "string"
@@ -95,7 +98,6 @@
   },
   "required": [
     "projectName",
-    "apiUrl",
     "pluginsPath",
     "plugins"
   ]

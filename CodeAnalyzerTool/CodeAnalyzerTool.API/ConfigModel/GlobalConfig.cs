@@ -7,7 +7,7 @@ public class GlobalConfig
 
     [JsonProperty("projectName", Required = Required.Always)]
     public string ProjectName { get; set; }
-    [JsonProperty("apiUrl", Required = Required.Always)]
+    [JsonProperty("apiUrl", Required = Required.Default)]
     public string ApiUrl { get; set; }
 
     [JsonProperty("pluginsPath", Required = Required.Always)]
