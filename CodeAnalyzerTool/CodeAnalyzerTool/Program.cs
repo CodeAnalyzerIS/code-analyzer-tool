@@ -10,12 +10,17 @@ namespace CodeAnalyzerTool;
 
 public class Program
 {
-    public static async Task Main()
+    public static async Task Main(string[] args)
     {
         try
         {
+            if (args.Contains("--generate-schema"))
+            {
+                await SchemaGenerator.GenerateSchema();
+                return;
+            }
+
             LogHelper.InitLogging(); // todo replace with DI injected loggers
-            await SchemaGenerator.GenerateSchema(); // todo replace with hosted version
             var services = new ServiceCollection();
 
             services.AddSingleton<IPlugin, RoslynPlugin.RoslynPlugin>();

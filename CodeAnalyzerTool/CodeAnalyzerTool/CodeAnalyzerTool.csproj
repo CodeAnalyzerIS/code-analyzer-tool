@@ -10,7 +10,7 @@
         <RepositoryUrl>https://github.com/CodeAnalyzerIS/code-analyzer-tool</RepositoryUrl>
         <PackageId>CodeAnalyzerTool</PackageId>
         <Authors>Code Analyzer Tool</Authors>
-        <ToolCommandName>code_analyzer_tool</ToolCommandName>
+        <ToolCommandName>cat</ToolCommandName>
         <PackageOutputPath>./nupkg</PackageOutputPath>
         <RootNamespace>CodeAnalyzerTool</RootNamespace>
     </PropertyGroup>

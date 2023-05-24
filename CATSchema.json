@@ -1,0 +1,102 @@
+{
+  "definitions": {
+    "PluginConfig": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "properties": {
+        "pluginName": {
+          "type": "string"
+        },
+        "assemblyName": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "folderName": {
+          "type": "string"
+        },
+        "enabled": {
+          "type": "boolean"
+        },
+        "rules": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/RuleConfig"
+          }
+        }
+      },
+      "required": [
+        "pluginName",
+        "folderName",
+        "enabled",
+        "rules"
+      ]
+    },
+    "RuleConfig": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "properties": {
+        "ruleName": {
+          "type": "string"
+        },
+        "enabled": {
+          "type": "boolean"
+        },
+        "severity": {
+          "type": "string",
+          "enum": [
+            "Info",
+            "Warning",
+            "Error"
+          ]
+        },
+        "options": {
+          "type": [
+            "object",
+            "null"
+          ],
+          "additionalProperties": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        }
+      },
+      "required": [
+        "ruleName",
+        "enabled",
+        "severity"
+      ]
+    }
+  },
+  "type": "object",
+  "properties": {
+    "projectName": {
+      "type": "string"
+    },
+    "apiUrl": {
+      "type": "string"
+    },
+    "pluginsPath": {
+      "type": "string"
+    },
+    "plugins": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/PluginConfig"
+      }
+    }
+  },
+  "required": [
+    "projectName",
+    "apiUrl",
+    "pluginsPath",
+    "plugins"
+  ]
+}
