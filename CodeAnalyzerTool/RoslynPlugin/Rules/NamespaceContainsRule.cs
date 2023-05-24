@@ -9,14 +9,15 @@ using Serilog;
 namespace RoslynPlugin.rules;
 
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
-public class NamespaceRule : RoslynRule
+public class NamespaceContainsRule : RoslynRule
 {
-    public sealed override string RuleName => "NamespaceContains";
+    public sealed override string RuleName => RuleNames.NAMESPACE_CONTAINS_RULE;
     public sealed override DiagnosticSeverity Severity { get; set; }
     public sealed override Dictionary<string, string> Options { get; set; }
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get; }
-    private const string Category = RuleCategories.NAMING;
+    private const string CATEGORY = RuleCategories.NAMING;
     private readonly DiagnosticDescriptor _rule;
+    public const string NAMESPACE_OPTION_KEY = "namespace";
 
     private static readonly LocalizableString Title = new LocalizableResourceString(
         nameof(Resources.NamespaceCheckTitle),
@@ -30,11 +31,11 @@ public class NamespaceRule : RoslynRule
         new LocalizableResourceString(nameof(Resources.NamespaceCheckDescription), Resources.ResourceManager,
             typeof(Resources));
 
-    public NamespaceRule()
+    public NamespaceContainsRule()
     {
         Options = new Dictionary<string, string>();
         Severity = DiagnosticSeverity.Info;
-        _rule = new DiagnosticDescriptor(RuleName, Title, MessageFormat, Category,
+        _rule = new DiagnosticDescriptor(RuleName, Title, MessageFormat, CATEGORY,
             Severity, isEnabledByDefault: true, description: Description);
         SupportedDiagnostics = ImmutableArray.Create(_rule);
     }
@@ -44,7 +45,7 @@ public class NamespaceRule : RoslynRule
         context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
         context.EnableConcurrentExecution();
 
-        if (!Options.TryGetValue("namespace", out _))
+        if (!Options.TryGetValue(NAMESPACE_OPTION_KEY, out _))
         {
             Log.Warning(StringResources.NO_NAME_SPACE_OPTION_MSG);
             return;
@@ -63,13 +64,13 @@ public class NamespaceRule : RoslynRule
             effectiveSeverity: Severity,
             null,
             null,
-            Options["namespace"]);
+            Options[NAMESPACE_OPTION_KEY]);
         ctx.ReportDiagnostic(diagnostic);
     }
 
     private bool ContainsGivenNameSpace(NamespaceDeclarationSyntax namespaceDeclaration)
     {
         var namespaceDeclarationName = namespaceDeclaration.Name.ToString();
-        return namespaceDeclarationName.Contains(Options["namespace"]);
+        return namespaceDeclarationName.Contains(Options[NAMESPACE_OPTION_KEY]);
     }
 }

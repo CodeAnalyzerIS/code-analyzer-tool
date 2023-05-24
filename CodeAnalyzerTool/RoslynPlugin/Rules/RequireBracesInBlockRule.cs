@@ -9,10 +9,10 @@ namespace RoslynPlugin.rules;
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public class RequireBracesInBlockRule : RoslynRule
 {
-    public sealed override string RuleName => "RequireBracesInBlock";
+    public sealed override string RuleName => RuleNames.REQUIRE_BRACES_IN_BLOCK_RULE;
     public sealed override DiagnosticSeverity Severity { get; set; }
     public sealed override Dictionary<string, string> Options { get; set; }
-    private const string Category = RuleCategories.STYLE;
+    private const string CATEGORY = RuleCategories.STYLE;
     private readonly DiagnosticDescriptor _rule;
     
     private static readonly LocalizableString Title = new LocalizableResourceString(nameof(Resources.BraceAnalyzerTitle),
@@ -32,7 +32,7 @@ public class RequireBracesInBlockRule : RoslynRule
     {
         Options = new Dictionary<string, string>();
         Severity = DiagnosticSeverity.Warning;
-        _rule = new DiagnosticDescriptor(RuleName, Title, MessageFormat, Category,
+        _rule = new DiagnosticDescriptor(RuleName, Title, MessageFormat, CATEGORY,
             Severity, isEnabledByDefault: true, description: Description);
         SupportedDiagnostics = ImmutableArray.Create(_rule);
     }
