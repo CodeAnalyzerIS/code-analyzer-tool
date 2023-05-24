@@ -15,6 +15,10 @@
         <PackageReadmeFile>README.md</PackageReadmeFile>
         <RootNamespace>CodeAnalyzerTool</RootNamespace>
     </PropertyGroup>
+    
+    <ItemGroup>
+        <None Include="README.md" Pack="true" PackagePath="\"/>
+    </ItemGroup>
 
     <ItemGroup>
       <PackageReference Include="Microsoft.Extensions.Hosting" Version="7.0.1" />
