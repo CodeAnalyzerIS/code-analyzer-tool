@@ -1,5 +1,6 @@
 ﻿using System.Collections.Immutable;
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Diagnostics;
 using RoslynPlugin.API;
 
@@ -34,6 +35,13 @@ public class MakeLocalVariableConstantRule : RoslynRule
 
     public override void Initialize(AnalysisContext context)
     {
-        throw new NotImplementedException();
+        context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
+        context.EnableConcurrentExecution();
+        context.RegisterSyntaxNodeAction(AnalyzeLocalDeclarationStatement, SyntaxKind.LocalDeclarationStatement);
+    }
+
+    private void AnalyzeLocalDeclarationStatement(SyntaxNodeAnalysisContext context)
+    {
+        return;
     }
 }
