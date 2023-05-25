@@ -12,6 +12,8 @@ using CodeAnalyzerService.Backend.DAL.EF;
 using CodeAnalyzerService.Backend.DAL.EF.Entities;
 using CodeAnalyzerService.Backend.Dtos;
 using CodeAnalyzerService.Backend.Dtos.Mappers;
+using CodeAnalyzerService.Backend.DTOs.Request;
+using CodeAnalyzerService.Backend.DTOs.Response;
 using NuGet.Packaging;
 
 namespace CodeAnalyzerService.Backend.Controllers
@@ -43,7 +45,7 @@ namespace CodeAnalyzerService.Backend.Controllers
 
         // GET: api/ProjectAnalysis/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<ProjectDto>> GetProject(int id)
+        public async Task<ActionResult<ProjectResponse>> GetProject(int id)
         {
             if (_context.Projects == null)
             {
@@ -65,9 +67,9 @@ namespace CodeAnalyzerService.Backend.Controllers
 
         // PUT: api/ProjectAnalysis
         [HttpPut]
-        public async Task<ActionResult<ProjectDto>> PutProject(ProjectAnalysisDto projectAnalysisDto)
+        public async Task<ActionResult<ProjectResponse>> PutProject(ProjectRequest projectRequest)
         {
-            var project = await _projectAnalysisManager.AddProjectAnalysis(projectAnalysisDto);
+            var project = await _projectAnalysisManager.AddProjectAnalysis(projectRequest);
 
             var projectDto = ProjectMapper.MapToDto(project);
 

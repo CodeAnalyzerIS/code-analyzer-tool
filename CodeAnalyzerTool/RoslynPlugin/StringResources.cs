@@ -2,7 +2,7 @@
 
 public static class StringResources
 {
-    public const string PLUGIN_ID = "Roslyn"; 
+    public const string PLUGIN_NAME = "Roslyn"; 
     public const string FILE_EXTENSION = ".cs";
     public const string TARGET_LANGUAGE = "C#";
     public const string RULES_FOLDER_NAME = "rules";

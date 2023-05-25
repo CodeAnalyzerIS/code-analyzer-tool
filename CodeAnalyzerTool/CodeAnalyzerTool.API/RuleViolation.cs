@@ -5,19 +5,14 @@ namespace CodeAnalyzerTool.API;
 public class RuleViolation
 {
     [Required] public Rule Rule { get; set; }
-    [Required] public string PluginId { get; set; }
     [Required] public string Message { get; set; }
-    [Required] public string TargetLanguage { get; set; }
     [Required] public Location Location { get; set; }
     public Severity Severity { get; set; }
 
-    public RuleViolation(Rule rule, string pluginId, string message, string targetLanguage, Location location,
-        Severity severity)
+    public RuleViolation(Rule rule, string message, Location location, Severity severity)
     {
         Rule = rule;
-        PluginId = pluginId;
         Message = message;
-        TargetLanguage = targetLanguage;
         Location = location;
         Severity = severity;
     }
@@ -25,7 +20,7 @@ public class RuleViolation
     public override string ToString()
     {
         return
-            $"[{Severity.ToString().ToUpper()}] {nameof(Rule)}: {Rule.RuleName}, {nameof(PluginId)}: {PluginId}, " +
+            $"[{Severity.ToString().ToUpper()}] {nameof(Rule)}: {Rule.RuleName}, {nameof(Rule.PluginName)}: {Rule.PluginName}, " +
             $"{nameof(Message)}: {Message}\n\t{Location}";
     }
 }
