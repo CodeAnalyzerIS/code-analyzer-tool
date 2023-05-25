@@ -24,7 +24,7 @@ public class ProjectControllerTest : IClassFixture<TestDatabaseFixture>
         var autoFixture = new Fixture();
         // var ruleViolationDto = autoFixture.Build<RuleViolationDto>().With(rv => rv.Rule, "Info").CreateMany(3);
         // var projectAnalysisDto = autoFixture.Build<ProjectAnalysisDto>().With(pa => pa.RuleViolations, new List<RuleViolationDto>(){ruleViolationDto}).Create();
-        var projectRequest = autoFixture.Create<ProjectRequest>();
+        var projectRequest = autoFixture.Create<ProjectAnalysisRequest>();
         await using var context = Fixture.CreateContext();
         var controller = new ProjectController(context);
         

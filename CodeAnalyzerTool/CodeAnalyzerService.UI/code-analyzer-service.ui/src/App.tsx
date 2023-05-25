@@ -1,6 +1,9 @@
-import React from 'react';
+import React, {useState} from 'react';
 import logo from './logo.svg';
 import './App.css';
+import {QueryClient} from "react-query";
+
+const queryClient = new QueryClient()
 
 function App() {
   return (

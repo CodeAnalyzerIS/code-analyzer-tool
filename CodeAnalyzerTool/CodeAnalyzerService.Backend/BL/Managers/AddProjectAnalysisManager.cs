@@ -26,34 +26,34 @@ public class AddProjectAnalysisManager
         _ruleService = ruleService;
     }
 
-    public async Task<Project> AddProjectAnalysis(ProjectRequest projectRequest)
+    public async Task<Project> AddProjectAnalysis(ProjectAnalysisRequest projectAnalysisRequest)
     {
-        var rules = GetRulesFromProjectAnalysisDto(projectRequest);
+        var rules = GetRulesFromProjectAnalysisDto(projectAnalysisRequest);
 
-        var ruleViolations = GetRuleViolationsAndAssignRule(projectRequest, rules);
+        var ruleViolations = GetRuleViolationsAndAssignRule(projectAnalysisRequest, rules);
 
         var analysis = CreateAnalysisAndAssignRuleViolations(ruleViolations);
         
-        var project = GetProject(projectRequest.ProjectName);
+        var project = GetProject(projectAnalysisRequest.ProjectName);
 
-        project = AddOrUpdateProject(projectRequest, project, analysis);
+        project = AddOrUpdateProject(projectAnalysisRequest, project, analysis);
         
         await _ctx.SaveChangesAsync();
 
         return project;
     }
 
-    private IEnumerable<Rule> GetRulesFromProjectAnalysisDto(ProjectRequest projectRequest)
+    private IEnumerable<Rule> GetRulesFromProjectAnalysisDto(ProjectAnalysisRequest projectAnalysisRequest)
     {
-        return projectRequest.RuleViolations
+        return projectAnalysisRequest.RuleViolations
             .Select(rv => rv.Rule)
             .Select(_ruleService.GetRuleModelFromDto)
             .Distinct();
     }
 
-    private static IEnumerable<RuleViolation> GetRuleViolationsAndAssignRule(ProjectRequest projectRequest, IEnumerable<Rule> rules)
+    private static IEnumerable<RuleViolation> GetRuleViolationsAndAssignRule(ProjectAnalysisRequest projectAnalysisRequest, IEnumerable<Rule> rules)
     {
-        return projectRequest.RuleViolations.Select(rv =>
+        return projectAnalysisRequest.RuleViolations.Select(rv =>
         {
             var rule = rules.Single(r => r.RuleName.Equals(rv.Rule.RuleName));
             var ruleViolation = RuleViolationMapper.MapToModel(rv);
@@ -75,11 +75,11 @@ public class AddProjectAnalysisManager
         return _ctx.Projects.SingleOrDefault(p => p.ProjectName.Equals(projectName));
     }
 
-    private Project AddOrUpdateProject(ProjectRequest projectRequest, Project? project, Analysis analysis)
+    private Project AddOrUpdateProject(ProjectAnalysisRequest projectAnalysisRequest, Project? project, Analysis analysis)
     {
         if (project is null)
         {
-            project = ProjectMapper.MapToModel(projectRequest);
+            project = ProjectMapper.MapToModel(projectAnalysisRequest);
             project.Analyses.Add(analysis);
             project = _ctx.Projects.Add(project).Entity;
         }

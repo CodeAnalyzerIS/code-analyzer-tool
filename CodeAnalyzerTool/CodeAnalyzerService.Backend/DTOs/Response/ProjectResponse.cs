@@ -2,7 +2,7 @@ namespace CodeAnalyzerService.Backend.DTOs.Response;
 
 public class ProjectResponse
 {
-    public int? Id { get; set; }
+    public int Id { get; set; }
     public string ProjectName { get; set; }
     public IEnumerable<AnalysisResponse> Analyses { get; set; }
 

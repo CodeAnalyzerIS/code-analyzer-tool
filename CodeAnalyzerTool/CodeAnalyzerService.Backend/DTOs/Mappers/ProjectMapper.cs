@@ -6,9 +6,9 @@ namespace CodeAnalyzerService.Backend.Dtos.Mappers;
 
 public class ProjectMapper
 {
-    public static Project MapToModel(ProjectRequest projectRequest)
+    public static Project MapToModel(ProjectAnalysisRequest projectAnalysisRequest)
     {
-        return new Project(projectRequest.ProjectName);
+        return new Project(projectAnalysisRequest.ProjectName);
     }
 
     public static ProjectResponse MapToDto(Project project)

@@ -67,9 +67,9 @@ namespace CodeAnalyzerService.Backend.Controllers
 
         // PUT: api/ProjectAnalysis
         [HttpPut]
-        public async Task<ActionResult<ProjectResponse>> PutProject(ProjectRequest projectRequest)
+        public async Task<ActionResult<ProjectResponse>> PutProject(ProjectAnalysisRequest projectAnalysisRequest)
         {
-            var project = await _projectAnalysisManager.AddProjectAnalysis(projectRequest);
+            var project = await _projectAnalysisManager.AddProjectAnalysis(projectAnalysisRequest);
 
             var projectDto = ProjectMapper.MapToDto(project);
 
