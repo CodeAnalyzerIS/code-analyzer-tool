@@ -16,9 +16,6 @@ class C {
 }
 ";
         var rule = new RequireBracesInBlockRule();
-        rule.Options = new Dictionary<string, string>();
-        rule.Severity = DiagnosticSeverity.Warning;
-        
         var results = await RuleTestRunner.CompileStringWithRule(code, rule);
         results.Should().Contain(rv => rv.Rule.RuleName == RuleNames.REQUIRE_BRACES_IN_BLOCK_RULE);
     }
@@ -36,9 +33,6 @@ class C {
 }
 ";
         var rule = new RequireBracesInBlockRule();
-        rule.Options = new Dictionary<string, string>();
-        rule.Severity = DiagnosticSeverity.Warning;
-        
         var results = await RuleTestRunner.CompileStringWithRule(code, rule);
         results.Should().BeEmpty();
     }

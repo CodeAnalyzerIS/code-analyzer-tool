@@ -60,83 +60,110 @@ namespace RoslynPlugin {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Enclose statement with curly braces..
+        ///   Looks up a localized string similar to Detects whether a local variable can be made a constant..
         /// </summary>
-        internal static string BraceAnalyzerDescription {
+        internal static string MakeLocalVariableConstantDescription {
             get {
-                return ResourceManager.GetString("BraceAnalyzerDescription", resourceCulture);
+                return ResourceManager.GetString("MakeLocalVariableConstantDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Local variable should be made constant.
+        /// </summary>
+        internal static string MakeLocalVariableConstantMessageFormat {
+            get {
+                return ResourceManager.GetString("MakeLocalVariableConstantMessageFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Local variable should be made constant.
+        /// </summary>
+        internal static string MakeLocalVariableConstantTitle {
+            get {
+                return ResourceManager.GetString("MakeLocalVariableConstantTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Detects whether a namespace contains the configured substring..
+        /// </summary>
+        internal static string NamespaceContains_Description {
+            get {
+                return ResourceManager.GetString("NamespaceContains_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Namespace should contain &apos;{0}&apos;.
+        /// </summary>
+        internal static string NamespaceContains_MessageFormat {
+            get {
+                return ResourceManager.GetString("NamespaceContains_MessageFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Namespaces should contain the configured substring.
+        /// </summary>
+        internal static string NamespaceContains_Title {
+            get {
+                return ResourceManager.GetString("NamespaceContains_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Detects whether a code block uses a single line statement format without curly braces..
+        /// </summary>
+        internal static string RequireBracesInBlock_Description {
+            get {
+                return ResourceManager.GetString("RequireBracesInBlock_Description", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to &apos;{&apos; brace expected.
         /// </summary>
-        internal static string BraceAnalyzerMessageFormat {
+        internal static string RequireBracesInBlock_MessageFormat {
             get {
-                return ResourceManager.GetString("BraceAnalyzerMessageFormat", resourceCulture);
+                return ResourceManager.GetString("RequireBracesInBlock_MessageFormat", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Enclose statement with curly braces.
+        ///   Looks up a localized string similar to Enclose code block with curly braces.
         /// </summary>
-        internal static string BraceAnalyzerTitle {
+        internal static string RequireBracesInBlock_Title {
             get {
-                return ResourceManager.GetString("BraceAnalyzerTitle", resourceCulture);
+                return ResourceManager.GetString("RequireBracesInBlock_Title", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Namespaces should be part of the parent namespace..
+        ///   Looks up a localized string similar to Detects whether a test method contains a assertion.
         /// </summary>
-        internal static string NamespaceCheckDescription {
+        internal static string TestMethodWithoutAssertion_Description {
             get {
-                return ResourceManager.GetString("NamespaceCheckDescription", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Namespace should be part of the &apos;{0}&apos; parent namespace.
-        /// </summary>
-        internal static string NamespaceCheckMessageFormat {
-            get {
-                return ResourceManager.GetString("NamespaceCheckMessageFormat", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Namespaces should be part of parent namespace.
-        /// </summary>
-        internal static string NamespaceCheckTitle {
-            get {
-                return ResourceManager.GetString("NamespaceCheckTitle", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Test method should contain at least one assertion..
-        /// </summary>
-        internal static string NoAssertionDescription {
-            get {
-                return ResourceManager.GetString("NoAssertionDescription", resourceCulture);
+                return ResourceManager.GetString("TestMethodWithoutAssertion_Description", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Test method &apos;{0}&apos; does not contain any assertions.
         /// </summary>
-        internal static string NoAssertionMessageFormat {
+        internal static string TestMethodWithoutAssertion_MessageFormat {
             get {
-                return ResourceManager.GetString("NoAssertionMessageFormat", resourceCulture);
+                return ResourceManager.GetString("TestMethodWithoutAssertion_MessageFormat", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Test method should contain at least one assertion.
         /// </summary>
-        internal static string NoAssertionTitle {
+        internal static string TestMethodWithoutAssertion_Title {
             get {
-                return ResourceManager.GetString("NoAssertionTitle", resourceCulture);
+                return ResourceManager.GetString("TestMethodWithoutAssertion_Title", resourceCulture);
             }
         }
     }

@@ -17,10 +17,12 @@ public static class RuleCategories
     public const string STYLE = "Style";
     public const string NAMING = "Naming";
     public const string MAINTAINABILITY = "Maintainability";
+    public const string PERFORMANCE = "Performance";
 }
 
 public static class RuleNames
 {
+    public const string MAKE_LOCAL_VARIABLE_CONSTANT_RULE = "MakeLocalVariableConstant";
     public const string NAMESPACE_CONTAINS_RULE = "NamespaceContains";
     public const string REQUIRE_BRACES_IN_BLOCK_RULE = "RequireBracesInBlock";
     public const string TEST_METHOD_WITHOUT_ASSERTION_RULE = "TestWithoutAssertion";
