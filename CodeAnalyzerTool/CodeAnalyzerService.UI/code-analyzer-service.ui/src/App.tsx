@@ -1,28 +1,33 @@
-import React, {useState} from 'react';
-import logo from './logo.svg';
+import React from 'react';
 import './App.css';
-import {QueryClient} from "react-query";
+import {QueryClient, QueryClientProvider} from "react-query";
+import {BrowserRouter, Route, Routes} from "react-router-dom";
+import Home from "./components/Home";
+import {AppBar, Avatar, Button, IconButton, Toolbar, Typography} from "@mui/material";
 
 const queryClient = new QueryClient()
 
+const Header = () => (
+    <AppBar position="static" color="transparent">
+        <Toolbar sx={{justifyContent: "space-between"}}>
+            <div className="headerBar">
+                <Avatar src={'logo_transparent.png'}/>
+                <Typography variant="h6" sx={{justifySelf: "center"}}>Code Analyzer Tool</Typography>
+            </div>
+        </Toolbar>
+    </AppBar>
+);
+
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={"logo_transparent.png"} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+      <QueryClientProvider client={queryClient}>
+            <BrowserRouter>
+                <Header/>
+                <Routes>
+                    <Route path="/" element={<Home/>}></Route>
+                </Routes>
+            </BrowserRouter>
+      </QueryClientProvider>
   );
 }
 

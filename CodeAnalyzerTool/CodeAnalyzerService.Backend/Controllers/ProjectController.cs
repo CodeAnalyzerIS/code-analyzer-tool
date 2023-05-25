@@ -42,6 +42,17 @@ namespace CodeAnalyzerService.Backend.Controllers
 
             return await _context.Projects.ToListAsync();
         }
+        
+        [HttpGet("overview")]
+        public async Task<ActionResult<IEnumerable<Project>>> GetProjectsOverview()
+        {
+            if (_context.Projects == null)
+            {
+                return NotFound();
+            }
+
+            return await _context.Projects.ToListAsync();
+        }
 
         // GET: api/ProjectAnalysis/5
         [HttpGet("{id}")]
@@ -53,6 +64,8 @@ namespace CodeAnalyzerService.Backend.Controllers
             }
 
             var project = await _context.Projects.Include(p => p.Analyses)
+                .ThenInclude(a => a.RuleViolations)
+                .ThenInclude(rv => rv.Location)
                 .SingleOrDefaultAsync(p => p.Id == id);
 
             if (project == null)
