@@ -1,10 +1,9 @@
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
-namespace CodeAnalyzerService.Backend.DAL.EF.Entities;
+namespace CodeAnalyzerService.Backend.DTOs.Request;
 
-public class Rule
+public class RuleRequest
 {
-    public int Id { get; set; }
     [Required] public string RuleName { get; set; }
     [Required] public string Title { get; set; }
     [Required] [MinLength(10)] public string Description { get; set; }
@@ -13,9 +12,8 @@ public class Rule
     [Required] public string TargetLanguage { get; set; }
     public bool IsEnabledByDefault { get; set; }
     public string DefaultSeverity { get; set; }
-    public ICollection<RuleViolation> RuleViolations { get; set; }
 
-    public Rule(string ruleName, string title, string description, string category, string pluginName,
+    public RuleRequest(string ruleName, string title, string description, string category, string pluginName,
         string targetLanguage, bool isEnabledByDefault, string defaultSeverity)
     {
         RuleName = ruleName;
@@ -26,6 +24,5 @@ public class Rule
         DefaultSeverity = defaultSeverity;
         PluginName = pluginName;
         TargetLanguage = targetLanguage;
-        RuleViolations = new List<RuleViolation>();
     }
 }

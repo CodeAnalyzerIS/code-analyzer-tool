@@ -20,7 +20,9 @@ public static class DiagnosticConverter
             category: diagnostic.Descriptor.Category,
             defaultSeverity: ConvertDiagnosticSeverity(diagnostic.DefaultSeverity),
             description: diagnostic.Descriptor.Description.ToString(),
-            isEnabledByDefault: diagnostic.Descriptor.IsEnabledByDefault
+            isEnabledByDefault: diagnostic.Descriptor.IsEnabledByDefault,
+            pluginName: StringResources.PLUGIN_NAME,
+            targetLanguage: StringResources.TARGET_LANGUAGE
         );
 
         var location = new Location(
@@ -33,9 +35,7 @@ public static class DiagnosticConverter
         var sev = ConvertDiagnosticSeverity(diagnostic.Severity);
         var result = new RuleViolation(
             rule: rule, 
-            pluginId: StringResources.PLUGIN_ID, 
             message: diagnostic.GetMessage(), 
-            targetLanguage: StringResources.TARGET_LANGUAGE, 
             location: location, 
             severity: sev);
 

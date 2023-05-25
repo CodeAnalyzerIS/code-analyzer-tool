@@ -26,8 +26,8 @@ internal static class LogHelper
         foreach (var r in res)
         {
             Log.Write(SeverityToLogLevel(r.Severity),
-                "[{Category}]({PluginId}, {RuleId}) {Message} | Path: {Path} at line: {Line}",
-                r.Rule.Category, r.PluginId, r.Rule.RuleName, r.Message, r.Location.Path, r.Location.StartLine);
+                "[{Category}]({PluginName}, {RuleId}) {Message} | Path: {Path} at line: {Line}",
+                r.Rule.Category, r.Rule.PluginName, r.Rule.RuleName, r.Message, r.Location.Path, r.Location.StartLine);
         }
     }
 
