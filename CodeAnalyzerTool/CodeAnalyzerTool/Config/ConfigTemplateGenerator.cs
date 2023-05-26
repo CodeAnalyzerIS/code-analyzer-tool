@@ -1,6 +1,4 @@
-﻿using System.Reflection;
-
-namespace CodeAnalyzerTool;
+﻿namespace CodeAnalyzerTool.Config;
 
 public static class ConfigTemplateGenerator
 {

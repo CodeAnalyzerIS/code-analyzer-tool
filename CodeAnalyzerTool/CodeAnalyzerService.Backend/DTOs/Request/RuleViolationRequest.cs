@@ -1,6 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using CodeAnalyzerService.Backend.Dtos;
-using CodeAnalyzerService.Backend.DTOs.Response;
 
 namespace CodeAnalyzerService.Backend.DTOs.Request;
 

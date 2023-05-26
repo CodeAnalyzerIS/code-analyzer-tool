@@ -1,7 +1,5 @@
-using System.Diagnostics;
 using AutoFixture;
 using CodeAnalyzerService.Backend.Controllers;
-using CodeAnalyzerService.Backend.Dtos;
 using CodeAnalyzerService.Backend.DTOs.Request;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;

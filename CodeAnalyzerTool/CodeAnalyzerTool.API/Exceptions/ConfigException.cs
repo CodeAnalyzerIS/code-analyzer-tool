@@ -3,7 +3,7 @@
 [Serializable]
 public class ConfigException : Exception
 {
-    public ConfigException() : base()
+    public ConfigException()
     {
     }
 

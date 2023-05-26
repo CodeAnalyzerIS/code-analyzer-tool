@@ -1,7 +1,7 @@
 using CodeAnalyzerTool.API.ConfigModel;
 using Newtonsoft.Json.Schema.Generation;
 
-namespace CodeAnalyzerTool;
+namespace CodeAnalyzerTool.Config;
 
 internal static class SchemaGenerator
 {

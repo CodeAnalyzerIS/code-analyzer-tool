@@ -1,20 +1,11 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using CodeAnalyzerService.Backend.BL.Managers;
-using CodeAnalyzerService.Backend.BL.Services;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using CodeAnalyzerService.Backend.DAL.EF;
 using CodeAnalyzerService.Backend.DAL.EF.Entities;
-using CodeAnalyzerService.Backend.Dtos;
 using CodeAnalyzerService.Backend.Dtos.Mappers;
 using CodeAnalyzerService.Backend.DTOs.Request;
 using CodeAnalyzerService.Backend.DTOs.Response;
-using NuGet.Packaging;
 
 namespace CodeAnalyzerService.Backend.Controllers
 {

@@ -8,7 +8,7 @@ public class GlobalConfig
     [JsonProperty("projectName", Required = Required.Always)]
     public string ProjectName { get; set; }
     [JsonProperty("apiUrl", Required = Required.Default)]
-    public string ApiUrl { get; set; }
+    public Uri ApiUrl { get; set; }
 
     [JsonProperty("pluginsPath", Required = Required.Default)]
     public string PluginsPath { get; set; }
@@ -16,7 +16,7 @@ public class GlobalConfig
     [JsonProperty("plugins", Required = Required.Always)]
     public IEnumerable<PluginConfig> Plugins { get; set; }
 
-    public GlobalConfig( string projectName, string apiUrl, string pluginsPath, IEnumerable<PluginConfig> plugins)
+    public GlobalConfig( string projectName, Uri apiUrl, string pluginsPath, IEnumerable<PluginConfig> plugins)
     {
         ProjectName = projectName;
         ApiUrl = apiUrl;
