@@ -22,7 +22,6 @@ namespace CodeAnalyzerService.Backend.Controllers
             _projectAnalysisManager = new AddProjectAnalysisManager(_context);
         }
 
-        // GET: api/ProjectAnalysis
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Project>>> GetProjects()
         {
@@ -55,7 +54,6 @@ namespace CodeAnalyzerService.Backend.Controllers
             return projectOverviewResponses;
         }
 
-        // GET: api/ProjectAnalysis/5
         [HttpGet("{id}")]
         public async Task<ActionResult<ProjectResponse>> GetProject(int id)
         {
@@ -79,7 +77,6 @@ namespace CodeAnalyzerService.Backend.Controllers
             return projectDto;
         }
 
-        // PUT: api/ProjectAnalysis
         [HttpPut]
         public async Task<ActionResult<ProjectResponse>> PutProject(ProjectAnalysisRequest projectAnalysisRequest)
         {
@@ -90,7 +87,6 @@ namespace CodeAnalyzerService.Backend.Controllers
             return CreatedAtAction("GetProject", new { id = project.Id }, projectDto);
         }
 
-        // DELETE: api/ProjectAnalysis/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteProject(int id)
         {

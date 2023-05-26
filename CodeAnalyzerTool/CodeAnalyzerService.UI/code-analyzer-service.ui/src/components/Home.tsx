@@ -15,7 +15,6 @@ export default function Home() {
     if (isError){
         return <Alert severity="error">Error loading the project</Alert>
     }
-    console.log(projectOverviews)
 
     return(
         <Box sx={{display: 'flex', justifyContent: 'center', mt: 5}}>
