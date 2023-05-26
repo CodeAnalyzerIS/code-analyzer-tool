@@ -1,8 +1,7 @@
-import {useQuery, useQueryClient} from "react-query";
+import {useQuery} from "react-query";
 import {getProject} from "../services/projectService";
 
 export function useProject(id: number) {
-    const queryClient = useQueryClient()
 
     const {
         isLoading,

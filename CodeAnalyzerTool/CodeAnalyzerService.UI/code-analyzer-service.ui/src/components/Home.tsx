@@ -1,10 +1,19 @@
-import React from "react";
-import {useProject} from "../hooks/useProject";
+import React, { useState } from "react";
 import Loading from "./Loading";
-import {Alert, Card, CardContent, CardHeader, Stack, Typography} from "@mui/material";
+import {Alert, Box, Card, CardContent, CardHeader, Stack, Typography} from "@mui/material";
+import {useProjectOverview} from "../hooks/useProjectOverview";
+import TroubleshootIcon from '@mui/icons-material/Troubleshoot';
+import {ProjectOverview} from "../model/ProjectOverview";
+import ReportIcon from '@mui/icons-material/Report';
+import {Searchbar} from "./Searchbar";
+
+export type SearchString = {
+    searchValue: string;
+}
 
 export default function Home() {
-    const {isLoading, isError, project} = useProject(1)
+    const [searchString, setSearchString] = useState("")
+    const {isLoading, isError, projectOverviews} = useProjectOverview()
 
     if (isLoading) {
         return <Loading/>
@@ -12,17 +21,33 @@ export default function Home() {
     if (isError){
         return <Alert severity="error">Error loading the project</Alert>
     }
-    console.log(project)
 
     return(
-        <Card sx={{width: "50%"}}>
-            <CardHeader title={project.projectName}/>
-            <CardContent>
-                <Stack direction="row" spacing={'space-between'}>
-                    <Typography>{project.analyses[project.analyses.length - 1].createdOn.toLocaleString("en-US")}</Typography>
-                    <Typography>{project.analyses[project.analyses.length - 1].ruleViolations.length}</Typography>
-                </Stack>
-            </CardContent>
-        </Card>
+        <Box sx={{display: 'flex', flexDirection: 'column', alignItems: 'center', mt: 5}}>
+            <Searchbar setSearchString={setSearchString}/>
+            {projectOverviews.map((po:ProjectOverview)  => (
+                <Card sx={{width: "50%", border: 'solid', borderColor: '#c4c4c4', borderWidth: 'thin', mt: 3}} key={po.id}>
+                    <CardHeader
+                        style={{ textAlign: 'center', color: '#6574FC', borderBottom: 'solid', borderColor: '#c4c4c4',
+                            borderWidth: 'thin' }}
+                        title={po.projectName}
+                    />
+                    <CardContent>
+                        <Box sx={{display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly',
+                            alignItems: 'center', color: '#15B7B9'}}>
+                            <Stack direction='row' spacing={1}>
+                                <TroubleshootIcon/>
+                                <Typography>Last Analysis: {po.lastAnalysisDate.toString()}</Typography>
+                            </Stack>
+
+                            <Stack direction='row' spacing={1}>
+                                <ReportIcon/>
+                                <Typography>Rule Violations: {po.ruleViolationCount}</Typography>
+                            </Stack>
+                        </Box>
+                    </CardContent>
+                </Card>
+            ))}
+        </Box>
     )
 }

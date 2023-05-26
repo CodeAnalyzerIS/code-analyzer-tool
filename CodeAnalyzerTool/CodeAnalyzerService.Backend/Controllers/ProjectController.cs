@@ -22,7 +22,6 @@ namespace CodeAnalyzerService.Backend.Controllers
             _projectAnalysisManager = new AddProjectAnalysisManager(_context);
         }
 
-        // GET: api/ProjectAnalysis
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Project>>> GetProjects()
         {
@@ -35,17 +34,26 @@ namespace CodeAnalyzerService.Backend.Controllers
         }
         
         [HttpGet("overview")]
-        public async Task<ActionResult<IEnumerable<Project>>> GetProjectsOverview()
+        public ActionResult<IEnumerable<ProjectOverviewResponse>> GetProjectsOverview()
         {
             if (_context.Projects == null)
             {
                 return NotFound();
             }
 
-            return await _context.Projects.ToListAsync();
+            var projectOverviewResponses = _context.Projects.Include(p => p.Analyses)
+                .Select(p => new ProjectOverviewResponse
+                {
+                    Id = p.Id,
+                    ProjectName = p.ProjectName,
+                    LastAnalysisDate = p.Analyses.OrderBy(a => a.CreatedOn).Last().CreatedOn.ToString("dd-MMM-yyyy, HH:mm:ss"),
+                    RuleViolationCount = p.Analyses.OrderBy(a => a.CreatedOn).Last().RuleViolations.Count()
+                })
+                .ToList();
+
+            return projectOverviewResponses;
         }
 
-        // GET: api/ProjectAnalysis/5
         [HttpGet("{id}")]
         public async Task<ActionResult<ProjectResponse>> GetProject(int id)
         {
@@ -69,7 +77,6 @@ namespace CodeAnalyzerService.Backend.Controllers
             return projectDto;
         }
 
-        // PUT: api/ProjectAnalysis
         [HttpPut]
         public async Task<ActionResult<ProjectResponse>> PutProject(ProjectAnalysisRequest projectAnalysisRequest)
         {
@@ -80,7 +87,6 @@ namespace CodeAnalyzerService.Backend.Controllers
             return CreatedAtAction("GetProject", new { id = project.Id }, projectDto);
         }
 
-        // DELETE: api/ProjectAnalysis/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteProject(int id)
         {
