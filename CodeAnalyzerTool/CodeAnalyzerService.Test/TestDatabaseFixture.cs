@@ -5,7 +5,7 @@ namespace CodeAnalyzerService.Test;
 
 public class TestDatabaseFixture
 {
-    private const string ConnectionString = @"Data Source=CodeAnalyzerServiceTest.db";
+    private const string CONNECTION_STRING = @"Data Source=CodeAnalyzerServiceTest.db";
 
     //alternatief semaphorslim -> lock misschien niet nodig
     private static readonly object Lock = new();
@@ -28,6 +28,6 @@ public class TestDatabaseFixture
 
     public CodeAnalyzerServiceDbContext CreateContext()
         => new(new DbContextOptionsBuilder<CodeAnalyzerServiceDbContext>()
-                .UseSqlite(ConnectionString)
+                .UseSqlite(CONNECTION_STRING)
                 .Options);
 }

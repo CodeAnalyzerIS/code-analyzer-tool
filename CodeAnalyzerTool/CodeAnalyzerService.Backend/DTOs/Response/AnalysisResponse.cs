@@ -1,4 +1,3 @@
-using CodeAnalyzerService.Backend.Dtos;
 
 namespace CodeAnalyzerService.Backend.DTOs.Response;
 

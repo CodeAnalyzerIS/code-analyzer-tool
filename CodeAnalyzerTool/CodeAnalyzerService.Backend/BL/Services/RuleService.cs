@@ -1,10 +1,7 @@
 using CodeAnalyzerService.Backend.DAL.EF;
 using CodeAnalyzerService.Backend.DAL.EF.Entities;
-using CodeAnalyzerService.Backend.Dtos;
 using CodeAnalyzerService.Backend.Dtos.Mappers;
 using CodeAnalyzerService.Backend.DTOs.Request;
-using CodeAnalyzerService.Backend.DTOs.Response;
-using NuGet.Packaging;
 
 namespace CodeAnalyzerService.Backend.BL.Services;
 
