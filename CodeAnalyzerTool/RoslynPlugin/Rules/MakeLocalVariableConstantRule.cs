@@ -1,6 +1,7 @@
 ﻿using System.Collections.Immutable;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 using RoslynPlugin.API;
 
@@ -42,6 +43,20 @@ public class MakeLocalVariableConstantRule : RoslynRule
 
     private void AnalyzeLocalDeclarationStatement(SyntaxNodeAnalysisContext context)
     {
+        if (context.Node.ContainsDiagnostics) return;
+        
+        var localDeclaration = (LocalDeclarationStatementSyntax)context.Node;
+
+        if (localDeclaration.IsConst) return;
+
+        var parent = localDeclaration.Parent;
+        if (parent is null) return;
+        // var statements = parent.
+        
+        // todo if else BlockSyntax - SwitchSyntax
+        var block = (BlockSyntax)parent;
+        var statements = block.Statements;
+
         return;
     }
 }
