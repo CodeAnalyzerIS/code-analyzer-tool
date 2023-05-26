@@ -1,4 +1,5 @@
 ﻿using CodeAnalyzerTool.API;
+using CodeAnalyzerTool.Config;
 using CodeAnalyzerTool.PluginSystem;
 using CodeAnalyzerTool.PluginSystem.Loaders;
 using CodeAnalyzerTool.util;

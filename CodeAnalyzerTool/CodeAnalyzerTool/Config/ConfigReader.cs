@@ -5,7 +5,7 @@ using Newtonsoft.Json.Schema;
 using Newtonsoft.Json.Schema.Generation;
 using Serilog;
 
-namespace CodeAnalyzerTool;
+namespace CodeAnalyzerTool.Config;
 
 internal class ConfigReader
 {
