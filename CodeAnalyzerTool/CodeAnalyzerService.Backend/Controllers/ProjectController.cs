@@ -35,14 +35,24 @@ namespace CodeAnalyzerService.Backend.Controllers
         }
         
         [HttpGet("overview")]
-        public async Task<ActionResult<IEnumerable<Project>>> GetProjectsOverview()
+        public ActionResult<IEnumerable<ProjectOverviewResponse>> GetProjectsOverview()
         {
             if (_context.Projects == null)
             {
                 return NotFound();
             }
 
-            return await _context.Projects.ToListAsync();
+            var projectOverviewResponses = _context.Projects.Include(p => p.Analyses)
+                .Select(p => new ProjectOverviewResponse
+                {
+                    Id = p.Id,
+                    ProjectName = p.ProjectName,
+                    LastAnalysisDate = p.Analyses.OrderBy(a => a.CreatedOn).Last().CreatedOn.ToString("dd-MMM-yyyy, HH:mm:ss"),
+                    RuleViolationCount = p.Analyses.OrderBy(a => a.CreatedOn).Last().RuleViolations.Count()
+                })
+                .ToList();
+
+            return projectOverviewResponses;
         }
 
         // GET: api/ProjectAnalysis/5
