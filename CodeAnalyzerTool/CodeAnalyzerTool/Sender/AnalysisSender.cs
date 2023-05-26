@@ -28,7 +28,6 @@ public class AnalysisSender
         try
         {
             var response = await _httpClient.PutAsJsonAsync(_endpointUrl, projectAnalysis);
-            // response.Content.ReadAsStringAsync()
             if (!response.IsSuccessStatusCode)
                 Log.Error(
                     "Sending analysis results to backend failed with status code: {StatusCode} | URL: {EndpointUrl}",
