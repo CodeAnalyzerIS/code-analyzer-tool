@@ -3,7 +3,7 @@ using CodeAnalyzerTool.API;
 using CodeAnalyzerTool.API.ConfigModel;
 using Serilog;
 
-namespace CodeAnalyzerTool;
+namespace CodeAnalyzerTool.Sender;
 
 public class AnalysisSender
 {
@@ -24,10 +24,10 @@ public class AnalysisSender
 
     internal async Task Send(IEnumerable<RuleViolation> ruleViolations)
     {
-        var analysis = new ProjectAnalysis(_projectName, ruleViolations);
+        var projectAnalysis = new ProjectAnalysis(_projectName, ruleViolations).MapToDto();
         try
         {
-            var response = await _httpClient.PutAsJsonAsync(_endpointUrl, analysis);
+            var response = await _httpClient.PutAsJsonAsync(_endpointUrl, projectAnalysis);
             // response.Content.ReadAsStringAsync()
             if (!response.IsSuccessStatusCode)
                 Log.Error(

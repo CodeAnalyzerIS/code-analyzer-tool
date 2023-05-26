@@ -2,6 +2,7 @@
 using CodeAnalyzerTool.Config;
 using CodeAnalyzerTool.PluginSystem;
 using CodeAnalyzerTool.PluginSystem.Loaders;
+using CodeAnalyzerTool.Sender;
 using CodeAnalyzerTool.util;
 using Serilog;
 using Microsoft.Extensions.DependencyInjection;
