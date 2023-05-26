@@ -34,6 +34,8 @@ namespace CodeAnalyzerService.Backend.Migrations
                     Title = table.Column<string>(type: "TEXT", nullable: false),
                     Description = table.Column<string>(type: "TEXT", nullable: false),
                     Category = table.Column<string>(type: "TEXT", nullable: false),
+                    PluginName = table.Column<string>(type: "TEXT", nullable: false),
+                    TargetLanguage = table.Column<string>(type: "TEXT", nullable: false),
                     IsEnabledByDefault = table.Column<bool>(type: "INTEGER", nullable: false),
                     DefaultSeverity = table.Column<string>(type: "TEXT", nullable: false)
                 },
@@ -68,9 +70,7 @@ namespace CodeAnalyzerService.Backend.Migrations
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false),
                     RuleId = table.Column<int>(type: "INTEGER", nullable: false),
-                    PluginId = table.Column<string>(type: "TEXT", nullable: false),
                     Message = table.Column<string>(type: "TEXT", nullable: false),
-                    TargetLanguage = table.Column<string>(type: "TEXT", nullable: false),
                     Location_Path = table.Column<string>(type: "TEXT", nullable: false),
                     Location_StartLine = table.Column<int>(type: "INTEGER", nullable: false),
                     Location_EndLine = table.Column<int>(type: "INTEGER", nullable: false),

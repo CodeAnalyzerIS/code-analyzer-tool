@@ -12,6 +12,8 @@ using CodeAnalyzerService.Backend.DAL.EF;
 using CodeAnalyzerService.Backend.DAL.EF.Entities;
 using CodeAnalyzerService.Backend.Dtos;
 using CodeAnalyzerService.Backend.Dtos.Mappers;
+using CodeAnalyzerService.Backend.DTOs.Request;
+using CodeAnalyzerService.Backend.DTOs.Response;
 using NuGet.Packaging;
 
 namespace CodeAnalyzerService.Backend.Controllers
@@ -40,10 +42,21 @@ namespace CodeAnalyzerService.Backend.Controllers
 
             return await _context.Projects.ToListAsync();
         }
+        
+        [HttpGet("overview")]
+        public async Task<ActionResult<IEnumerable<Project>>> GetProjectsOverview()
+        {
+            if (_context.Projects == null)
+            {
+                return NotFound();
+            }
+
+            return await _context.Projects.ToListAsync();
+        }
 
         // GET: api/ProjectAnalysis/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<ProjectDto>> GetProject(int id)
+        public async Task<ActionResult<ProjectResponse>> GetProject(int id)
         {
             if (_context.Projects == null)
             {
@@ -51,6 +64,8 @@ namespace CodeAnalyzerService.Backend.Controllers
             }
 
             var project = await _context.Projects.Include(p => p.Analyses)
+                .ThenInclude(a => a.RuleViolations)
+                .ThenInclude(rv => rv.Location)
                 .SingleOrDefaultAsync(p => p.Id == id);
 
             if (project == null)
@@ -65,9 +80,9 @@ namespace CodeAnalyzerService.Backend.Controllers
 
         // PUT: api/ProjectAnalysis
         [HttpPut]
-        public async Task<ActionResult<ProjectDto>> PutProject(ProjectAnalysisDto projectAnalysisDto)
+        public async Task<ActionResult<ProjectResponse>> PutProject(ProjectAnalysisRequest projectAnalysisRequest)
         {
-            var project = await _projectAnalysisManager.AddProjectAnalysis(projectAnalysisDto);
+            var project = await _projectAnalysisManager.AddProjectAnalysis(projectAnalysisRequest);
 
             var projectDto = ProjectMapper.MapToDto(project);
 

@@ -2,6 +2,8 @@ using CodeAnalyzerService.Backend.DAL.EF;
 using CodeAnalyzerService.Backend.DAL.EF.Entities;
 using CodeAnalyzerService.Backend.Dtos;
 using CodeAnalyzerService.Backend.Dtos.Mappers;
+using CodeAnalyzerService.Backend.DTOs.Request;
+using CodeAnalyzerService.Backend.DTOs.Response;
 using NuGet.Packaging;
 
 namespace CodeAnalyzerService.Backend.BL.Services;
@@ -15,11 +17,11 @@ public class RuleService
         _ctx = context;
     }
 
-    public Rule GetRuleModelFromDto(RuleDto ruleDto)
+    public Rule GetRuleModelFromDto(RuleRequest ruleRequest)
     {
-        var rule = GetRule(ruleDto.RuleName);
+        var rule = GetRule(ruleRequest.RuleName);
         if (rule is not null) return rule;
-        rule = RuleMapper.MapToModel(ruleDto);
+        rule = RuleMapper.MapToModel(ruleRequest);
         rule = _ctx.Rules.Add(rule).Entity;
         _ctx.SaveChanges();
 

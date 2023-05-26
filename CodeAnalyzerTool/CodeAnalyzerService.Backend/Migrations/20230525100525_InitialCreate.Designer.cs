@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CodeAnalyzerService.Backend.Migrations
 {
     [DbContext(typeof(CodeAnalyzerServiceDbContext))]
-    [Migration("20230522082950_InitialCreate")]
+    [Migration("20230525100525_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -78,7 +78,15 @@ namespace CodeAnalyzerService.Backend.Migrations
                     b.Property<bool>("IsEnabledByDefault")
                         .HasColumnType("INTEGER");
 
+                    b.Property<string>("PluginName")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("RuleName")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("TargetLanguage")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
@@ -107,18 +115,10 @@ namespace CodeAnalyzerService.Backend.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("PluginId")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
                     b.Property<int>("RuleId")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Severity")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("TargetLanguage")
                         .IsRequired()
                         .HasColumnType("TEXT");
 

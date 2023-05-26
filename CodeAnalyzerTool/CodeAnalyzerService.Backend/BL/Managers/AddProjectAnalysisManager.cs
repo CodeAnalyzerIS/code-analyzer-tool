@@ -3,6 +3,7 @@ using CodeAnalyzerService.Backend.DAL.EF;
 using CodeAnalyzerService.Backend.DAL.EF.Entities;
 using CodeAnalyzerService.Backend.Dtos;
 using CodeAnalyzerService.Backend.Dtos.Mappers;
+using CodeAnalyzerService.Backend.DTOs.Request;
 using Microsoft.EntityFrameworkCore;
 using NuGet.Packaging;
 
@@ -25,34 +26,34 @@ public class AddProjectAnalysisManager
         _ruleService = ruleService;
     }
 
-    public async Task<Project> AddProjectAnalysis(ProjectAnalysisDto projectAnalysisDto)
+    public async Task<Project> AddProjectAnalysis(ProjectAnalysisRequest projectAnalysisRequest)
     {
-        var rules = GetRulesFromProjectAnalysisDto(projectAnalysisDto);
+        var rules = GetRulesFromProjectAnalysisDto(projectAnalysisRequest);
 
-        var ruleViolations = GetRuleViolationsAndAssignRule(projectAnalysisDto, rules);
+        var ruleViolations = GetRuleViolationsAndAssignRule(projectAnalysisRequest, rules);
 
         var analysis = CreateAnalysisAndAssignRuleViolations(ruleViolations);
         
-        var project = GetProject(projectAnalysisDto.ProjectName);
+        var project = GetProject(projectAnalysisRequest.ProjectName);
 
-        project = AddOrUpdateProject(projectAnalysisDto, project, analysis);
+        project = AddOrUpdateProject(projectAnalysisRequest, project, analysis);
         
         await _ctx.SaveChangesAsync();
 
         return project;
     }
 
-    private IEnumerable<Rule> GetRulesFromProjectAnalysisDto(ProjectAnalysisDto projectAnalysisDto)
+    private IEnumerable<Rule> GetRulesFromProjectAnalysisDto(ProjectAnalysisRequest projectAnalysisRequest)
     {
-        return projectAnalysisDto.RuleViolations
+        return projectAnalysisRequest.RuleViolations
             .Select(rv => rv.Rule)
             .Select(_ruleService.GetRuleModelFromDto)
             .Distinct();
     }
 
-    private static IEnumerable<RuleViolation> GetRuleViolationsAndAssignRule(ProjectAnalysisDto projectAnalysisDto, IEnumerable<Rule> rules)
+    private static IEnumerable<RuleViolation> GetRuleViolationsAndAssignRule(ProjectAnalysisRequest projectAnalysisRequest, IEnumerable<Rule> rules)
     {
-        return projectAnalysisDto.RuleViolations.Select(rv =>
+        return projectAnalysisRequest.RuleViolations.Select(rv =>
         {
             var rule = rules.Single(r => r.RuleName.Equals(rv.Rule.RuleName));
             var ruleViolation = RuleViolationMapper.MapToModel(rv);
@@ -74,11 +75,11 @@ public class AddProjectAnalysisManager
         return _ctx.Projects.SingleOrDefault(p => p.ProjectName.Equals(projectName));
     }
 
-    private Project AddOrUpdateProject(ProjectAnalysisDto projectAnalysisDto, Project? project, Analysis analysis)
+    private Project AddOrUpdateProject(ProjectAnalysisRequest projectAnalysisRequest, Project? project, Analysis analysis)
     {
         if (project is null)
         {
-            project = ProjectMapper.MapProjectAnalysisDtoToProject(projectAnalysisDto);
+            project = ProjectMapper.MapToModel(projectAnalysisRequest);
             project.Analyses.Add(analysis);
             project = _ctx.Projects.Add(project).Entity;
         }
