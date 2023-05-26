@@ -9,4 +9,5 @@ internal static class StringResources
     public const string INCORRECT_CONFIG_MESSAGE = $"Config is not valid according to the {SCHEMA_FILE_NAME}";
     public const string ASSEMBLY_NAME_MISSING_MESSAGE =
         "Invalid config: AssemblyName is a required field for external plugins.";
+    public const string PUT_ENDPOINT_PATH = "/api/Project";
 }
