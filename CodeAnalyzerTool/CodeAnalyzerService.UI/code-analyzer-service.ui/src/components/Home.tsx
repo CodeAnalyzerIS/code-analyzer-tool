@@ -1,12 +1,18 @@
-import React from "react";
+import React, { useState } from "react";
 import Loading from "./Loading";
 import {Alert, Box, Card, CardContent, CardHeader, Stack, Typography} from "@mui/material";
 import {useProjectOverview} from "../hooks/useProjectOverview";
 import TroubleshootIcon from '@mui/icons-material/Troubleshoot';
 import {ProjectOverview} from "../model/ProjectOverview";
 import ReportIcon from '@mui/icons-material/Report';
+import {Searchbar} from "./Searchbar";
+
+export type SearchString = {
+    searchValue: string;
+}
 
 export default function Home() {
+    const [searchString, setSearchString] = useState("")
     const {isLoading, isError, projectOverviews} = useProjectOverview()
 
     if (isLoading) {
@@ -17,9 +23,10 @@ export default function Home() {
     }
 
     return(
-        <Box sx={{display: 'flex', justifyContent: 'center', mt: 5}}>
+        <Box sx={{display: 'flex', flexDirection: 'column', alignItems: 'center', mt: 5}}>
+            <Searchbar setSearchString={setSearchString}/>
             {projectOverviews.map((po:ProjectOverview)  => (
-                <Card sx={{width: "50%", border: 'solid', borderColor: '#c4c4c4', borderWidth: 'thin'}} key={po.id}>
+                <Card sx={{width: "50%", border: 'solid', borderColor: '#c4c4c4', borderWidth: 'thin', mt: 3}} key={po.id}>
                     <CardHeader
                         style={{ textAlign: 'center', color: '#6574FC', borderBottom: 'solid', borderColor: '#c4c4c4',
                             borderWidth: 'thin' }}
