@@ -27,10 +27,10 @@ internal class MakeLocalVariableConstantWalker : CSharpSyntaxWalker
 
     public override void VisitIdentifierName(IdentifierNameSyntax node)
     {
-        if (IsParentSyntaxKind(node, SyntaxKind.SimpleMemberAccessExpression, SyntaxKind.AddressOfExpression)
+        if (node.IsParentSyntaxKind(SyntaxKind.SimpleMemberAccessExpression, SyntaxKind.AddressOfExpression)
             && IsLocalReference(node))
         {
-            if (IsParentSyntaxKind(node, SyntaxKind.SimpleMemberAccessExpression))
+            if (node.IsParentSyntaxKind(SyntaxKind.SimpleMemberAccessExpression))
             {
                 var methodSymbol = SemanticModel.GetSymbolInfo(node.Parent, CancellationToken).Symbol as IMethodSymbol;
                 
@@ -40,7 +40,7 @@ internal class MakeLocalVariableConstantWalker : CSharpSyntaxWalker
                     Result = true;
                 }
             }
-            else if (IsParentSyntaxKind(node, SyntaxKind.AddressOfExpression))
+            else if (node.IsParentSyntaxKind(SyntaxKind.AddressOfExpression))
             {
                 Result = true;
             }
@@ -86,16 +86,6 @@ internal class MakeLocalVariableConstantWalker : CSharpSyntaxWalker
         _cachedInstance = walker;
     }
 
-    private static bool IsParentSyntaxKind(SyntaxNode node, SyntaxKind kind)
-    {
-        return node.Parent?.RawKind == (int)kind;
-    }
-    
-    private static bool IsParentSyntaxKind(SyntaxNode node, SyntaxKind kind1, SyntaxKind kind2)
-    {
-        return IsParentSyntaxKind(node, kind1) || IsParentSyntaxKind(node, kind2);
-    }
-    
     private static bool IsRefOrOut(IParameterSymbol parameterSymbol)
     {
         if (parameterSymbol is null)
@@ -105,5 +95,84 @@ internal class MakeLocalVariableConstantWalker : CSharpSyntaxWalker
 
         return refKind == RefKind.Ref
                || refKind == RefKind.Out;
+    }
+    
+     public override void VisitAssignmentExpression(AssignmentExpressionSyntax node)
+    {
+        ExpressionSyntax left = node.Left;
+
+        if (node.Kind() == SyntaxKind.SimpleAssignmentExpression
+            && (left is TupleExpressionSyntax tupleExpression))
+        {
+            foreach (ArgumentSyntax argument in tupleExpression.Arguments)
+            {
+                ExpressionSyntax expression = argument.Expression;
+
+                if (expression?.IsKind(SyntaxKind.DeclarationExpression) == false)
+                    VisitAssignedExpression(expression);
+
+                VisitArgument(argument);
+            }
+        }
+        else
+        {
+            VisitAssignedExpression(left);
+            Visit(left);
+        }
+
+        Visit(node.Right);
+    }
+
+    public override void VisitPrefixUnaryExpression(PrefixUnaryExpressionSyntax node)
+    {
+        if (node.IsKind(SyntaxKind.PreIncrementExpression, SyntaxKind.PreDecrementExpression))
+        {
+            ExpressionSyntax operand = node.Operand;
+
+            VisitAssignedExpression(operand);
+            Visit(operand);
+        }
+        else
+        {
+            base.VisitPrefixUnaryExpression(node);
+        }
+    }
+
+    public override void VisitPostfixUnaryExpression(PostfixUnaryExpressionSyntax node)
+    {
+        if (node.IsKind(SyntaxKind.PostIncrementExpression, SyntaxKind.PostDecrementExpression))
+        {
+            ExpressionSyntax operand = node.Operand;
+
+            VisitAssignedExpression(operand);
+            Visit(operand);
+        }
+        else
+        {
+            base.VisitPostfixUnaryExpression(node);
+        }
+    }
+
+    public override void VisitArgument(ArgumentSyntax node)
+    {
+        switch (node.RefOrOutKeyword.Kind())
+        {
+            case SyntaxKind.RefKeyword:
+                {
+                    VisitAssignedExpression(node.Expression);
+                    break;
+                }
+            case SyntaxKind.OutKeyword:
+                {
+                    ExpressionSyntax expression = node.Expression;
+
+                    if (expression?.IsKind(SyntaxKind.DeclarationExpression) == false)
+                        VisitAssignedExpression(expression);
+
+                    break;
+                }
+        }
+
+        base.VisitArgument(node);
     }
 }

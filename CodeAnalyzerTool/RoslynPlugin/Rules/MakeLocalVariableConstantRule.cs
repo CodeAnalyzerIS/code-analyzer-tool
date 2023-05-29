@@ -77,10 +77,7 @@ public class MakeLocalVariableConstantRule : RoslynRule
             SyntaxKind.SwitchSection => ((SwitchSectionSyntax)parent).Statements,
             _ => throw new ArgumentOutOfRangeException() // todo
         };
-        
-        if (statements.Count <= 1)
-            return;
-        
+
         int index = statements.IndexOf(localDeclarationStatement);
         if (!CanBeMarkedAsConst(context, localDeclarationStatement.Declaration.Variables, statements, index + 1))
             return;

@@ -82,7 +82,21 @@ class C
     {
         string nonConstantString = ""This isn't a constant string"";
         nonConstantString = ""new value"";
-
+    }
+}";
+        var rule = new MakeLocalVariableConstantRule();
+        var results = await RuleTestRunner.CompileStringWithRule(code, rule);
+        results.Should().BeEmpty();
+    }
+    
+    [Fact]
+    public async Task MakeLocalVariableConstantRule_ShouldNotReportRuleViolation_WhenLocalVariableHasAdditionAssignment()
+    {
+        var code = @"
+class C
+{
+    void M()
+    {
         string nonConstantString2 = ""This isn't a constant string"";
         nonConstantString2 += ""new value"";
     }
