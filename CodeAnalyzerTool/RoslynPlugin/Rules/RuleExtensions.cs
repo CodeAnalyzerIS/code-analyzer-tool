@@ -1,5 +1,6 @@
 ﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace RoslynPlugin.rules;
 
@@ -33,5 +34,16 @@ public static class RuleExtensions
     public static bool IsKind(this SyntaxNode node, SyntaxKind kind1, SyntaxKind kind2)
     {
         return node.IsKind(kind1) || node.IsKind(kind2);
+    }
+    
+    public static ExpressionSyntax WalkDownParentheses(this ExpressionSyntax expression)
+    {
+        if (expression is null)
+            throw new ArgumentNullException(nameof(expression));
+
+        while (expression.Kind() == SyntaxKind.ParenthesizedExpression)
+            expression = ((ParenthesizedExpressionSyntax)expression).Expression;
+
+        return expression;
     }
 }

@@ -59,16 +59,16 @@ public class MakeLocalVariableConstantRule : RoslynRule
         // if (localDeclaration.Declaration.Type.IsVar) todo check if var can be explicitly declared?
 
 
-        // foreach (VariableDeclaratorSyntax declarator in localDeclaration.Declaration.Variables)
-        // {
-        //     ExpressionSyntax value = declarator.Initializer?.Value?.WalkDownParentheses();
-        //
-        //     if (value?.IsMissing != false)
-        //         return;
-        //
-        //     if (!HasConstantValue(value, typeSymbol, context.SemanticModel, context.CancellationToken))
-        //         return;
-        // }
+        foreach (VariableDeclaratorSyntax declarator in localDeclarationStatement.Declaration.Variables)
+        {
+            ExpressionSyntax value = declarator.Initializer?.Value?.WalkDownParentheses();
+        
+            if (value?.IsMissing != false)
+                return;
+        
+            if (!HasConstantValue(value, type, context.SemanticModel, context.CancellationToken))
+                return;
+        }
 
 
         SyntaxList<StatementSyntax> statements = parent.Kind() switch
@@ -127,6 +127,62 @@ public class MakeLocalVariableConstantRule : RoslynRule
         }
 
         return true;
+    }
+    
+    private static bool HasConstantValue(
+        ExpressionSyntax expression,
+        ITypeSymbol typeSymbol,
+        SemanticModel semanticModel,
+        CancellationToken cancellationToken = default)
+    {
+        switch (typeSymbol.SpecialType)
+        {
+            case SpecialType.System_Boolean:
+            {
+                if (expression.Kind() == SyntaxKind.TrueLiteralExpression || expression.Kind() == SyntaxKind.FalseLiteralExpression)
+                    return true;
+
+                break;
+            }
+            case SpecialType.System_Char:
+            {
+                if (expression.IsKind(SyntaxKind.CharacterLiteralExpression))
+                    return true;
+
+                break;
+            }
+            case SpecialType.System_SByte:
+            case SpecialType.System_Byte:
+            case SpecialType.System_Int16:
+            case SpecialType.System_UInt16:
+            case SpecialType.System_Int32:
+            case SpecialType.System_UInt32:
+            case SpecialType.System_Int64:
+            case SpecialType.System_UInt64:
+            case SpecialType.System_Decimal:
+            case SpecialType.System_Single:
+            case SpecialType.System_Double:
+            {
+                if (expression.IsKind(SyntaxKind.NumericLiteralExpression))
+                    return true;
+
+                break;
+            }
+            case SpecialType.System_String:
+            {
+                switch (expression.Kind())
+                {
+                    case SyntaxKind.StringLiteralExpression:
+                        return true;
+                    case SyntaxKind.InterpolatedStringExpression:
+                        return false; // todo
+                }
+
+                break;
+            }
+        }
+
+        return false;
     }
 
     private static bool CanTypeBeConst(ITypeSymbol typeSymbol)

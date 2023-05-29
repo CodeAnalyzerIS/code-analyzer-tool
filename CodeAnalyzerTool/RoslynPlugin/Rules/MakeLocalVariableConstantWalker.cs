@@ -33,12 +33,8 @@ internal class MakeLocalVariableConstantWalker : CSharpSyntaxWalker
             if (node.IsParentSyntaxKind(SyntaxKind.SimpleMemberAccessExpression))
             {
                 var methodSymbol = SemanticModel.GetSymbolInfo(node.Parent, CancellationToken).Symbol as IMethodSymbol;
-                
-
-                if (IsRefOrOut(methodSymbol.Parameters.FirstOrDefault()))
-                {
-                    Result = true;
-                }
+                var firstParameter = methodSymbol.ReducedFrom.Parameters.FirstOrDefault();
+                if (IsRefOrOut(firstParameter)) Result = true;
             }
             else if (node.IsParentSyntaxKind(SyntaxKind.AddressOfExpression))
             {
