@@ -6,21 +6,39 @@ namespace RoslynPlugin.Test.Rules;
 public class MakeLocalVariableConstantTest
 {
 
-    [Fact]
-    public async Task MakeLocalVariableConstantRule_ShouldReportRuleViolation_WhenConstantVariableNotMarkedAsConst()
+    public static TheoryData<IEnumerable<string>> ConstantVariableNotMarkedAsConstData => new()
     {
-        var code = @"
+        new List<string>
+        {
+            @"
 class C
 {
     void M()
     {
         string s = ""This string stays constant"";
     }
-}";
-        
+}",
+            @"
+class C
+{
+    void M()
+    {
+        string s = ""This string "" + ""stays constant"";
+    }
+}"
+        }
+    };
+
+    [Theory]
+    [MemberData(nameof(ConstantVariableNotMarkedAsConstData))]
+    public async Task MakeLocalVariableConstantRule_ShouldReportRuleViolation_WhenConstantVariableNotMarkedAsConst(IEnumerable<string> codeStrings)
+    {
         var rule = new MakeLocalVariableConstantRule();
-        var results = await RuleTestRunner.CompileStringWithRule(code, rule);
-        results.Should().Contain(rv => rv.Rule.RuleName == RuleNames.MAKE_LOCAL_VARIABLE_CONSTANT_RULE);
+        foreach (var code in codeStrings)
+        {
+            var results = await RuleTestRunner.CompileStringWithRule(code, rule);
+            results.Should().Contain(rv => rv.Rule.RuleName == RuleNames.MAKE_LOCAL_VARIABLE_CONSTANT_RULE);
+        }
     }
 
     [Fact]
@@ -71,11 +89,13 @@ class C
 //         var results = await RuleTestRunner.CompileStringWithRule(code, rule);
 //         results.Should().Contain(rv => rv.Rule.RuleName == RuleNames.MAKE_LOCAL_VARIABLE_CONSTANT_RULE);
 //     }
-    
-    [Fact]
-    public async Task MakeLocalVariableConstantRule_ShouldNotReportRuleViolation_WhenLocalVariableAssignedNewValue()
+
+
+    public static TheoryData<IEnumerable<string>> LocalVariableAssignedNewValueData => new()
     {
-        var code = @"
+        new List<string>
+        {
+            @"
 class C
 {
     void M()
@@ -83,29 +103,49 @@ class C
         string nonConstantString = ""This isn't a constant string"";
         nonConstantString = ""new value"";
     }
-}";
-        var rule = new MakeLocalVariableConstantRule();
-        var results = await RuleTestRunner.CompileStringWithRule(code, rule);
-        results.Should().BeEmpty();
-    }
-    
-    [Fact]
-    public async Task MakeLocalVariableConstantRule_ShouldNotReportRuleViolation_WhenLocalVariableHasAdditionAssignment()
-    {
-        var code = @"
+}",
+            @"
 class C
 {
     void M()
     {
-        string nonConstantString2 = ""This isn't a constant string"";
-        nonConstantString2 += ""new value"";
+        string nonConstantString = ""This isn't a constant string"";
+        nonConstantString += ""new value"";
     }
-}";
-        var rule = new MakeLocalVariableConstantRule();
-        var results = await RuleTestRunner.CompileStringWithRule(code, rule);
-        results.Should().BeEmpty();
+}",
+            @"
+class C
+{
+    void M()
+    {
+        int nonConstantInt = 0;
+        nonConstantInt += 8;
     }
+}",
+            @"
+class C
+{
+    void M()
+    {
+        var nonConstantInt = 2;
+        nonConstantInt *= 8;
+    }
+}"
+        }
+    };
     
+    [Theory]
+    [MemberData(nameof(LocalVariableAssignedNewValueData))]
+    public async Task MakeLocalVariableConstantRule_ShouldNotReportRuleViolation_WhenLocalVariableAssignedNewValue(IEnumerable<string> codeStrings)
+    {
+        foreach (var code in codeStrings)
+        {
+            var rule = new MakeLocalVariableConstantRule();
+            var results = await RuleTestRunner.CompileStringWithRule(code, rule);
+            results.Should().BeEmpty();
+        }
+    }
+
     [Fact]
     public async Task MakeLocalVariableConstantRule_ShouldNotReportRuleViolation_WhenInterpolatedStringContainsNonConstants()
     {

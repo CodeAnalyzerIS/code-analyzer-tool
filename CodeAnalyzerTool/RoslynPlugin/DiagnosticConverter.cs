@@ -25,8 +25,8 @@ public static class DiagnosticConverter
 
         var location = new Location(
             path: diagnostic.Location.GetLineSpan().Path,
-            startLine: diagnostic.Location.GetLineSpan().StartLinePosition.Line,
-            endLine: diagnostic.Location.GetLineSpan().EndLinePosition.Line,
+            startLine: diagnostic.Location.GetLineSpan().StartLinePosition.Line + 1,
+            endLine: diagnostic.Location.GetLineSpan().EndLinePosition.Line + 1,
             fileExtension: StringResources.FILE_EXTENSION
         );
 

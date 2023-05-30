@@ -53,7 +53,7 @@ public class MakeLocalVariableConstantRule : RoslynRule
         var type = context.SemanticModel.GetTypeInfo(localDeclarationStatement.Declaration.Type, context.CancellationToken).Type;
         if (type is null || !CanTypeBeConst(type)) return;
         
-        if (ContainsNonConstantExpression(localDeclarationStatement)) return;
+        if (!ContainsNoInterpolatedStrings(localDeclarationStatement)) return;
         
         var parent = localDeclarationStatement.Parent;
         if (parent is null) return;
@@ -75,35 +75,19 @@ public class MakeLocalVariableConstantRule : RoslynRule
                typeSymbol.TypeKind == TypeKind.Enum;
     }
 
-    private static bool ContainsNonConstantExpression(LocalDeclarationStatementSyntax localDeclarationStatement)
+    private static bool ContainsNoInterpolatedStrings(LocalDeclarationStatementSyntax localDeclarationStatement)
     {
         foreach (var variableDeclarator in localDeclarationStatement.Declaration.Variables)
         {
             var initializer = variableDeclarator.Initializer;
-            if (initializer is null) return true;
+            if (initializer is null) return false;
             ExpressionSyntax value = initializer.Value.WalkDownParentheses();
-
-            if (value.IsMissing)
-                return true;
-
-            if (!IsExpressionConstant(value))
-                return true;
+            if (value.IsMissing || value.IsOfSyntaxKind(SyntaxKind.InterpolatedStringExpression)) return false;
         }
 
-        return false;
+        return true;
     }
-    
-    private static bool IsExpressionConstant(ExpressionSyntax expression)
-    {
 
-        if (expression.IsOfSyntaxKind(SyntaxKind.CharacterLiteralExpression)
-            || expression.IsOfSyntaxKind(SyntaxKind.TrueLiteralExpression, SyntaxKind.FalseLiteralExpression)
-            || expression.IsOfSyntaxKind(SyntaxKind.NumericLiteralExpression)
-            || expression.IsOfSyntaxKind(SyntaxKind.StringLiteralExpression))
-            return true;
-        return false;
-    }
-    
     private static SyntaxList<StatementSyntax> GetStatements(SyntaxNode parent)
     {
         return parent.Kind() switch

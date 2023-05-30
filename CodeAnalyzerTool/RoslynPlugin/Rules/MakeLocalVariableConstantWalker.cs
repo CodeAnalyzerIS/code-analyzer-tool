@@ -1,6 +1,7 @@
 ﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using RoslynPlugin.API;
 
 namespace RoslynPlugin.rules;
 
@@ -106,14 +107,14 @@ internal class MakeLocalVariableConstantWalker : CSharpSyntaxWalker
             case SyntaxKind.OutKeyword:
                 {
                     ExpressionSyntax expression = node.Expression;
-
+    
                     if (expression?.IsOfSyntaxKind(SyntaxKind.DeclarationExpression) == false)
                         VisitAssignedExpression(expression);
-
+    
                     break;
                 }
         }
-
+    
         base.VisitArgument(node);
     }
 }
