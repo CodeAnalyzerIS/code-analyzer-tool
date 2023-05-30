@@ -48,18 +48,21 @@ public class MakeLocalVariableConstantRule : RoslynRule
         var localDeclarationStatement = (LocalDeclarationStatementSyntax)context.Node;
 
         if (localDeclarationStatement.IsConst) return; // check whether type is already const
+        if (localDeclarationStatement.Declaration.Variables.Count > 1) return; // supports only single variable declaration
+        var variableDeclarator = localDeclarationStatement.Declaration.Variables.SingleOrDefault();
+        if (variableDeclarator is null) return;
 
         // check whether the type of the var can legally be declared as const
         var type = context.SemanticModel.GetTypeInfo(localDeclarationStatement.Declaration.Type, context.CancellationToken).Type;
         if (type is null || !CanTypeBeConst(type)) return;
         
-        if (!ContainsNoInterpolatedStrings(localDeclarationStatement)) return;
+        if (IsNullOrInterpolatedString(variableDeclarator)) return;
         
         var parent = localDeclarationStatement.Parent;
         if (parent is null) return;
         var statements = GetStatements(parent);
         
-        if (!CanLocalVariableBeMadeConst(context, localDeclarationStatement.Declaration.Variables, statements))
+        if (!CanBeMadeConst(context, variableDeclarator, statements))
             return;
 
         var diagnostic = Diagnostic.Create(_rule,
@@ -75,17 +78,14 @@ public class MakeLocalVariableConstantRule : RoslynRule
                typeSymbol.TypeKind == TypeKind.Enum;
     }
 
-    private static bool ContainsNoInterpolatedStrings(LocalDeclarationStatementSyntax localDeclarationStatement)
+    private static bool IsNullOrInterpolatedString(VariableDeclaratorSyntax variableDeclarator)
     {
-        foreach (var variableDeclarator in localDeclarationStatement.Declaration.Variables)
-        {
-            var initializer = variableDeclarator.Initializer;
-            if (initializer is null) return false;
-            ExpressionSyntax value = initializer.Value.WalkDownParentheses();
-            if (value.IsMissing || value.IsOfSyntaxKind(SyntaxKind.InterpolatedStringExpression)) return false;
-        }
-
-        return true;
+        var initializer = variableDeclarator.Initializer;
+        if (initializer is null) return true;
+        ExpressionSyntax value = initializer.Value.WalkDownParentheses();
+        if (value.IsMissing || value.IsOfSyntaxKind(SyntaxKind.InterpolatedStringExpression)) return true;
+        
+        return false;
     }
 
     private static SyntaxList<StatementSyntax> GetStatements(SyntaxNode parent)
@@ -98,20 +98,17 @@ public class MakeLocalVariableConstantRule : RoslynRule
         };
     }
 
-    private static bool CanLocalVariableBeMadeConst(
+    private static bool CanBeMadeConst(
         SyntaxNodeAnalysisContext context,
-        SeparatedSyntaxList<VariableDeclaratorSyntax> variables,
+        VariableDeclaratorSyntax variable,
         SyntaxList<StatementSyntax> statements)
     {
-        var walker = new MakeLocalVariableConstantWalker(context.SemanticModel, context.CancellationToken);
-
-        foreach (var variable in variables)
-        {
-            var symbol = context.SemanticModel.GetDeclaredSymbol(variable, context.CancellationToken) as ILocalSymbol;
-            if (symbol is not null)
-                walker.Identifiers[variable.Identifier.ValueText] = symbol;
-        }
-
+        var symbol = context.SemanticModel.GetDeclaredSymbol(variable, context.CancellationToken) as ILocalSymbol;
+        if (symbol is null) return false;
+        
+        var identifier = new KeyValuePair<string, ILocalSymbol>(variable.Identifier.ValueText, symbol);
+        var walker = new MakeLocalVariableConstantWalker(context.SemanticModel, identifier, context.CancellationToken);
+        
         foreach (var statement in statements)
         {
             walker.Visit(statement);

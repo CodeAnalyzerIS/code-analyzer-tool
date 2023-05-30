@@ -2,7 +2,7 @@
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
-namespace RoslynPlugin.rules;
+namespace RoslynPlugin.API;
 
 public static class RuleExtensions
 {
@@ -22,6 +22,16 @@ public static class RuleExtensions
     }
     
     public static bool IsOfSyntaxKind(this SyntaxNode node, SyntaxKind kind1, SyntaxKind kind2)
+    {
+        return node.IsOfSyntaxKind(kind1) || node.IsOfSyntaxKind(kind2);
+    }
+
+    public static bool IsOfSyntaxKind(this SyntaxToken node, SyntaxKind kind)
+    {
+        return node.RawKind == (int)kind;
+    }
+    
+    public static bool IsOfSyntaxKind(this SyntaxToken node, SyntaxKind kind1, SyntaxKind kind2)
     {
         return node.IsOfSyntaxKind(kind1) || node.IsOfSyntaxKind(kind2);
     }

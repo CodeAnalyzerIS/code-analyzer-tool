@@ -56,41 +56,7 @@ class C
         var results = await RuleTestRunner.CompileStringWithRule(code, rule);
         results.Should().Contain(rv => rv.Rule.RuleName == RuleNames.MAKE_LOCAL_VARIABLE_CONSTANT_RULE);
     }
-
-//     [Fact]
-//     public async Task MakeLocalVariableConstantRule_ShouldReportRuleViolation_WhenInterpolatedStringContainsNoVariables()
-//     {
-//         var code = @"
-// class C
-// {
-//     void M()
-//     {
-//         string s = $""This is a string with interpolation but without variables"";
-//     }
-// }";
-//         var rule = new MakeLocalVariableConstantRule();
-//         var results = await RuleTestRunner.CompileStringWithRule(code, rule);
-//         results.Should().Contain(rv => rv.Rule.RuleName == RuleNames.MAKE_LOCAL_VARIABLE_CONSTANT_RULE);
-//     }
-//     
-//     [Fact]
-//     public async Task MakeLocalVariableConstantRule_ShouldReportRuleViolation_WhenInterpolatedStringContainsOnlyConstants()
-//     {
-//         var code = @"
-// class C
-// {
-//     void M()
-//     {
-//         const string constantString = ""This is a constant string"";
-//         string s = $""This is a string with interpolation with solely constants: {constantString}"";
-//     }
-// }";
-//         var rule = new MakeLocalVariableConstantRule();
-//         var results = await RuleTestRunner.CompileStringWithRule(code, rule);
-//         results.Should().Contain(rv => rv.Rule.RuleName == RuleNames.MAKE_LOCAL_VARIABLE_CONSTANT_RULE);
-//     }
-
-
+    
     public static TheoryData<IEnumerable<string>> LocalVariableAssignedNewValueData => new()
     {
         new List<string>
@@ -130,6 +96,42 @@ class C
         var nonConstantInt = 2;
         nonConstantInt *= 8;
     }
+}",
+            @"
+class C
+{
+    void M()
+    {
+        int nonConstantInt = 2;
+        ++nonConstantInt;
+    }
+}",
+            @"
+class C
+{
+    void M()
+    {
+        int nonConstantInt = 2;
+        nonConstantInt++;
+    }
+}",
+            @"
+class C
+{
+    void M()
+    {
+        int nonConstantInt = 2;
+        --nonConstantInt;
+    }
+}",
+            @"
+class C
+{
+    void M()
+    {
+        int nonConstantInt = 2;
+        nonConstantInt--;
+    }
 }"
         }
     };
@@ -144,25 +146,6 @@ class C
             var results = await RuleTestRunner.CompileStringWithRule(code, rule);
             results.Should().BeEmpty();
         }
-    }
-
-    [Fact]
-    public async Task MakeLocalVariableConstantRule_ShouldNotReportRuleViolation_WhenInterpolatedStringContainsNonConstants()
-    {
-        var code = @"
-class C
-{
-    void M()
-    {
-        const string constantString = ""This is a constant string"";
-        string nonConstantString = ""This isn't a constant string"";
-        nonConstantString += ""."";
-        string s = $""This is an interpolated string with non-constant variables: {nonConstantString} {constantString}"";
-    }
-}";
-        var rule = new MakeLocalVariableConstantRule();
-        var results = await RuleTestRunner.CompileStringWithRule(code, rule);
-        results.Should().BeEmpty();
     }
 
     [Fact]

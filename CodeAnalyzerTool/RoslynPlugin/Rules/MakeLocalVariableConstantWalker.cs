@@ -8,86 +8,86 @@ namespace RoslynPlugin.rules;
 internal class MakeLocalVariableConstantWalker : CSharpSyntaxWalker
 {
     private readonly SemanticModel _semanticModel;
-    public Dictionary<string, ILocalSymbol> Identifiers { get; }
+    private readonly KeyValuePair<string, ILocalSymbol> _variableIdentifier;
     private readonly CancellationToken _cancellationToken;
     public bool IsVariableNonConstant { get; set; }
-    protected bool ShouldVisit => !IsVariableNonConstant;
 
-    public MakeLocalVariableConstantWalker(SemanticModel semanticModel, CancellationToken cancellationToken, SyntaxWalkerDepth depth = SyntaxWalkerDepth.Node) : base(depth)
+    public MakeLocalVariableConstantWalker(SemanticModel semanticModel, KeyValuePair<string, ILocalSymbol> variableIdentifier,
+        CancellationToken cancellationToken, SyntaxWalkerDepth depth = SyntaxWalkerDepth.Node) : base(depth)
     {
         _semanticModel = semanticModel;
+        _variableIdentifier = variableIdentifier;
         _cancellationToken = cancellationToken;
-        Identifiers = new();
         IsVariableNonConstant = false;
     }
 
     public override void VisitIdentifierName(IdentifierNameSyntax node)
     {
-        if (node.Parent is not null && node.IsParentOfSyntaxKind(SyntaxKind.SimpleMemberAccessExpression) && IsLocalReference(node))
+        if (FromExtensionMethod(node) && IsIdentifierAMatch(node))
         {
-            var methodSymbol = _semanticModel.GetSymbolInfo(node.Parent, _cancellationToken).Symbol as IMethodSymbol;
+            var methodSymbol = _semanticModel.GetSymbolInfo(node.Parent!, _cancellationToken).Symbol as IMethodSymbol;
             var firstParameter = methodSymbol?.ReducedFrom?.Parameters.FirstOrDefault();
-            if (firstParameter is not null && RefKindIsOutOrRef(firstParameter)) IsVariableNonConstant = true;
+            if (firstParameter is not null && IsOutOrRef(firstParameter)) IsVariableNonConstant = true;
         }
 
         base.VisitIdentifierName(node);
     }
 
-    private static bool RefKindIsOutOrRef(IParameterSymbol parameterSymbol)
+    private static bool FromExtensionMethod(IdentifierNameSyntax node)
+    {
+        return node.Parent is not null && node.IsParentOfSyntaxKind(SyntaxKind.SimpleMemberAccessExpression);
+    }
+
+    private static bool IsOutOrRef(IParameterSymbol parameterSymbol)
     {
         return parameterSymbol.RefKind is RefKind.Out or RefKind.Ref;
     }
     
      public override void VisitAssignmentExpression(AssignmentExpressionSyntax node)
     {
-        VisitAssignedExpression(node.Left);
+        CheckIdentifierMatches(node.Left);
         Visit(node.Left);
         Visit(node.Right);
     }
-    
-     public void VisitAssignedExpression(ExpressionSyntax expression)
-     {
-         if (IsLocalReference(expression))
-             IsVariableNonConstant = true;
-     }
-     
-     private bool IsLocalReference(SyntaxNode node)
-     {
-         return node is IdentifierNameSyntax identifierName && IsLocalReference(identifierName);
-     }
-     
-     private bool IsLocalReference(IdentifierNameSyntax identifierName)
-     {
-         var isIdentifierRecognized = Identifiers.TryGetValue(identifierName.Identifier.ValueText, out ILocalSymbol? symbol);
-         var expectedSymbol = _semanticModel.GetSymbolInfo(identifierName, _cancellationToken).Symbol;
-         var areSymbolsEqual = SymbolEqualityComparer.Default.Equals(expectedSymbol, symbol);
 
-         return isIdentifierRecognized && areSymbolsEqual;
+     private void CheckIdentifierMatches(ExpressionSyntax expression)
+     {
+         if (IsIdentifierAMatch(expression)) IsVariableNonConstant = true;
+     }
+     
+     private bool IsIdentifierAMatch(SyntaxNode node)
+     {
+         return node is IdentifierNameSyntax identifierName && IsIdentifierAMatch(identifierName);
+     }
+     
+     private bool IsIdentifierAMatch(IdentifierNameSyntax identifierName)
+     {
+         var identifierStringMatches  = identifierName.Identifier.ValueText == _variableIdentifier.Key;
+         var symbol = _semanticModel.GetSymbolInfo(identifierName, _cancellationToken).Symbol;
+         var identifierSymbolMatches = SymbolEqualityComparer.Default.Equals(_variableIdentifier.Value, symbol);
+
+         return identifierStringMatches && identifierSymbolMatches;
      }
 
     public override void VisitPrefixUnaryExpression(PrefixUnaryExpressionSyntax node)
     {
         if (node.IsOfSyntaxKind(SyntaxKind.PreIncrementExpression, SyntaxKind.PreDecrementExpression))
         {
-            ExpressionSyntax operand = node.Operand;
-
-            VisitAssignedExpression(operand);
-            Visit(operand);
+            CheckIdentifierMatches(node.Operand);
+            Visit(node.Operand);
         }
         else
         {
             base.VisitPrefixUnaryExpression(node);
         }
     }
-
+    
     public override void VisitPostfixUnaryExpression(PostfixUnaryExpressionSyntax node)
     {
         if (node.IsOfSyntaxKind(SyntaxKind.PostIncrementExpression, SyntaxKind.PostDecrementExpression))
         {
-            ExpressionSyntax operand = node.Operand;
-
-            VisitAssignedExpression(operand);
-            Visit(operand);
+            CheckIdentifierMatches(node.Operand);
+            Visit(node.Operand);
         }
         else
         {
@@ -97,24 +97,10 @@ internal class MakeLocalVariableConstantWalker : CSharpSyntaxWalker
 
     public override void VisitArgument(ArgumentSyntax node)
     {
-        switch (node.RefOrOutKeyword.Kind())
+        if (node.RefKindKeyword.IsOfSyntaxKind(SyntaxKind.RefKeyword, SyntaxKind.OutKeyword))
         {
-            case SyntaxKind.RefKeyword:
-                {
-                    VisitAssignedExpression(node.Expression);
-                    break;
-                }
-            case SyntaxKind.OutKeyword:
-                {
-                    ExpressionSyntax expression = node.Expression;
-    
-                    if (expression?.IsOfSyntaxKind(SyntaxKind.DeclarationExpression) == false)
-                        VisitAssignedExpression(expression);
-    
-                    break;
-                }
+            CheckIdentifierMatches(node.Expression);
         }
-    
         base.VisitArgument(node);
     }
 }
