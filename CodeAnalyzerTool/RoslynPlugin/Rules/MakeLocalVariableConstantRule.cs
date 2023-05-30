@@ -58,9 +58,8 @@ public class MakeLocalVariableConstantRule : RoslynRule
         var parent = localDeclarationStatement.Parent;
         if (parent is null) return;
         var statements = GetStatements(parent);
-
-        int index = statements.IndexOf(localDeclarationStatement);
-        if (!CanLocalVariableBeMadeConst(context, localDeclarationStatement.Declaration.Variables, statements, index + 1))
+        
+        if (!CanLocalVariableBeMadeConst(context, localDeclarationStatement.Declaration.Variables, statements))
             return;
 
         var diagnostic = Diagnostic.Create(_rule,
@@ -97,10 +96,10 @@ public class MakeLocalVariableConstantRule : RoslynRule
     private static bool IsExpressionConstant(ExpressionSyntax expression)
     {
 
-        if (expression.IsKind(SyntaxKind.CharacterLiteralExpression)
-            || expression.IsKind(SyntaxKind.TrueLiteralExpression, SyntaxKind.FalseLiteralExpression)
-            || expression.IsKind(SyntaxKind.NumericLiteralExpression)
-            || expression.IsKind(SyntaxKind.StringLiteralExpression))
+        if (expression.IsOfSyntaxKind(SyntaxKind.CharacterLiteralExpression)
+            || expression.IsOfSyntaxKind(SyntaxKind.TrueLiteralExpression, SyntaxKind.FalseLiteralExpression)
+            || expression.IsOfSyntaxKind(SyntaxKind.NumericLiteralExpression)
+            || expression.IsOfSyntaxKind(SyntaxKind.StringLiteralExpression))
             return true;
         return false;
     }
@@ -118,37 +117,24 @@ public class MakeLocalVariableConstantRule : RoslynRule
     private static bool CanLocalVariableBeMadeConst(
         SyntaxNodeAnalysisContext context,
         SeparatedSyntaxList<VariableDeclaratorSyntax> variables,
-        SyntaxList<StatementSyntax> statements,
-        int startIndex)
+        SyntaxList<StatementSyntax> statements)
     {
-        MakeLocalVariableConstantWalker? walker = null;
+        var walker = new MakeLocalVariableConstantWalker(context.SemanticModel, context.CancellationToken);
 
-        try
+        foreach (var variable in variables)
         {
-            walker = MakeLocalVariableConstantWalker.Create();
-            walker.SemanticModel = context.SemanticModel;
-            walker.CancellationToken = context.CancellationToken;
-
-            foreach (var variable in variables)
-            {
-                var symbol = context.SemanticModel.GetDeclaredSymbol(variable, context.CancellationToken) as ILocalSymbol;
-                if (symbol is not null)
-                    walker.Identifiers[variable.Identifier.ValueText] = symbol;
-            }
-
-            foreach (var statement in statements)
-            {
-                walker.Visit(statement);
-                if (walker.Result)
-                    return false;
-            }
-        }
-        finally
-        {
-            if (walker is not null)
-                MakeLocalVariableConstantWalker.Free(walker);
+            var symbol = context.SemanticModel.GetDeclaredSymbol(variable, context.CancellationToken) as ILocalSymbol;
+            if (symbol is not null)
+                walker.Identifiers[variable.Identifier.ValueText] = symbol;
         }
 
+        foreach (var statement in statements)
+        {
+            walker.Visit(statement);
+            if (walker.IsVariableNonConstant)
+                return false;
+        }
+        
         return true;
     }
 }

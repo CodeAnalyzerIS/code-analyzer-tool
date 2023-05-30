@@ -6,78 +6,38 @@ namespace RoslynPlugin.rules;
 
 internal class MakeLocalVariableConstantWalker : CSharpSyntaxWalker
 {
-    [ThreadStatic]
-    private static MakeLocalVariableConstantWalker? _cachedInstance;
+    private readonly SemanticModel _semanticModel;
+    public Dictionary<string, ILocalSymbol> Identifiers { get; }
+    private readonly CancellationToken _cancellationToken;
+    public bool IsVariableNonConstant { get; set; }
+    protected bool ShouldVisit => !IsVariableNonConstant;
 
-    public Dictionary<string, ILocalSymbol> Identifiers { get; } = new();
-
-    public SemanticModel SemanticModel { get; set; }
-
-    public CancellationToken CancellationToken { get; set; }
-
-    public bool Result { get; set; }
-
-    protected bool ShouldVisit => !Result;
-
-    public void VisitAssignedExpression(ExpressionSyntax expression)
+    public MakeLocalVariableConstantWalker(SemanticModel semanticModel, CancellationToken cancellationToken, SyntaxWalkerDepth depth = SyntaxWalkerDepth.Node) : base(depth)
     {
-        if (IsLocalReference(expression))
-            Result = true;
+        _semanticModel = semanticModel;
+        _cancellationToken = cancellationToken;
+        Identifiers = new();
+        IsVariableNonConstant = false;
     }
 
     public override void VisitIdentifierName(IdentifierNameSyntax node)
     {
-        if (node.IsParentSyntaxKind(SyntaxKind.SimpleMemberAccessExpression, SyntaxKind.AddressOfExpression)
+        if (node.IsParentOfSyntaxKind(SyntaxKind.SimpleMemberAccessExpression, SyntaxKind.AddressOfExpression)
             && IsLocalReference(node))
         {
-            if (node.IsParentSyntaxKind(SyntaxKind.SimpleMemberAccessExpression))
+            if (node.IsParentOfSyntaxKind(SyntaxKind.SimpleMemberAccessExpression))
             {
-                var methodSymbol = SemanticModel.GetSymbolInfo(node.Parent, CancellationToken).Symbol as IMethodSymbol;
+                var methodSymbol = _semanticModel.GetSymbolInfo(node.Parent, _cancellationToken).Symbol as IMethodSymbol;
                 var firstParameter = methodSymbol.ReducedFrom.Parameters.FirstOrDefault();
-                if (IsRefOrOut(firstParameter)) Result = true;
+                if (IsRefOrOut(firstParameter)) IsVariableNonConstant = true;
             }
-            else if (node.IsParentSyntaxKind(SyntaxKind.AddressOfExpression))
+            else if (node.IsParentOfSyntaxKind(SyntaxKind.AddressOfExpression))
             {
-                Result = true;
+                IsVariableNonConstant = true;
             }
         }
 
         base.VisitIdentifierName(node);
-    }
-
-    private bool IsLocalReference(SyntaxNode node)
-    {
-        return node is IdentifierNameSyntax identifierName
-            && IsLocalReference(identifierName);
-    }
-
-    private bool IsLocalReference(IdentifierNameSyntax identifierName)
-    {
-        return Identifiers.TryGetValue(identifierName.Identifier.ValueText, out ILocalSymbol symbol)
-            && SymbolEqualityComparer.Default.Equals(symbol, SemanticModel.GetSymbolInfo(identifierName, CancellationToken).Symbol);
-    }
-
-    public static MakeLocalVariableConstantWalker Create()
-    {
-        var walker = _cachedInstance;
-
-        if (walker is not null)
-        {
-            _cachedInstance = null;
-            return walker;
-        }
-
-        return new MakeLocalVariableConstantWalker();
-    }
-
-    public static void Free(MakeLocalVariableConstantWalker walker)
-    {
-        walker.Identifiers.Clear();
-        walker.SemanticModel = null;
-        walker.CancellationToken = default;
-        walker.Result = false;
-
-        _cachedInstance = walker;
     }
 
     private static bool IsRefOrOut(IParameterSymbol parameterSymbol)
@@ -102,7 +62,7 @@ internal class MakeLocalVariableConstantWalker : CSharpSyntaxWalker
             {
                 ExpressionSyntax expression = argument.Expression;
 
-                if (expression?.IsKind(SyntaxKind.DeclarationExpression) == false)
+                if (expression?.IsOfSyntaxKind(SyntaxKind.DeclarationExpression) == false)
                     VisitAssignedExpression(expression);
 
                 VisitArgument(argument);
@@ -116,10 +76,29 @@ internal class MakeLocalVariableConstantWalker : CSharpSyntaxWalker
 
         Visit(node.Right);
     }
+    
+     public void VisitAssignedExpression(ExpressionSyntax expression)
+     {
+         if (IsLocalReference(expression))
+             IsVariableNonConstant = true;
+     }
+     
+
+     private bool IsLocalReference(SyntaxNode node)
+     {
+         return node is IdentifierNameSyntax identifierName
+                && IsLocalReference(identifierName);
+     }
+     
+     private bool IsLocalReference(IdentifierNameSyntax identifierName)
+     {
+         return Identifiers.TryGetValue(identifierName.Identifier.ValueText, out ILocalSymbol symbol)
+                && SymbolEqualityComparer.Default.Equals(symbol, _semanticModel.GetSymbolInfo(identifierName, _cancellationToken).Symbol);
+     }
 
     public override void VisitPrefixUnaryExpression(PrefixUnaryExpressionSyntax node)
     {
-        if (node.IsKind(SyntaxKind.PreIncrementExpression, SyntaxKind.PreDecrementExpression))
+        if (node.IsOfSyntaxKind(SyntaxKind.PreIncrementExpression, SyntaxKind.PreDecrementExpression))
         {
             ExpressionSyntax operand = node.Operand;
 
@@ -134,7 +113,7 @@ internal class MakeLocalVariableConstantWalker : CSharpSyntaxWalker
 
     public override void VisitPostfixUnaryExpression(PostfixUnaryExpressionSyntax node)
     {
-        if (node.IsKind(SyntaxKind.PostIncrementExpression, SyntaxKind.PostDecrementExpression))
+        if (node.IsOfSyntaxKind(SyntaxKind.PostIncrementExpression, SyntaxKind.PostDecrementExpression))
         {
             ExpressionSyntax operand = node.Operand;
 
@@ -160,7 +139,7 @@ internal class MakeLocalVariableConstantWalker : CSharpSyntaxWalker
                 {
                     ExpressionSyntax expression = node.Expression;
 
-                    if (expression?.IsKind(SyntaxKind.DeclarationExpression) == false)
+                    if (expression?.IsOfSyntaxKind(SyntaxKind.DeclarationExpression) == false)
                         VisitAssignedExpression(expression);
 
                     break;
