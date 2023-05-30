@@ -22,58 +22,25 @@ internal class MakeLocalVariableConstantWalker : CSharpSyntaxWalker
 
     public override void VisitIdentifierName(IdentifierNameSyntax node)
     {
-        if (node.IsParentOfSyntaxKind(SyntaxKind.SimpleMemberAccessExpression, SyntaxKind.AddressOfExpression)
-            && IsLocalReference(node))
+        if (node.Parent is not null && node.IsParentOfSyntaxKind(SyntaxKind.SimpleMemberAccessExpression) && IsLocalReference(node))
         {
-            if (node.IsParentOfSyntaxKind(SyntaxKind.SimpleMemberAccessExpression))
-            {
-                var methodSymbol = _semanticModel.GetSymbolInfo(node.Parent, _cancellationToken).Symbol as IMethodSymbol;
-                var firstParameter = methodSymbol.ReducedFrom.Parameters.FirstOrDefault();
-                if (IsRefOrOut(firstParameter)) IsVariableNonConstant = true;
-            }
-            else if (node.IsParentOfSyntaxKind(SyntaxKind.AddressOfExpression))
-            {
-                IsVariableNonConstant = true;
-            }
+            var methodSymbol = _semanticModel.GetSymbolInfo(node.Parent, _cancellationToken).Symbol as IMethodSymbol;
+            var firstParameter = methodSymbol?.ReducedFrom?.Parameters.FirstOrDefault();
+            if (firstParameter is not null && RefKindIsOutOrRef(firstParameter)) IsVariableNonConstant = true;
         }
 
         base.VisitIdentifierName(node);
     }
 
-    private static bool IsRefOrOut(IParameterSymbol parameterSymbol)
+    private static bool RefKindIsOutOrRef(IParameterSymbol parameterSymbol)
     {
-        if (parameterSymbol is null)
-            throw new ArgumentNullException(nameof(parameterSymbol));
-
-        RefKind refKind = parameterSymbol.RefKind;
-
-        return refKind == RefKind.Ref
-               || refKind == RefKind.Out;
+        return parameterSymbol.RefKind is RefKind.Out or RefKind.Ref;
     }
     
      public override void VisitAssignmentExpression(AssignmentExpressionSyntax node)
     {
-        ExpressionSyntax left = node.Left;
-
-        if (node.Kind() == SyntaxKind.SimpleAssignmentExpression
-            && (left is TupleExpressionSyntax tupleExpression))
-        {
-            foreach (ArgumentSyntax argument in tupleExpression.Arguments)
-            {
-                ExpressionSyntax expression = argument.Expression;
-
-                if (expression?.IsOfSyntaxKind(SyntaxKind.DeclarationExpression) == false)
-                    VisitAssignedExpression(expression);
-
-                VisitArgument(argument);
-            }
-        }
-        else
-        {
-            VisitAssignedExpression(left);
-            Visit(left);
-        }
-
+        VisitAssignedExpression(node.Left);
+        Visit(node.Left);
         Visit(node.Right);
     }
     
@@ -83,17 +50,18 @@ internal class MakeLocalVariableConstantWalker : CSharpSyntaxWalker
              IsVariableNonConstant = true;
      }
      
-
      private bool IsLocalReference(SyntaxNode node)
      {
-         return node is IdentifierNameSyntax identifierName
-                && IsLocalReference(identifierName);
+         return node is IdentifierNameSyntax identifierName && IsLocalReference(identifierName);
      }
      
      private bool IsLocalReference(IdentifierNameSyntax identifierName)
      {
-         return Identifiers.TryGetValue(identifierName.Identifier.ValueText, out ILocalSymbol symbol)
-                && SymbolEqualityComparer.Default.Equals(symbol, _semanticModel.GetSymbolInfo(identifierName, _cancellationToken).Symbol);
+         var isIdentifierRecognized = Identifiers.TryGetValue(identifierName.Identifier.ValueText, out ILocalSymbol? symbol);
+         var expectedSymbol = _semanticModel.GetSymbolInfo(identifierName, _cancellationToken).Symbol;
+         var areSymbolsEqual = SymbolEqualityComparer.Default.Equals(expectedSymbol, symbol);
+
+         return isIdentifierRecognized && areSymbolsEqual;
      }
 
     public override void VisitPrefixUnaryExpression(PrefixUnaryExpressionSyntax node)
