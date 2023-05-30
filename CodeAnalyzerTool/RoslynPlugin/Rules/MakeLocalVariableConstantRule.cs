@@ -49,34 +49,15 @@ public class MakeLocalVariableConstantRule : RoslynRule
 
         if (localDeclarationStatement.IsConst) return; // check whether type is already const
 
-        var parent = localDeclarationStatement.Parent;
-        if (parent is null) return;
-
         // check whether the type of the var can legally be declared as const
         var type = context.SemanticModel.GetTypeInfo(localDeclarationStatement.Declaration.Type, context.CancellationToken).Type;
         if (type is null || !CanTypeBeConst(type)) return;
-
-        // if (localDeclaration.Declaration.Type.IsVar) todo check if var can be explicitly declared?
-
-
-        foreach (VariableDeclaratorSyntax declarator in localDeclarationStatement.Declaration.Variables)
-        {
-            ExpressionSyntax value = declarator.Initializer?.Value?.WalkDownParentheses();
         
-            if (value?.IsMissing != false)
-                return;
+        if (ContainsNonConstantExpression(localDeclarationStatement)) return;
         
-            if (!HasConstantValue(value, type, context.SemanticModel, context.CancellationToken))
-                return;
-        }
-
-
-        SyntaxList<StatementSyntax> statements = parent.Kind() switch
-        {
-            SyntaxKind.Block => ((BlockSyntax)parent).Statements,
-            SyntaxKind.SwitchSection => ((SwitchSectionSyntax)parent).Statements,
-            _ => throw new ArgumentOutOfRangeException() // todo
-        };
+        var parent = localDeclarationStatement.Parent;
+        if (parent is null) return;
+        var statements = GetStatements(parent);
 
         int index = statements.IndexOf(localDeclarationStatement);
         if (!CanBeMarkedAsConst(context, localDeclarationStatement.Declaration.Variables, statements, index + 1))
@@ -87,8 +68,53 @@ public class MakeLocalVariableConstantRule : RoslynRule
             Severity);
         context.ReportDiagnostic(diagnostic);
     }
+
+    private static bool CanTypeBeConst(ITypeSymbol typeSymbol)
+    {
+        return typeSymbol.IsValueType ||
+               typeSymbol.SpecialType == SpecialType.System_String ||
+               typeSymbol.TypeKind == TypeKind.Enum;
+    }
+
+    private static bool ContainsNonConstantExpression(LocalDeclarationStatementSyntax localDeclarationStatement)
+    {
+        foreach (var variableDeclarator in localDeclarationStatement.Declaration.Variables)
+        {
+            var initializer = variableDeclarator.Initializer;
+            if (initializer is null) return true;
+            ExpressionSyntax value = initializer.Value.WalkDownParentheses();
+
+            if (value.IsMissing)
+                return true;
+
+            if (!IsExpressionConstant(value))
+                return true;
+        }
+
+        return false;
+    }
     
+    private static bool IsExpressionConstant(ExpressionSyntax expression)
+    {
+
+        if (expression.IsKind(SyntaxKind.CharacterLiteralExpression)
+            || expression.IsKind(SyntaxKind.TrueLiteralExpression, SyntaxKind.FalseLiteralExpression)
+            || expression.IsKind(SyntaxKind.NumericLiteralExpression)
+            || expression.IsKind(SyntaxKind.StringLiteralExpression))
+            return true;
+        return false;
+    }
     
+    private static SyntaxList<StatementSyntax> GetStatements(SyntaxNode parent)
+    {
+        return parent.Kind() switch
+        {
+            SyntaxKind.Block => ((BlockSyntax)parent).Statements,
+            SyntaxKind.SwitchSection => ((SwitchSectionSyntax)parent).Statements,
+            _ => throw new ArgumentOutOfRangeException() // todo
+        };
+    }
+
     private static bool CanBeMarkedAsConst(
         SyntaxNodeAnalysisContext context,
         SeparatedSyntaxList<VariableDeclaratorSyntax> variables,
@@ -127,68 +153,5 @@ public class MakeLocalVariableConstantRule : RoslynRule
         }
 
         return true;
-    }
-    
-    private static bool HasConstantValue(
-        ExpressionSyntax expression,
-        ITypeSymbol typeSymbol,
-        SemanticModel semanticModel,
-        CancellationToken cancellationToken = default)
-    {
-        switch (typeSymbol.SpecialType)
-        {
-            case SpecialType.System_Boolean:
-            {
-                if (expression.Kind() == SyntaxKind.TrueLiteralExpression || expression.Kind() == SyntaxKind.FalseLiteralExpression)
-                    return true;
-
-                break;
-            }
-            case SpecialType.System_Char:
-            {
-                if (expression.IsKind(SyntaxKind.CharacterLiteralExpression))
-                    return true;
-
-                break;
-            }
-            case SpecialType.System_SByte:
-            case SpecialType.System_Byte:
-            case SpecialType.System_Int16:
-            case SpecialType.System_UInt16:
-            case SpecialType.System_Int32:
-            case SpecialType.System_UInt32:
-            case SpecialType.System_Int64:
-            case SpecialType.System_UInt64:
-            case SpecialType.System_Decimal:
-            case SpecialType.System_Single:
-            case SpecialType.System_Double:
-            {
-                if (expression.IsKind(SyntaxKind.NumericLiteralExpression))
-                    return true;
-
-                break;
-            }
-            case SpecialType.System_String:
-            {
-                switch (expression.Kind())
-                {
-                    case SyntaxKind.StringLiteralExpression:
-                        return true;
-                    case SyntaxKind.InterpolatedStringExpression:
-                        return false; // todo
-                }
-
-                break;
-            }
-        }
-
-        return false;
-    }
-
-    private static bool CanTypeBeConst(ITypeSymbol typeSymbol)
-    {
-        return typeSymbol.IsValueType ||
-               typeSymbol.SpecialType == SpecialType.System_String ||
-               typeSymbol.TypeKind == TypeKind.Enum;
     }
 }
