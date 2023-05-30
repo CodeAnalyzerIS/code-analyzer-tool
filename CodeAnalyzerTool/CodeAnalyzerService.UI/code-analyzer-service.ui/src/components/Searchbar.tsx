@@ -1,4 +1,4 @@
-import {SearchString} from "./Home";
+import {SearchString} from "../pages/Home";
 import {IconButton, InputBase, Paper} from "@mui/material";
 import {Controller, useForm} from "react-hook-form";
 import SearchIcon from '@mui/icons-material/Search';

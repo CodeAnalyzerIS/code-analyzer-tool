@@ -2,8 +2,9 @@ import React, {useState} from 'react';
 import './App.css';
 import {QueryClient, QueryClientProvider} from "react-query";
 import {BrowserRouter, Route, Routes} from "react-router-dom";
-import Home from "./components/Home";
+import Home from "./pages/Home";
 import {AppBar, Avatar, Breadcrumbs, Link, Stack, Toolbar, Typography} from "@mui/material";
+import ProjectDetails from "./pages/ProjectDetails";
 
 export const BACKEND_URL = 'http://localhost:5082';
 
@@ -21,7 +22,7 @@ const Header = ({breadcrumbData}: HeaderProps) => (
     <AppBar position="static" color="transparent">
         <Toolbar variant='dense' sx={{justifyContent: 'center'}}>
             <Stack direction='row' spacing={1} alignItems='center' sx={{position: 'absolute', left: 10}}>
-                <Avatar src={'logo_transparent.png'}/>
+                <Avatar src={'/logo_transparent.png'}/>
                 <Breadcrumbs aria-label='breadcrumb'>
                     {breadcrumbData.map((breadcrumb, index) => (
                         <Link key={index} underline='hover' color="#6574FC" href={breadcrumb.path}>
@@ -38,12 +39,17 @@ const Header = ({breadcrumbData}: HeaderProps) => (
 function App() {
     const [breadcrumbData, setBreadcrumbData] =
         useState<Breadcrumb[]>([{label: 'ᓚᘏᗢ', path:'/'}])
+    const updateBreadcrumbData = (newData: Breadcrumb[]) => {
+        setBreadcrumbData(newData);
+    };
+
     return (
         <QueryClientProvider client={queryClient}>
             <BrowserRouter>
                 <Header breadcrumbData={breadcrumbData}/>
                 <Routes>
                     <Route path="/" element={<Home/>}/>
+                    <Route path="/project/:id" element={<ProjectDetails updateBreadCrumbData={updateBreadcrumbData}/>}/>
                 </Routes>
             </BrowserRouter>
         </QueryClientProvider>

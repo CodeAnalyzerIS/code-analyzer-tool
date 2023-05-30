@@ -5,3 +5,9 @@ export type Analysis = {
     createdOn: Date;
     ruleViolations: RuleViolation[];
 }
+
+export type AnalysisWithViolationCount = {
+    id: number;
+    createdOn: Date;
+    ruleViolationCount: number;
+}

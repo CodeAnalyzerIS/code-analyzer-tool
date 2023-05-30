@@ -8,6 +8,6 @@ public class AnalysisMapper
     public static AnalysisResponse MapToDto(Analysis analysis)
     {
         var ruleViolations = analysis.RuleViolations.Select(RuleViolationMapper.MapToDto);
-        return new AnalysisResponse(analysis.Id, analysis.CreatedOn, ruleViolations);
+        return new AnalysisResponse(analysis.Id, analysis.CreatedOn.ToString("dd-MMM-yyyy, HH:mm:ss"), ruleViolations);
     }
 }

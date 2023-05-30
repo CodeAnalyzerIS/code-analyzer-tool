@@ -1,11 +1,11 @@
 import React, { useState } from "react";
-import Loading from "./Loading";
+import Loading from "../components/Loading";
 import {Alert, Box, Card, CardContent, CardHeader, Stack, Typography} from "@mui/material";
 import {useProjectOverview} from "../hooks/useProjectOverview";
 import TroubleshootIcon from '@mui/icons-material/Troubleshoot';
 import {ProjectOverview} from "../model/ProjectOverview";
 import ReportIcon from '@mui/icons-material/Report';
-import {Searchbar} from "./Searchbar";
+import {Searchbar} from "../components/Searchbar";
 
 export type SearchString = {
     searchValue: string;
@@ -19,7 +19,7 @@ export default function Home() {
         return <Loading/>
     }
     if (isError){
-        return <Alert severity="error">Error loading the project</Alert>
+        return <Alert severity="error">Error loading the projects</Alert>
     }
 
     return(

@@ -25,23 +25,13 @@ namespace CodeAnalyzerService.Backend.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Project>>> GetProjects()
         {
-            if (_context.Projects == null)
-            {
-                return NotFound();
-            }
-
             return await _context.Projects.ToListAsync();
         }
         
-        [HttpGet("overview")]
+        [HttpGet("Overview")]
         public ActionResult<IEnumerable<ProjectOverviewResponse>> GetProjectsOverview()
         {
-            if (_context.Projects == null)
-            {
-                return NotFound();
-            }
-
-            var projectOverviewResponses = _context.Projects.Include(p => p.Analyses)
+           var projectOverviewResponses = _context.Projects.Include(p => p.Analyses)
                 .Select(p => new ProjectOverviewResponse
                 {
                     Id = p.Id,
@@ -55,26 +45,34 @@ namespace CodeAnalyzerService.Backend.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<ProjectResponse>> GetProject(int id)
+        public async Task<ActionResult<ProjectDetailsResponse>> GetProject(int id)
         {
-            if (_context.Projects == null)
-            {
-                return NotFound();
-            }
-
             var project = await _context.Projects.Include(p => p.Analyses)
                 .ThenInclude(a => a.RuleViolations)
+                .ThenInclude(rv => rv.Rule)
+                .Include(p => p.Analyses)
+                .ThenInclude(a => a.RuleViolations)
                 .ThenInclude(rv => rv.Location)
-                .SingleOrDefaultAsync(p => p.Id == id);
+                .Where(p => p.Id == id)
+                .Select(p => new ProjectDetailsResponse
+                {
+                    Id = p.Id,
+                    ProjectName = p.ProjectName,
+                    LastAnalysis = AnalysisMapper.MapToDto(p.Analyses.OrderBy(a => a.CreatedOn).Last()),
+                    AnalysisHistory = p.Analyses.Select(a => new AnalysisWithViolationCountResponse
+                    {
+                        Id = a.Id, 
+                        CreatedOn = a.CreatedOn.ToString("dd-MMM-yyyy, HH:mm:ss"),
+                        RuleViolationCount = a.RuleViolations.Count()
+                    })
+                }).SingleOrDefaultAsync();
 
             if (project == null)
             {
                 return NotFound();
             }
 
-            var projectDto = ProjectMapper.MapToDto(project);
-
-            return projectDto;
+            return project;
         }
 
         [HttpPut]
@@ -85,36 +83,6 @@ namespace CodeAnalyzerService.Backend.Controllers
             var projectDto = ProjectMapper.MapToDto(project);
 
             return CreatedAtAction("GetProject", new { id = project.Id }, projectDto);
-        }
-
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteProject(int id)
-        {
-            if (_context.Projects == null)
-            {
-                return NotFound();
-            }
-
-            var project = await _context.Projects.FindAsync(id);
-            if (project == null)
-            {
-                return NotFound();
-            }
-
-            _context.Projects.Remove(project);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
-        }
-
-        private bool ProjectExists(int id)
-        {
-            return _context.Projects.Any(e => e.Id == id);
-        }
-
-        private Project? GetProject(string projectName)
-        {
-            return _context.Projects.SingleOrDefault(p => p.ProjectName.Equals(projectName));
         }
     }
 }

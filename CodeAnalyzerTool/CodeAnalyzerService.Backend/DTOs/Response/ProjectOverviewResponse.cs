@@ -2,7 +2,6 @@
 
 public class ProjectOverviewResponse
 {
-    //TODO aan iemand vragen hoe ik entity framework enkel dit kan laten ophalen en in response laten steken
     public int Id { get; set; }
     public string ProjectName { get; set; } = null!;
     public string LastAnalysisDate { get; set; } = null!;
