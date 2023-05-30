@@ -57,14 +57,12 @@ internal class MakeLocalVariableConstantWalker : CSharpSyntaxWalker
             && SymbolEqualityComparer.Default.Equals(symbol, SemanticModel.GetSymbolInfo(identifierName, CancellationToken).Symbol);
     }
 
-    public static MakeLocalVariableConstantWalker GetInstance()
+    public static MakeLocalVariableConstantWalker Create()
     {
         var walker = _cachedInstance;
 
         if (walker is not null)
         {
-            // Debug.Assert(walker.Identifiers.Count == 0);
-            // Debug.Assert(!walker.Result);
             _cachedInstance = null;
             return walker;
         }

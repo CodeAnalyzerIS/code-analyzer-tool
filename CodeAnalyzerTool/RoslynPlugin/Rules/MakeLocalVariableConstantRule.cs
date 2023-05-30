@@ -60,7 +60,7 @@ public class MakeLocalVariableConstantRule : RoslynRule
         var statements = GetStatements(parent);
 
         int index = statements.IndexOf(localDeclarationStatement);
-        if (!CanBeMarkedAsConst(context, localDeclarationStatement.Declaration.Variables, statements, index + 1))
+        if (!CanLocalVariableBeMadeConst(context, localDeclarationStatement.Declaration.Variables, statements, index + 1))
             return;
 
         var diagnostic = Diagnostic.Create(_rule,
@@ -115,33 +115,30 @@ public class MakeLocalVariableConstantRule : RoslynRule
         };
     }
 
-    private static bool CanBeMarkedAsConst(
+    private static bool CanLocalVariableBeMadeConst(
         SyntaxNodeAnalysisContext context,
         SeparatedSyntaxList<VariableDeclaratorSyntax> variables,
         SyntaxList<StatementSyntax> statements,
         int startIndex)
     {
-        MakeLocalVariableConstantWalker walker = null;
+        MakeLocalVariableConstantWalker? walker = null;
 
         try
         {
-            walker = MakeLocalVariableConstantWalker.GetInstance();
-
+            walker = MakeLocalVariableConstantWalker.Create();
             walker.SemanticModel = context.SemanticModel;
             walker.CancellationToken = context.CancellationToken;
 
-            foreach (VariableDeclaratorSyntax variable in variables)
+            foreach (var variable in variables)
             {
                 var symbol = context.SemanticModel.GetDeclaredSymbol(variable, context.CancellationToken) as ILocalSymbol;
-
                 if (symbol is not null)
                     walker.Identifiers[variable.Identifier.ValueText] = symbol;
             }
 
-            for (int i = startIndex; i < statements.Count; i++)
+            foreach (var statement in statements)
             {
-                walker.Visit(statements[i]);
-
+                walker.Visit(statement);
                 if (walker.Result)
                     return false;
             }
