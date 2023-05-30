@@ -15,15 +15,15 @@ public class RequireBracesInBlockRule : RoslynRule
     private const string CATEGORY = RuleCategories.STYLE;
     private readonly DiagnosticDescriptor _rule;
     
-    private static readonly LocalizableString Title = new LocalizableResourceString(nameof(Resources.BraceAnalyzerTitle),
+    private static readonly LocalizableString Title = new LocalizableResourceString(nameof(Resources.RequireBracesInBlock_Title),
         Resources.ResourceManager, typeof(Resources));
 
     private static readonly LocalizableString MessageFormat =
-        new LocalizableResourceString(nameof(Resources.BraceAnalyzerMessageFormat), Resources.ResourceManager,
+        new LocalizableResourceString(nameof(Resources.RequireBracesInBlock_MessageFormat), Resources.ResourceManager,
             typeof(Resources));
 
     private static readonly LocalizableString Description =
-        new LocalizableResourceString(nameof(Resources.BraceAnalyzerDescription), Resources.ResourceManager,
+        new LocalizableResourceString(nameof(Resources.RequireBracesInBlock_Description), Resources.ResourceManager,
             typeof(Resources));
 
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get; }

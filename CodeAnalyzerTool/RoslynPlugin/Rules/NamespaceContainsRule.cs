@@ -20,15 +20,15 @@ public class NamespaceContainsRule : RoslynRule
     public const string NAMESPACE_OPTION_KEY = "namespace";
 
     private static readonly LocalizableString Title = new LocalizableResourceString(
-        nameof(Resources.NamespaceCheckTitle),
+        nameof(Resources.NamespaceContains_Title),
         Resources.ResourceManager, typeof(Resources));
 
     private static readonly LocalizableString MessageFormat =
-        new LocalizableResourceString(nameof(Resources.NamespaceCheckMessageFormat), Resources.ResourceManager,
+        new LocalizableResourceString(nameof(Resources.NamespaceContains_MessageFormat), Resources.ResourceManager,
             typeof(Resources));
 
     private static readonly LocalizableString Description =
-        new LocalizableResourceString(nameof(Resources.NamespaceCheckDescription), Resources.ResourceManager,
+        new LocalizableResourceString(nameof(Resources.NamespaceContains_Description), Resources.ResourceManager,
             typeof(Resources));
 
     public NamespaceContainsRule()

@@ -15,12 +15,9 @@ namespace Animals.Mammals.Felines {
             Console.WriteLine(""void"");
         }
     }
-}
-";
+}";
         var rule = new NamespaceContainsRule();
-        rule.Severity = DiagnosticSeverity.Warning;
         rule.Options = new Dictionary<string, string> { [NamespaceContainsRule.NAMESPACE_OPTION_KEY] = "InfoSupport" };
-        
         var results = await RuleTestRunner.CompileStringWithRule(code, rule);
         results.Should().Contain(rv => rv.Rule.RuleName == RuleNames.NAMESPACE_CONTAINS_RULE);
     }
@@ -38,9 +35,7 @@ namespace InfoSupport.Animals.Mammals.Felines {
 }
 ";
         var rule = new NamespaceContainsRule();
-        rule.Severity = DiagnosticSeverity.Warning;
         rule.Options = new Dictionary<string, string> { [NamespaceContainsRule.NAMESPACE_OPTION_KEY] = "InfoSupport" };
-        
         var results = await RuleTestRunner.CompileStringWithRule(code, rule);
         results.Should().BeEmpty();
     }
@@ -58,9 +53,6 @@ namespace InfoSupport.Animals.Mammals.Felines {
 }
 ";
         var rule = new NamespaceContainsRule();
-        rule.Severity = DiagnosticSeverity.Warning;
-        rule.Options = new Dictionary<string, string>();
-        
         var results = await RuleTestRunner.CompileStringWithRule(code, rule);
         results.Should().BeEmpty();
     }

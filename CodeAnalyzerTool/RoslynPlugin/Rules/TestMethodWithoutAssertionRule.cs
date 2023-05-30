@@ -16,23 +16,21 @@ public class TestMethodWithoutAssertionRule : RoslynRule
     private const string CATEGORY = RuleCategories.MAINTAINABILITY;
     private readonly DiagnosticDescriptor _rule;
 
-    private static readonly LocalizableString Title = new LocalizableResourceString(nameof(Resources.NoAssertionTitle),
-        Resources.ResourceManager, typeof(Resources));
+    private static readonly LocalizableString Title = new LocalizableResourceString(
+        nameof(Resources.TestMethodWithoutAssertion_Title), Resources.ResourceManager, typeof(Resources));
 
-    private static readonly LocalizableString MessageFormat =
-        new LocalizableResourceString(nameof(Resources.NoAssertionMessageFormat), Resources.ResourceManager,
+    private static readonly LocalizableString MessageFormat = new LocalizableResourceString(
+        nameof(Resources.TestMethodWithoutAssertion_MessageFormat), Resources.ResourceManager,
             typeof(Resources));
 
-    private static readonly LocalizableString Description =
-        new LocalizableResourceString(nameof(Resources.NoAssertionDescription), Resources.ResourceManager,
-            typeof(Resources));
+    private static readonly LocalizableString Description = new LocalizableResourceString(
+        nameof(Resources.TestMethodWithoutAssertion_Description), Resources.ResourceManager, typeof(Resources));
 
     public TestMethodWithoutAssertionRule()
     {
         Options = new Dictionary<string, string>();
         Severity = DiagnosticSeverity.Warning;
-        _rule = new DiagnosticDescriptor(RuleName, Title, MessageFormat, CATEGORY,
-            Severity, isEnabledByDefault: true, description: Description);
+        _rule = new DiagnosticDescriptor(RuleName, Title, MessageFormat, CATEGORY, Severity, true, Description);
         SupportedDiagnostics = ImmutableArray.Create(_rule);
     }
 
