@@ -107,60 +107,62 @@ class C
 
 
 
-//     public async Task Test_Accessibility()
-//     {
-//         var code = @"
-// class B
-// {
-//     private void M(B b)
-//     {
-//         ((C)b).Protected();
-//
-//         ((C)b).PrivateProtected();
-//
-//         ((C)b).ProtectedInternal();
-//     }
-//
-//     private class C : B
-//     {
-//         private void M2(B b)
-//         {
-//             ((C)b).Protected();
-//
-//             ((C)b).PrivateProtected();
-//
-//             ((C)b).ProtectedInternal();
-//         }
-//     }
-//
-//     protected void Protected() { }
-//
-//     private protected void PrivateProtected() { }
-//
-//     protected internal void ProtectedInternal() { }
-// }
-// ";
-//     }
-//
-//     public async Task Test_Accessibility_ProtectedInternal()
-//     {
-//         var code = @"
-// class C : B
-// {
-//     public static void M()
-//     {
-//         var b = default(B);
-//
-//         ([|(C)|]b).ProtectedInternal();
-//     }
-// }
-//
-// class B
-// {
-//     protected internal void ProtectedInternal() { }
-// }
-// ";
-//     }
+    public async Task UnnecessaryTypeCastRule_ShouldReportRuleViolation_WhenTODO()
+    {
+        var code = @"
+class B
+{
+    private void M(B b)
+    {
+        ((C)b).Protected();
+
+        ((C)b).PrivateProtected();
+
+        ((C)b).ProtectedInternal();
+    }
+
+    private class C : B
+    {
+        private void M2(B b)
+        {
+            ((C)b).Protected();
+
+            ((C)b).PrivateProtected();
+
+            ((C)b).ProtectedInternal();
+        }
+    }
+
+    protected void Protected() { }
+
+    private protected void PrivateProtected() { }
+
+    protected internal void ProtectedInternal() { }
+}
+";
+        await ShouldReport(code);
+    }
+
+    public async Task UnnecessaryTypeCastRule_ShouldReportRuleViolation_WhenTODO2()
+    {
+        var code = @"
+class C : B
+{
+    public static void M()
+    {
+        var b = default(B);
+
+        ([C]b).ProtectedInternal();
+    }
+}
+
+class B
+{
+    protected internal void ProtectedInternal() { }
+}
+";
+        await ShouldReport(code);
+    }
 
     [Fact]
     public async Task UnnecessaryTypeCastRule_ShouldNotReportRuleViolation_WhenPrivateProtectedOtherwiseNotAccesible()
