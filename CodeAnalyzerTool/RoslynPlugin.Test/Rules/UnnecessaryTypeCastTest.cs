@@ -19,6 +19,7 @@ public class UnnecessaryTypeCastTest
         results.Should().BeEmpty();
     }
 
+    [Fact]
     public async Task UnnecessaryTypeCastRule_ShouldReportRuleViolation_WhenCastToDerivedType()
     {
         var code = @"
@@ -42,6 +43,7 @@ class D : C
         await ShouldReport(code);
     }
 
+    [Fact]
     public async Task UnnecessaryTypeCastRule_ShouldReportRuleViolation_WhenCastToDerivedTypeWithConditionalAccess()
     {
         var code = @"
@@ -65,6 +67,7 @@ class D : C
         await ShouldReport(code);
     }
 
+    [Fact]
     public async Task UnnecessaryTypeCastRule_ShouldReportRuleViolation_WhenCastToImplementedInterface()
     {
         var code = @"
@@ -83,6 +86,7 @@ class C
         await ShouldReport(code);
     }
 
+    [Fact]
     public async Task UnnecessaryTypeCastRule_ShouldReportRuleViolation_WhenCastToImplementedInterfaceWithConditionalAccess()
     {
         var code = @"
@@ -158,6 +162,7 @@ class C
 // ";
 //     }
 
+    [Fact]
     public async Task UnnecessaryTypeCastRule_ShouldNotReportRuleViolation_WhenPrivateProtectedOtherwiseNotAccesible()
     {
         var code = @"
@@ -177,6 +182,7 @@ class C : B
         await ShouldNotReport(code);
     }
 
+    [Fact]
     public async Task UnnecessaryTypeCastRule_ShouldNotReportRuleViolation_WhenCastToDerivedType()
     {
         var code = @"
