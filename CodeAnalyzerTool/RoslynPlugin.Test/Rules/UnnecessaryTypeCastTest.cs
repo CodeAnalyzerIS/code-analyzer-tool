@@ -29,14 +29,14 @@ class C
     {
         var c = new C();
 
-        var s = ((D)c).I;
+        var s = ((DerivesFromC)c).I;
 
     }
 
     public int I { get; set; }
 }
 
-class D : C
+class DerivesFromC : C
 {
 }
 ";
@@ -87,7 +87,8 @@ class C
     }
 
     [Fact]
-    public async Task UnnecessaryTypeCastRule_ShouldReportRuleViolation_WhenCastToImplementedInterfaceWithConditionalAccess()
+    public async Task
+        UnnecessaryTypeCastRule_ShouldReportRuleViolation_WhenCastToImplementedInterfaceWithConditionalAccess()
     {
         var code = @"
 using System.Collections.Generic;
@@ -106,7 +107,7 @@ class C
     }
 
 
-
+    [Fact]
     public async Task UnnecessaryTypeCastRule_ShouldReportRuleViolation_WhenTODO()
     {
         var code = @"
@@ -143,6 +144,7 @@ class B
         await ShouldReport(code);
     }
 
+    [Fact]
     public async Task UnnecessaryTypeCastRule_ShouldReportRuleViolation_WhenTODO2()
     {
         var code = @"
@@ -152,7 +154,7 @@ class C : B
     {
         var b = default(B);
 
-        ([C]b).ProtectedInternal();
+        ((C)b).ProtectedInternal();
     }
 }
 
