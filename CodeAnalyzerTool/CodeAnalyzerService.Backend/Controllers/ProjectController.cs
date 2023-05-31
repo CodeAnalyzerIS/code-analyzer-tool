@@ -42,7 +42,7 @@ namespace CodeAnalyzerService.Backend.Controllers
                 {
                     Id = p.Id,
                     ProjectName = p.ProjectName,
-                    LastAnalysisDate = p.Analyses.OrderBy(a => a.CreatedOn).Last().CreatedOn.ToString("dd-MMM-yyyy, HH:mm:ss"),
+                    LastAnalysisDate = p.Analyses.OrderBy(a => a.CreatedOn).Last().CreatedOn.ToUniversalTime(),
                     RuleViolationCount = p.Analyses.OrderBy(a => a.CreatedOn).Last().RuleViolations.Count()
                 })
                 .ToList();
@@ -64,7 +64,7 @@ namespace CodeAnalyzerService.Backend.Controllers
                     AnalysisHistory = p.Analyses.Select(a => new AnalysisWithViolationCountResponse
                     {
                         Id = a.Id, 
-                        CreatedOn = a.CreatedOn.ToString("dd-MMM-yyyy, HH:mm:ss"),
+                        CreatedOn = a.CreatedOn.ToUniversalTime(),
                         RuleViolationCount = a.RuleViolations.Count()
                     })
                 }).SingleOrDefaultAsync();

@@ -29,13 +29,13 @@ export default function ProjectDetails({updateBreadCrumbData}: ProjectDetailsPro
     if (isLoading) {
         return <Loading/>
     }
-    if (isError){
+    if (isError || !project){
         return <Alert severity="error">Error loading the project</Alert>
     }
 
 
     return(
-        <Box sx={{display: 'flex', flexDirection: 'column', alignItems: 'center', mt: 3}}>
+        <Box sx={{display: 'flex', flexDirection: 'column', alignItems: 'center', mt: 3, mb: 20}}>
             <ProjectDetailCards projectName={project.projectName}
                                 lastAnalysisDate={project.analysisHistory[project.analysisHistory.length - 1].createdOn}
                                 analysisHistory={project.analysisHistory}

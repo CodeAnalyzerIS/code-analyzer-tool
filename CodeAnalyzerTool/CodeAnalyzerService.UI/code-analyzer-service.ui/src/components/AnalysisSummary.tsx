@@ -4,12 +4,12 @@ import {
     AccordionSummary,
     Alert,
     AlertTitle,
-    FormControl, Grid, InputLabel, MenuItem, Select, SelectChangeEvent,
+    FormControl, Grid, MenuItem, Select, SelectChangeEvent,
     Stack,
     Typography
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import {getMUISeverity, groupRuleViolationsByPath} from "../util/HelperFunctions";
+import {getMUISeverity, groupRuleViolationsByPath, sortAnalysisHistoryDatesReversed} from "../util/HelperFunctions";
 import React, {useState} from "react";
 import {useAnalysis} from "../hooks/useAnalysis";
 import Loading from "./Loading";
@@ -27,7 +27,7 @@ export default function AnalysisSummary({initialAnalysisId, analysisHistory}: An
     if (isLoading) {
         return <Loading/>
     }
-    if (isError){
+    if (isError || !analysis){
         return <Alert severity="error">Error loading the analysis</Alert>
     }
     const groupedAnalysis = groupRuleViolationsByPath(analysis)
@@ -35,30 +35,29 @@ export default function AnalysisSummary({initialAnalysisId, analysisHistory}: An
         const newAnalysisId = Number(event.target.value)
         setAnalysisId(newAnalysisId);
     };
+    const reverseSortedHistory = sortAnalysisHistoryDatesReversed(analysisHistory)
 
     return (
         <Stack sx={{width: '60%', mt: 3}} spacing={2}>
             <Grid container alignItems='center'>
-                <Grid item xs={3}>
+                <Grid item xs={2}>
                     <FormControl fullWidth>
-                        <InputLabel id="demo-simple-select-label">{analysis.createdOn.toString()}</InputLabel>
                         <Select
                             labelId="select-analysis-label"
                             id="select-analysis"
-                            value={analysis.id}
-                            label={analysis.createdOn.toString()}
+                            value={analysis.id.toString()}
                             onChange={handleChange}
                         >
-                            {analysisHistory.map((analysisItem, index) => (
-                                <MenuItem key={index} value={analysisItem.id}>{analysisItem.createdOn.toString()}</MenuItem>
+                            {reverseSortedHistory.map((analysisItem, index) => (
+                                <MenuItem key={index} value={analysisItem.id}>{analysisItem.createdOn.toLocaleString('nl-BE')}</MenuItem>
                             ))}
                         </Select>
                     </FormControl>
                 </Grid>
-                <Grid item xs={6}>
+                <Grid item xs={8}>
                     <Typography sx={{textAlign: 'center'}}>Analysis Results</Typography>
                 </Grid>
-                <Grid item xs={3}>
+                <Grid item xs={2}>
                     <Typography sx={{textAlign: 'end'}}>{analysis.ruleViolations.length} Rule Violations</Typography>
                 </Grid>
             </Grid>

@@ -32,7 +32,7 @@ export default function Home({updateBreadCrumbData}: HomeProps) {
     if (isLoading) {
         return <Loading/>
     }
-    if (isError){
+    if (isError || !projectOverviews){
         return <Alert severity="error">Error loading the projects</Alert>
     }
 
@@ -60,7 +60,7 @@ export default function Home({updateBreadCrumbData}: HomeProps) {
                             alignItems: 'center', color: '#15B7B9'}}>
                             <Stack direction='row' spacing={1}>
                                 <TroubleshootIcon/>
-                                <Typography>Last Analysis: {po.lastAnalysisDate.toString()}</Typography>
+                                <Typography>Last Analysis: {po.lastAnalysisDate.toLocaleString('nl-BE')}</Typography>
                             </Stack>
 
                             <Stack direction='row' spacing={1}>

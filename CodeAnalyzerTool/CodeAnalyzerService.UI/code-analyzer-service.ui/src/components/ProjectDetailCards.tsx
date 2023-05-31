@@ -57,7 +57,9 @@ export default function ProjectDetailCards({
                         <TroubleshootIcon fontSize={'large'}/>
                     </Box>
                     <Typography sx={{color: '#b0b0b0', mt: 1, fontSize: '1.2em'}}>{analysisHistory.length} Analyses</Typography>
-                    <Typography sx={{color: '#b0b0b0', mt: 1, fontSize: '1.2em'}}>Last Analysis: {lastAnalysisDate.toString()}</Typography>
+                    <Typography sx={{color: '#b0b0b0', mt: 1, fontSize: '1.2em'}}>
+                        Last Analysis: {lastAnalysisDate.toLocaleString('nl-BE')}
+                    </Typography>
                 </CardContent>
             </Card>
         </Box>
