@@ -166,5 +166,32 @@ namespace RoslynPlugin {
                 return ResourceManager.GetString("TestMethodWithoutAssertion_Title", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Detects whether a unnecessary typecast has been made. The casting can be removed without any repercussions, and should be removed for maintainability sake..
+        /// </summary>
+        internal static string UnnecessaryTypeCastDescription {
+            get {
+                return ResourceManager.GetString("UnnecessaryTypeCastDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Remove unnecessary typecast.
+        /// </summary>
+        internal static string UnnecessaryTypeCastMessageFormat {
+            get {
+                return ResourceManager.GetString("UnnecessaryTypeCastMessageFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Remove unnecessary typecast.
+        /// </summary>
+        internal static string UnnecessaryTypeCastTitle {
+            get {
+                return ResourceManager.GetString("UnnecessaryTypeCastTitle", resourceCulture);
+            }
+        }
     }
 }
