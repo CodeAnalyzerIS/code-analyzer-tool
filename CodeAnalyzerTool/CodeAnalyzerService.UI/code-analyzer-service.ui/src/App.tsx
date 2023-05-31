@@ -48,7 +48,7 @@ function App() {
             <BrowserRouter>
                 <Header breadcrumbData={breadcrumbData}/>
                 <Routes>
-                    <Route path="/" element={<Home/>}/>
+                    <Route path="/" element={<Home updateBreadCrumbData={updateBreadcrumbData}/>}/>
                     <Route path="/project/:id" element={<ProjectDetails updateBreadCrumbData={updateBreadcrumbData}/>}/>
                 </Routes>
             </BrowserRouter>

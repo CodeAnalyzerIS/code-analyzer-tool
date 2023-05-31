@@ -22,12 +22,18 @@ namespace CodeAnalyzerService.Backend.Controllers
             _projectAnalysisManager = new AddProjectAnalysisManager(_context);
         }
 
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Project>>> GetProjects()
+        [HttpGet("GetFromName/{projectName}")]
+        public async Task<ActionResult<int>> GetProjectIdFromProjectName(string projectName)
         {
-            return await _context.Projects.ToListAsync();
+            var project = await _context.Projects.SingleOrDefaultAsync(p => p.ProjectName.ToLower().Equals(projectName.ToLower()));
+            if (project == null)
+            {
+                return NotFound();
+            }
+
+            return project.Id;
         }
-        
+
         [HttpGet("Overview")]
         public ActionResult<IEnumerable<ProjectOverviewResponse>> GetProjectsOverview()
         {
@@ -49,16 +55,12 @@ namespace CodeAnalyzerService.Backend.Controllers
         {
             var project = await _context.Projects.Include(p => p.Analyses)
                 .ThenInclude(a => a.RuleViolations)
-                .ThenInclude(rv => rv.Rule)
-                .Include(p => p.Analyses)
-                .ThenInclude(a => a.RuleViolations)
-                .ThenInclude(rv => rv.Location)
                 .Where(p => p.Id == id)
                 .Select(p => new ProjectDetailsResponse
                 {
                     Id = p.Id,
                     ProjectName = p.ProjectName,
-                    LastAnalysis = AnalysisMapper.MapToDto(p.Analyses.OrderBy(a => a.CreatedOn).Last()),
+                    LastAnalysisId = p.Analyses.OrderBy(a => a.CreatedOn).Last().Id,
                     AnalysisHistory = p.Analyses.Select(a => new AnalysisWithViolationCountResponse
                     {
                         Id = a.Id, 

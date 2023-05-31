@@ -9,3 +9,8 @@ export async function getProjectOverviews() {
     const response = await fetch(`${BACKEND_URL}/api/Project/Overview`)
     return await response.json()
 }
+
+export async function getProjectIdFromName(projectName: string) {
+    const response = await fetch(`${BACKEND_URL}/api/Project/GetFromName/${projectName}`)
+    return await response.json()
+}

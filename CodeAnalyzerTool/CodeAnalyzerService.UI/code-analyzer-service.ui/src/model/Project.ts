@@ -1,8 +1,8 @@
-import {Analysis, AnalysisWithViolationCount} from "./Analysis";
+import {AnalysisWithViolationCount} from "./Analysis";
 
 export type Project = {
     id: number;
     projectName: string;
-    lastAnalysis: Analysis;
+    lastAnalysisId: number;
     analysisHistory: AnalysisWithViolationCount[]
 }

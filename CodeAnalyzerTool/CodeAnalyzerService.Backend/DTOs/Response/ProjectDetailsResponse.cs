@@ -5,7 +5,7 @@ public class ProjectDetailsResponse
 {
     public int Id { get; set; }
     public string ProjectName { get; set; } = null!;
-    public AnalysisResponse LastAnalysis { get; set; } = null!;
+    public int LastAnalysisId { get; set; }
     public IEnumerable<AnalysisWithViolationCountResponse> AnalysisHistory { get; set; }
 
     public ProjectDetailsResponse()
@@ -14,11 +14,11 @@ public class ProjectDetailsResponse
     }
 
     public ProjectDetailsResponse(int id, string projectName,
-        IEnumerable<AnalysisWithViolationCountResponse> analysisHistory, AnalysisResponse analysis)
+        IEnumerable<AnalysisWithViolationCountResponse> analysisHistory, int analysisId)
     {
         Id = id;
         ProjectName = projectName;
         AnalysisHistory = analysisHistory;
-        LastAnalysis = analysis;
+        LastAnalysisId = analysisId;
     }
 }
