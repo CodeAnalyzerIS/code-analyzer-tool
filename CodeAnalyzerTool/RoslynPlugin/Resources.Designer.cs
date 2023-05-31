@@ -168,7 +168,7 @@ namespace RoslynPlugin {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Detects whether a unnecessary typecast has been made. The casting can be removed without any repercussions, and should be removed for maintainability sake..
+        ///   Looks up a localized string similar to Detects whether a unnecessary typecast has been made to access a property, method, etc. The casting can be removed without any repercussions, and should be removed for maintainability sake..
         /// </summary>
         internal static string UnnecessaryTypeCastDescription {
             get {

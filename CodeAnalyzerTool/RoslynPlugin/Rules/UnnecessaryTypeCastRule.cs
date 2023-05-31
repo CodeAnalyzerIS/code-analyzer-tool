@@ -43,69 +43,78 @@ public class UnnecessaryTypeCastRule : RoslynRule
 
     private void AnalyzeTypeCastExpression(SyntaxNodeAnalysisContext context)
     { 
-        var castExpression = (CastExpressionSyntax)context.Node;
-        if (castExpression.ContainsDiagnostics) return;
-        TypeSyntax type = castExpression.Type;
-        ExpressionSyntax expression = castExpression.Expression;
-        SemanticModel semanticModel = context.SemanticModel;
-        CancellationToken cancellationToken = context.CancellationToken;
+        var castExpressionSyntax = (CastExpressionSyntax)context.Node;
+        if (castExpressionSyntax.ContainsDiagnostics) return;
+        var castType = castExpressionSyntax.Type;
+        var expression = castExpressionSyntax.Expression;
+        var semanticModel = context.SemanticModel;
+        var cancellationToken = context.CancellationToken;
 
-        ITypeSymbol? typeSymbol = semanticModel.GetTypeInfo(type, cancellationToken).Type;
-        if (typeSymbol is null || typeSymbol.Kind == SymbolKind.ErrorType) return;
+        // type of the typecast (which the expression gets cast into)
+        var castTypeSymbol = semanticModel.GetTypeInfo(castType, cancellationToken).Type;
+        if (castTypeSymbol is null) return;
 
-        ITypeSymbol? expressionTypeSymbol = semanticModel.GetTypeInfo(expression, cancellationToken).Type;
+        // expression that gets typecast
+        var expressionTypeSymbol = semanticModel.GetTypeInfo(expression, cancellationToken).Type;
+        if (expressionTypeSymbol is null) return;
 
-        if (expressionTypeSymbol is null || typeSymbol.Kind == SymbolKind.ErrorType)
-            return;
-
-        if (expressionTypeSymbol.TypeKind == TypeKind.Interface)
-            return;
-
-        if (expressionTypeSymbol.SpecialType == SpecialType.System_Object
-            || expressionTypeSymbol.TypeKind == TypeKind.Dynamic
-            || typeSymbol.TypeKind != TypeKind.Interface)
-        {
-            if (!typeSymbol.EqualsOrInheritsFrom(expressionTypeSymbol, includeInterfaces: true))
-                return;
-        }
+        // check if castType equals or inherits from the type of the expression
+        if (castTypeSymbol.TypeKind != TypeKind.Interface && 
+           !castTypeSymbol.EqualsOrInheritsFrom(expressionTypeSymbol)) return;
         
-        
-        if (castExpression.Parent is not ParenthesizedExpressionSyntax parenthesizedExpression 
-            || parenthesizedExpression.Parent is null) return;
-        
-        ExpressionSyntax accessedExpression = GetAccessedExpression(parenthesizedExpression.Parent);
-        ISymbol? accessedSymbol = semanticModel.GetSymbolInfo(accessedExpression, cancellationToken).Symbol;
-        INamedTypeSymbol? containingType = accessedSymbol?.ContainingType;
-
+        var gotAccessSymbol = TryGetAccessSymbol(semanticModel, castExpressionSyntax, cancellationToken, out ISymbol? accessSymbol);
+        if (!gotAccessSymbol) return;
+        var containingType = accessSymbol!.ContainingType;
         if (containingType is null) return;
 
-        if (typeSymbol.TypeKind == TypeKind.Interface)
+        if (castTypeSymbol.TypeKind == TypeKind.Interface)
         {
-            if (accessedSymbol.IsAbstract)
+            if (accessSymbol.IsAbstract)
             {
-                if (!CheckExplicitImplementation(expressionTypeSymbol, accessedSymbol))
-                {
-                    return;
-                }
+                if (!CheckExplicitImplementation(expressionTypeSymbol, accessSymbol)) return;
             }
-            else
-            {
-                return;
-            }
+            else return;
         }
         else
         {
-            if (!CheckAccessibility(expressionTypeSymbol.OriginalDefinition, accessedSymbol, expression.SpanStart, semanticModel, cancellationToken))
+            if (!CheckAccessibility(expressionTypeSymbol.OriginalDefinition, accessSymbol, expression.SpanStart, semanticModel, cancellationToken))
                 return;
 
-            if (!expressionTypeSymbol.EqualsOrInheritsFrom(containingType, includeInterfaces: true))
+            if (!expressionTypeSymbol.EqualsOrInheritsFrom(containingType))
                 return;
         }
 
-        var diagnostic = Diagnostic.Create(_rule, castExpression.GetLocation(), Severity);
+        var diagnostic = Diagnostic.Create(_rule, castExpressionSyntax.GetLocation(), Severity);
         context.ReportDiagnostic(diagnostic);
     }
 
+    private bool TryGetAccessSymbol(SemanticModel semanticModel, SyntaxNode castExpression, CancellationToken ct, out ISymbol? accessSymbol)
+    {
+        var accessExpression = castExpression.Parent?.Parent; // castExpression -> parenthesizedExpression -> accessExpression
+        if (accessExpression is null)
+        {
+            accessSymbol = null;
+            return false;
+        }
+        
+        accessSymbol = semanticModel.GetSymbolInfo(accessExpression, ct).Symbol;
+        if (accessSymbol is not null) return true;
+        
+        // When accessExpression is a conditional expression it has to be cast to ConditionalAccessExpressionSyntax to access
+        //      the WhenNotNull prop (to be able to extract the real expression from the conditional abstraction layer).
+        try
+        {
+            var expressionWhenConditionalNotNull = ((ConditionalAccessExpressionSyntax)accessExpression).WhenNotNull;
+            accessSymbol = semanticModel.GetSymbolInfo(expressionWhenConditionalNotNull, ct).Symbol;
+            if (accessSymbol is null) return false;
+            return true;
+        }
+        catch
+        {
+            return false;
+        }
+    }
+    
     private static bool CheckExplicitImplementation(ITypeSymbol typeSymbol, ISymbol symbol)
     {
         ISymbol implementation = typeSymbol.FindImplementationForInterfaceMember(symbol);
@@ -189,17 +198,10 @@ public class UnnecessaryTypeCastRule : RoslynRule
         return true;
     }
 
-    private static ExpressionSyntax GetAccessedExpression(SyntaxNode node)
+    private static ExpressionSyntax CastAccessExpressionToConditionalAccessIfIsOfType(SyntaxNode node)
     {
-        switch (node?.Kind())
-        {
-            case SyntaxKind.SimpleMemberAccessExpression:
-            case SyntaxKind.ElementAccessExpression:
-                return (ExpressionSyntax)node;
-            case SyntaxKind.ConditionalAccessExpression:
-                return ((ConditionalAccessExpressionSyntax)node).WhenNotNull;
-            default:
-                return null;
-        }
+        if (node.IsOfSyntaxKind(SyntaxKind.ConditionalAccessExpression)) 
+            return ((ConditionalAccessExpressionSyntax)node).WhenNotNull;
+        return (ExpressionSyntax)node;
     }
 }

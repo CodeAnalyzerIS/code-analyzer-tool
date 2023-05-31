@@ -46,6 +46,7 @@ public static class RuleExtensions
         return expression;
     }
     
+    // todo refactor 
     public static TSymbol GetEnclosingSymbol<TSymbol>(
         this SemanticModel semanticModel,
         int position,
@@ -67,6 +68,7 @@ public static class RuleExtensions
         return default;
     }
     
+    // todo refactor 
     public static INamedTypeSymbol GetEnclosingNamedType(
         this SemanticModel semanticModel,
         int position,
@@ -75,17 +77,19 @@ public static class RuleExtensions
         return GetEnclosingSymbol<INamedTypeSymbol>(semanticModel, position, cancellationToken);
     }
     
-    public static bool EqualsOrInheritsFrom(this ITypeSymbol type, ITypeSymbol baseType, bool includeInterfaces = false)
+    // todo refactor 
+    public static bool EqualsOrInheritsFrom(this ITypeSymbol type, ITypeSymbol baseType)
     {
         if (type is null)
             throw new ArgumentNullException(nameof(type));
 
         return SymbolEqualityComparer.Default.Equals(type, baseType)
-               || InheritsFrom(type, baseType, includeInterfaces);
+               || InheritsFrom(type, baseType);
     }
     
     
-    public static bool InheritsFrom(this ITypeSymbol type, ITypeSymbol baseType, bool includeInterfaces = false)
+    // todo refactor 
+    public static bool InheritsFrom(this ITypeSymbol type, ITypeSymbol baseType)
     {
         if (type is null)
             throw new ArgumentNullException(nameof(type));
@@ -103,8 +107,7 @@ public static class RuleExtensions
             t = t.BaseType;
         }
 
-        if (includeInterfaces
-            && baseType.TypeKind == TypeKind.Interface)
+        if (baseType.TypeKind == TypeKind.Interface)
         {
             foreach (INamedTypeSymbol interfaceType in type.AllInterfaces)
             {
