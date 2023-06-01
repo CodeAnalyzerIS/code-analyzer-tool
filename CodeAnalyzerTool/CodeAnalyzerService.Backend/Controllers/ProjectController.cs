@@ -62,8 +62,10 @@ namespace CodeAnalyzerService.Backend.Controllers
                 {
                     Id = p.Id,
                     ProjectName = p.ProjectName,
+                    RepoUrl = p.RepoUrl,
                     LastAnalysisId = p.Analyses.OrderBy(a => a.CreatedOn).Last().Id,
                     RuleViolationCount = p.Analyses.OrderBy(a => a.CreatedOn).Last().RuleViolations.Count(),
+                    LastAnalysisDate = p.Analyses.OrderBy(a => a.CreatedOn).Last().CreatedOn.ToUniversalTime(),
                     AnalysisHistory = p.Analyses.OrderByDescending(a => a.CreatedOn)
                         .Select(a => new AnalysisHistoryResponse
                         {

@@ -9,6 +9,7 @@ internal static class Mapper
     {
         return new ProjectAnalysisDto(
             projectName: pa.ProjectName,
+            repoUrl: pa.RepoUrl,
             ruleViolations: pa.RuleViolations.Select(rv => rv.MapToDto())
         );
     }

@@ -84,6 +84,13 @@
       "type": [
         "string",
         "null"
+      ],
+      "format": "uri"
+    },
+    "repoUrl": {
+      "type": [
+        "string",
+        "null"
       ]
     },
     "pluginsPath": {

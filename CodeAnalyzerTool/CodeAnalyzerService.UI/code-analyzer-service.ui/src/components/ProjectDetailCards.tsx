@@ -1,12 +1,12 @@
-import {Box, Card, CardContent, Typography} from "@mui/material";
+import {Box} from "@mui/material";
 import React from "react";
-import {Sparklines, SparklinesLine} from 'react-sparklines';
-import TrendingDownIcon from '@mui/icons-material/TrendingDown';
-import TrendingUpIcon from '@mui/icons-material/TrendingUp';
-import TroubleshootIcon from '@mui/icons-material/Troubleshoot';
+import AnalysesCard from "./projectCards/AnalysesCard";
+import MainCard from "./projectCards/MainCard";
+import RuleViolationsCard from "./projectCards/RuleViolationsCard";
 
 interface ProjectDetailCardsProps {
     projectName: string;
+    repoUrl: string | null;
     lastAnalysisDate: Date;
     ruleViolationCount: number;
     ruleViolationHistory: number[];
@@ -16,15 +16,13 @@ interface ProjectDetailCardsProps {
 
 export default function ProjectDetailCards({
                                                projectName,
+                                               repoUrl,
                                                lastAnalysisDate,
                                                ruleViolationCount,
                                                ruleViolationHistory,
                                                ruleViolationDifference,
                                                analysisAmount
                                            }: ProjectDetailCardsProps) {
-
-    const iconColor = ruleViolationDifference < 0 ? 'error' : 'success';
-    const sparkLineColor = ruleViolationDifference < 0 ? 'red' : 'green';
 
     return (
         <Box sx={{
@@ -35,41 +33,11 @@ export default function ProjectDetailCards({
             width: '100%',
             height: '175px'
         }}>
-            <Card sx={{width: '25%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
-                <CardContent sx={{color: "#15B7B9", fontSize: '2em'}}>
-                    {projectName}
-                </CardContent>
-            </Card>
-            <Card sx={{width: '20%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
-                <CardContent sx={{flex: '1'}}>
-                    <Typography sx={{color: '#15B7B9', mb: 1, fontSize: '1.2em'}}>{ruleViolationCount} Rule violations
-                        in last analysis</Typography>
-                    {ruleViolationHistory.length < 2 ? "" :
-                        <>
-                            <Typography sx={{display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 1}}>
-                                {ruleViolationDifference < 0 ? <TrendingUpIcon color={iconColor}/>
-                                    : <TrendingDownIcon color={iconColor}/>}
-                                {`${Math.abs(ruleViolationDifference)}`}
-                            </Typography>
-                            <Sparklines data={ruleViolationHistory}
-                                        height={40}>
-                                <SparklinesLine color={sparkLineColor} style={{fill: "none"}}/>
-                            </Sparklines>
-                        </>}
-                </CardContent>
-            </Card>
-            <Card sx={{width: '25%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
-                <CardContent>
-                    <Box sx={{color: "#15B7B9"}}>
-                        <TroubleshootIcon fontSize={'large'}/>
-                    </Box>
-                    <Typography
-                        sx={{color: '#15B7B9', mt: 1, fontSize: '1.2em'}}>{analysisAmount} Analyses</Typography>
-                    <Typography sx={{color: '#15B7B9', mt: 1, fontSize: '1.2em'}}>
-                        Last Analysis: {lastAnalysisDate.toLocaleString('nl-BE')}
-                    </Typography>
-                </CardContent>
-            </Card>
+            <AnalysesCard analysisAmount={analysisAmount} lastAnalysisDate={lastAnalysisDate}/>
+            <MainCard projectName={projectName} repoUrl={repoUrl}/>
+            <RuleViolationsCard ruleViolationCount={ruleViolationCount}
+                                ruleViolationHistory={ruleViolationHistory}
+                                ruleViolationDifference={ruleViolationDifference}/>
         </Box>
     )
 }

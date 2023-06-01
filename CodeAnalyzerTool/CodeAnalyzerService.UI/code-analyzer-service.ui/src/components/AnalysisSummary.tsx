@@ -1,19 +1,15 @@
 import {
-    Accordion,
-    AccordionDetails,
-    AccordionSummary,
     Alert,
-    AlertTitle,
     FormControl, Grid, MenuItem, Select, SelectChangeEvent,
     Stack,
     Typography
 } from "@mui/material";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import {getMUISeverity, groupRuleViolationsByPath} from "../util/HelperFunctions";
+import {groupRuleViolationsByPath} from "../util/HelperFunctions";
 import React, {useState} from "react";
 import {useAnalysis} from "../hooks/useAnalysis";
 import Loading from "./Loading";
 import {AnalysisHistory} from "../model/Analysis";
+import FileViolations from "./FileViolations";
 
 interface AnalysisSummaryProps {
     initialAnalysisId: number;
@@ -57,25 +53,11 @@ export default function AnalysisSummary({initialAnalysisId, analysisHistory}: An
                     <Typography sx={{textAlign: 'center'}}>Analysis Results</Typography>
                 </Grid>
                 <Grid item xs={2}>
-                    <Typography sx={{textAlign: 'end'}}>{analysis.ruleViolations.length} Rule Violations</Typography>
+                    <Typography sx={{textAlign: 'end'}}><strong>{analysis.ruleViolations.length}</strong> Rule Violations</Typography>
                 </Grid>
             </Grid>
             {Object.entries(groupedAnalysis).map(([path, violations]) => (
-                <Accordion defaultExpanded={true} key={path}>
-                    <AccordionSummary expandIcon={<ExpandMoreIcon/>}>
-                        <Typography>{path}</Typography>
-                    </AccordionSummary>
-                    <AccordionDetails sx={{padding: 'unset'}}>
-                        <Stack>
-                            {violations.map((violation, index) => (
-                                <Alert key={index} severity={getMUISeverity(violation.severity)} sx={{paddingY: 'unset', borderRadius: 'unset'}}>
-                                    <AlertTitle>{violation.message}</AlertTitle>
-                                    <small>Line {violation.location.startLine}</small>
-                                </Alert>
-                            ))}
-                        </Stack>
-                    </AccordionDetails>
-                </Accordion>
+                <FileViolations path={path} violations={violations}/>
             ))}
         </Stack>
     )

@@ -83,6 +83,7 @@ public class AddProjectAnalysisManager
         }
         else
         {
+            project.RepoUrl = projectAnalysisRequest.RepoUrl;
             project.Analyses.Add(analysis);
             _ctx.Entry(project).State = EntityState.Modified;
         }

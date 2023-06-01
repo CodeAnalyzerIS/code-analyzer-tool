@@ -28,7 +28,9 @@ function mapProjectOverviewDates(projectOverviews: ProjectOverview[]) : ProjectO
 }
 
 function mapProject(project: Project) : Project {
-    return {...project, analysisHistory: mapAnalysisHistoryDates(project.analysisHistory)};
+    return {...project,
+        lastAnalysisDate: new Date(project.lastAnalysisDate),
+        analysisHistory: mapAnalysisHistoryDates(project.analysisHistory)};
 }
 
 function mapAnalysisHistoryDates(analysisHistory: AnalysisHistory[]) : AnalysisHistory[] {
