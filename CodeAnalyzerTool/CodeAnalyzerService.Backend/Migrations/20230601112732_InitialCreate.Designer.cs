@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CodeAnalyzerService.Backend.Migrations
 {
     [DbContext(typeof(CodeAnalyzerServiceDbContext))]
-    [Migration("20230525100525_InitialCreate")]
+    [Migration("20230601112732_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -47,6 +47,9 @@ namespace CodeAnalyzerService.Backend.Migrations
 
                     b.Property<string>("ProjectName")
                         .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("RepoUrl")
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");

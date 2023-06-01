@@ -17,7 +17,8 @@ namespace CodeAnalyzerService.Backend.Migrations
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    ProjectName = table.Column<string>(type: "TEXT", nullable: false)
+                    ProjectName = table.Column<string>(type: "TEXT", nullable: false),
+                    RepoUrl = table.Column<string>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {

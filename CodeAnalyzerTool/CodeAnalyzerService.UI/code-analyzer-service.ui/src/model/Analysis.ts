@@ -5,3 +5,5 @@ export type Analysis = {
     createdOn: Date;
     ruleViolations: RuleViolation[];
 }
+
+export type AnalysisHistory = Omit<Analysis, "ruleViolations">

@@ -1,7 +1,7 @@
 import {useQuery} from "react-query";
 import {getProject} from "../services/projectService";
 
-export function useProject(id: number) {
+export function useProject(id: string) {
 
     const {
         isLoading,

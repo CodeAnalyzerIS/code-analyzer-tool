@@ -1,7 +1,13 @@
-import {Analysis} from "./Analysis";
+import {AnalysisHistory} from "./Analysis";
 
 export type Project = {
     id: number;
     projectName: string;
-    analyses: Analysis[];
+    repoUrl: string | null;
+    lastAnalysisId: number;
+    ruleViolationCount: number;
+    lastAnalysisDate: Date
+    analysisHistory: AnalysisHistory[];
+    ruleViolationHistory: number[];
+    ruleViolationDifference: number;
 }

@@ -8,7 +8,7 @@ public class ProjectMapper
 {
     public static Project MapToModel(ProjectAnalysisRequest projectAnalysisRequest)
     {
-        return new Project(projectAnalysisRequest.ProjectName);
+        return new Project(projectAnalysisRequest.ProjectName, projectAnalysisRequest.RepoUrl);
     }
 
     public static ProjectResponse MapToDto(Project project)

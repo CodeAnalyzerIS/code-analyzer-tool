@@ -10,11 +10,13 @@ public class AnalysisSender
     private readonly HttpClient _httpClient;
     private readonly string _projectName;
     private readonly Uri _endpointUrl;
+    private readonly string _repoUrl;
 
     public AnalysisSender(HttpClient httpClient, GlobalConfig globalConfig)
     {
         _httpClient = httpClient;
         _projectName = globalConfig.ProjectName;
+        _repoUrl = globalConfig.RepoUrl;
         var url = globalConfig.ApiUrl;
         // todo make clear in documentation that including /api causes full URL to be used, and excluding it adds the default endpoint path to the url
         _endpointUrl = url.AbsoluteUri.ToLower().Contains("/api")
@@ -24,7 +26,7 @@ public class AnalysisSender
 
     internal async Task Send(IEnumerable<RuleViolation> ruleViolations)
     {
-        var projectAnalysis = new ProjectAnalysis(_projectName, ruleViolations).MapToDto();
+        var projectAnalysis = new ProjectAnalysis(_projectName, _repoUrl, ruleViolations).MapToDto();
         try
         {
             var response = await _httpClient.PutAsJsonAsync(_endpointUrl, projectAnalysis);
