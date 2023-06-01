@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from "react";
+import React, {useCallback, useContext, useEffect, useState} from "react";
 import Loading from "../components/Loading";
 import {Alert, Box, Card, CardContent, CardHeader, Stack, Typography} from "@mui/material";
 import {useProjectOverview} from "../hooks/useProjectOverview";
@@ -20,12 +20,18 @@ export default function Home() {
     const {setBreadcrumbData} = useContext<IBreadcrumbContext>(BreadcrumbContext)
     const navigate = useNavigate()
 
-    useEffect(() => {
+    //use useCallback to update the state and to be able to provide the dependency array with the set state
+    //without triggering infinite re-renders, because the callback function will only be called when the setter changes
+    const updateBreadcrumbData = useCallback(() => {
         const newBreadcrumbData: Breadcrumb[] = [
             {label: 'ᓚᘏᗢ', path:'/'},
         ];
         setBreadcrumbData(newBreadcrumbData);
-    }, [projectOverviews])
+    }, [setBreadcrumbData]);
+
+    useEffect(() => {
+        updateBreadcrumbData();
+    }, [updateBreadcrumbData]);
 
     if (isLoading) {
         return <Loading/>

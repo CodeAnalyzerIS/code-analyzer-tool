@@ -1,11 +1,11 @@
-import React, {useContext, useState} from 'react';
+import React, {useContext} from 'react';
 import './App.css';
 import {QueryClient, QueryClientProvider} from "react-query";
-import {BrowserRouter, Route, Routes} from "react-router-dom";
+import {BrowserRouter, Link, Route, Routes} from "react-router-dom";
 import Home from "./pages/Home";
-import {AppBar, Avatar, Breadcrumbs, Link, Stack, Toolbar, Typography} from "@mui/material";
+import {AppBar, Avatar, Breadcrumbs, Stack, Toolbar, Typography} from "@mui/material";
 import ProjectDetails from "./pages/ProjectDetails";
-import BreadcrumbContext, {Breadcrumb, IBreadcrumbContext} from './context/BreadcrumbContext';
+import BreadcrumbContext, {IBreadcrumbContext} from './context/BreadcrumbContext';
 import BreadcrumbContextProvider from "./context/BreadcrumbContextProvider";
 
 export const BACKEND_URL = 'http://localhost:5082';
@@ -23,7 +23,7 @@ function Header() {
                     <Avatar src={'/logo_transparent.png'}/>
                     <Breadcrumbs aria-label='breadcrumb'>
                         {breadcrumbData.map((breadcrumb, index) => (
-                            <Link key={index} underline='hover' color="#6574FC" href={breadcrumb.path}>
+                            <Link key={index} style={{color: "#6574FC"}} to={breadcrumb.path}>
                                 {breadcrumb.label}
                             </Link>
                         ))}

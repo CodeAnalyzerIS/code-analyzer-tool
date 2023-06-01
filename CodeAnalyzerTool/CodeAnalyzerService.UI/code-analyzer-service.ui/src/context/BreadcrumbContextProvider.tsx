@@ -1,16 +1,12 @@
-import {ReactElement} from "react";
+import {ReactElement, useState} from "react";
 import BreadcrumbContext, {Breadcrumb} from "./BreadcrumbContext";
-import useLocalStorage from "../hooks/useLocalStorage";
 
 interface IWithChildren {
     children: ReactElement | ReactElement[];
 }
 
 export default function BreadcrumbContextProvider({ children }: IWithChildren) {
-    const [breadcrumbData, setBreadcrumbData] = useLocalStorage<Breadcrumb[]>(
-        "BreadcrumbData",
-        []
-    );
+    const [breadcrumbData, setBreadcrumbData] = useState<Breadcrumb[]>([]);
 
     return (
         <BreadcrumbContext.Provider value={{breadcrumbData: breadcrumbData ?? [], setBreadcrumbData}}>

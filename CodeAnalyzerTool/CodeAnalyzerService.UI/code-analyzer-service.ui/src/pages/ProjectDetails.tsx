@@ -5,7 +5,7 @@ import {
     Alert,
     Box,
 } from "@mui/material";
-import React, {useContext, useEffect} from "react";
+import React, {useCallback, useContext, useEffect} from "react";
 import ProjectDetailCards from "../components/ProjectDetailCards";
 import AnalysisSummary from "../components/AnalysisSummary";
 import BreadcrumbContext, {Breadcrumb, IBreadcrumbContext} from "../context/BreadcrumbContext";
@@ -13,15 +13,21 @@ import BreadcrumbContext, {Breadcrumb, IBreadcrumbContext} from "../context/Brea
 export default function ProjectDetails() {
     const {id} = useParams<{ id: string }>()
     const {isLoading, isError, project} = useProject(id!)
-    const {breadcrumbData, setBreadcrumbData} = useContext<IBreadcrumbContext>(BreadcrumbContext)
+    const {setBreadcrumbData} = useContext<IBreadcrumbContext>(BreadcrumbContext)
 
-    useEffect(() => {
+    //use useCallback to update the state and to be able to provide the dependency array with the set state
+    //without triggering infinite re-renders, because the callback function will only be called when the setter changes
+    const updateBreadcrumbData = useCallback(() => {
         const newBreadcrumbData: Breadcrumb[] = [
             {label: 'ᓚᘏᗢ', path:'/'},
             {label: project ? project.projectName : '', path:`/project/${id}`}
         ];
         setBreadcrumbData(newBreadcrumbData);
-    }, [breadcrumbData, id, project])
+    }, [id, project, setBreadcrumbData]);
+
+    useEffect(() => {
+        updateBreadcrumbData();
+    }, [updateBreadcrumbData]);
 
     if (isLoading) {
         return <Loading/>
