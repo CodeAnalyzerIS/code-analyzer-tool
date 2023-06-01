@@ -47,7 +47,7 @@ public static class RuleExtensions
     }
     
     // todo refactor 
-    public static TSymbol GetEnclosingSymbol<TSymbol>(
+    public static TSymbol? GetEnclosingSymbol<TSymbol>(
         this SemanticModel semanticModel,
         int position,
         CancellationToken cancellationToken = default) where TSymbol : ISymbol
@@ -69,7 +69,7 @@ public static class RuleExtensions
     }
     
     // todo refactor 
-    public static INamedTypeSymbol GetEnclosingNamedType(
+    public static INamedTypeSymbol? GetEnclosingNamedType(
         this SemanticModel semanticModel,
         int position,
         CancellationToken cancellationToken = default)
