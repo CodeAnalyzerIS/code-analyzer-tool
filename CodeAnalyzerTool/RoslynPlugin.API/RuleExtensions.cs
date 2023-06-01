@@ -76,46 +76,4 @@ public static class RuleExtensions
     {
         return GetEnclosingSymbol<INamedTypeSymbol>(semanticModel, position, cancellationToken);
     }
-    
-    // todo refactor 
-    public static bool EqualsOrInheritsFrom(this ITypeSymbol type, ITypeSymbol baseType)
-    {
-        if (type is null)
-            throw new ArgumentNullException(nameof(type));
-
-        return SymbolEqualityComparer.Default.Equals(type, baseType)
-               || InheritsFrom(type, baseType);
-    }
-    
-    
-    // todo refactor 
-    public static bool InheritsFrom(this ITypeSymbol type, ITypeSymbol baseType)
-    {
-        if (type is null)
-            throw new ArgumentNullException(nameof(type));
-
-        if (baseType is null)
-            return false;
-
-        INamedTypeSymbol t = type.BaseType;
-
-        while (t is not null)
-        {
-            if (SymbolEqualityComparer.Default.Equals(t.OriginalDefinition, baseType))
-                return true;
-
-            t = t.BaseType;
-        }
-
-        if (baseType.TypeKind == TypeKind.Interface)
-        {
-            foreach (INamedTypeSymbol interfaceType in type.AllInterfaces)
-            {
-                if (SymbolEqualityComparer.Default.Equals(interfaceType.OriginalDefinition, baseType))
-                    return true;
-            }
-        }
-
-        return false;
-    }
 }
