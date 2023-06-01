@@ -37,7 +37,7 @@ export default function ProjectDetailCards({
             </Card>
             <Card sx={{width: '20%', height: '15vh'}}>
                 <CardContent>
-                    <Typography sx={{color: '#b0b0b0', mb: 1, fontSize: '1.2em'}}>{ruleViolationCount} Rule violations in last analysis</Typography>
+                    <Typography sx={{color: '#15B7B9', mb: 1, fontSize: '1.2em'}}>{ruleViolationCount} Rule violations in last analysis</Typography>
                     {analysisHistory.length < 2 ? "" :
                         <>
                             <Typography sx={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
@@ -56,8 +56,8 @@ export default function ProjectDetailCards({
                     <Box sx={{color: "#15B7B9"}}>
                         <TroubleshootIcon fontSize={'large'}/>
                     </Box>
-                    <Typography sx={{color: '#b0b0b0', mt: 1, fontSize: '1.2em'}}>{analysisHistory.length} Analyses</Typography>
-                    <Typography sx={{color: '#b0b0b0', mt: 1, fontSize: '1.2em'}}>
+                    <Typography sx={{color: '#15B7B9', mt: 1, fontSize: '1.2em'}}>{analysisHistory.length} Analyses</Typography>
+                    <Typography sx={{color: '#15B7B9', mt: 1, fontSize: '1.2em'}}>
                         Last Analysis: {lastAnalysisDate.toLocaleString('nl-BE')}
                     </Typography>
                 </CardContent>

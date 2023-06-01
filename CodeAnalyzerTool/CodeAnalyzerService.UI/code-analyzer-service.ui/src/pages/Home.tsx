@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import Loading from "../components/Loading";
 import {Alert, Box, Card, CardContent, CardHeader, Stack, Typography} from "@mui/material";
 import {useProjectOverview} from "../hooks/useProjectOverview";
@@ -7,27 +7,25 @@ import {ProjectOverview} from "../model/ProjectOverview";
 import ReportIcon from '@mui/icons-material/Report';
 import {Searchbar} from "../components/Searchbar";
 import {useNavigate} from "react-router-dom";
-import {Breadcrumb} from "../App";
 import {getProjectIdFromName} from "../services/projectService";
-
-interface HomeProps {
-    updateBreadCrumbData: (data: Breadcrumb[]) => void;
-}
+import BreadcrumbContext, {Breadcrumb, IBreadcrumbContext} from "../context/BreadcrumbContext";
 
 export type SearchString = {
     searchValue: string;
 }
 
-export default function Home({updateBreadCrumbData}: HomeProps) {
+export default function Home() {
     const [searchString, setSearchString] = useState("")
     const {isLoading, isError, projectOverviews} = useProjectOverview()
+    const {setBreadcrumbData} = useContext<IBreadcrumbContext>(BreadcrumbContext)
     const navigate = useNavigate()
+
     useEffect(() => {
         const newBreadcrumbData: Breadcrumb[] = [
             {label: 'ᓚᘏᗢ', path:'/'},
         ];
-        updateBreadCrumbData(newBreadcrumbData);
-    }, [])
+        setBreadcrumbData(newBreadcrumbData);
+    }, [projectOverviews])
 
     if (isLoading) {
         return <Loading/>

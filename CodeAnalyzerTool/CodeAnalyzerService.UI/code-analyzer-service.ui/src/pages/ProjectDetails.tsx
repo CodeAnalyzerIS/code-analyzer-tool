@@ -5,26 +5,23 @@ import {
     Alert,
     Box,
 } from "@mui/material";
-import React, {useEffect} from "react";
+import React, {useContext, useEffect} from "react";
 import ProjectDetailCards from "../components/ProjectDetailCards";
-import {Breadcrumb} from "../App";
 import AnalysisSummary from "../components/AnalysisSummary";
+import BreadcrumbContext, {Breadcrumb, IBreadcrumbContext} from "../context/BreadcrumbContext";
 
-interface ProjectDetailsProps {
-    updateBreadCrumbData: (data: Breadcrumb[]) => void;
-}
-
-export default function ProjectDetails({updateBreadCrumbData}: ProjectDetailsProps) {
+export default function ProjectDetails() {
     const {id} = useParams<{ id: string }>()
     const {isLoading, isError, project} = useProject(id!)
+    const {breadcrumbData, setBreadcrumbData} = useContext<IBreadcrumbContext>(BreadcrumbContext)
 
     useEffect(() => {
         const newBreadcrumbData: Breadcrumb[] = [
             {label: 'ᓚᘏᗢ', path:'/'},
             {label: project ? project.projectName : '', path:`/project/${id}`}
         ];
-        updateBreadCrumbData(newBreadcrumbData);
-    }, [id, project])
+        setBreadcrumbData(newBreadcrumbData);
+    }, [breadcrumbData, id, project])
 
     if (isLoading) {
         return <Loading/>
