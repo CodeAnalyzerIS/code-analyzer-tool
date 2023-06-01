@@ -1,4 +1,4 @@
-import {Analysis, AnalysisWithViolationCount} from "../model/Analysis";
+import {Analysis} from "../model/Analysis";
 import {RuleViolation} from "../model/RuleViolation";
 
 export function groupRuleViolationsByPath(analysis: Analysis): Record<string, RuleViolation[]> {
@@ -30,9 +30,4 @@ export const getMUISeverity = (severity: string) => {
 
 export const copyArray = (array: any[]) => {
     return [...array];
-}
-
-export const sortAnalysisHistoryDatesReversed = (analysisHistory: AnalysisWithViolationCount[]) => {
-    return copyArray(analysisHistory).sort((a, b) =>
-        new Date(b.createdOn).getTime() - new Date(a.createdOn).getTime());
 }

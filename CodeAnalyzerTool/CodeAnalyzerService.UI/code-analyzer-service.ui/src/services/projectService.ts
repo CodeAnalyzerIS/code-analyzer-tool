@@ -1,7 +1,7 @@
 import {BACKEND_URL} from "../App";
 import {Project} from "../model/Project";
 import {ProjectOverview} from "../model/ProjectOverview";
-import {AnalysisWithViolationCount} from "../model/Analysis";
+import {AnalysisHistory} from "../model/Analysis";
 
 export async function getProject(id: string) {
     const response = await fetch(`${BACKEND_URL}/api/Project/${id}`);
@@ -31,7 +31,7 @@ function mapProject(project: Project) : Project {
     return {...project, analysisHistory: mapAnalysisHistoryDates(project.analysisHistory)};
 }
 
-function mapAnalysisHistoryDates(analysisHistory: AnalysisWithViolationCount[]) : AnalysisWithViolationCount[] {
+function mapAnalysisHistoryDates(analysisHistory: AnalysisHistory[]) : AnalysisHistory[] {
     return analysisHistory.map((analysis) => {
         const parsedDate = new Date(analysis.createdOn)
         return {...analysis, createdOn: parsedDate}

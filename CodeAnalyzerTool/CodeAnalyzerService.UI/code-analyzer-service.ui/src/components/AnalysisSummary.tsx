@@ -9,15 +9,15 @@ import {
     Typography
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import {getMUISeverity, groupRuleViolationsByPath, sortAnalysisHistoryDatesReversed} from "../util/HelperFunctions";
+import {getMUISeverity, groupRuleViolationsByPath} from "../util/HelperFunctions";
 import React, {useState} from "react";
 import {useAnalysis} from "../hooks/useAnalysis";
 import Loading from "./Loading";
-import {AnalysisWithViolationCount} from "../model/Analysis";
+import {AnalysisHistory} from "../model/Analysis";
 
 interface AnalysisSummaryProps {
     initialAnalysisId: number;
-    analysisHistory: AnalysisWithViolationCount[];
+    analysisHistory: AnalysisHistory[];
 }
 
 export default function AnalysisSummary({initialAnalysisId, analysisHistory}: AnalysisSummaryProps) {
@@ -35,7 +35,6 @@ export default function AnalysisSummary({initialAnalysisId, analysisHistory}: An
         const newAnalysisId = Number(event.target.value)
         setAnalysisId(newAnalysisId);
     };
-    const reverseSortedHistory = sortAnalysisHistoryDatesReversed(analysisHistory)
 
     return (
         <Stack sx={{width: '60%', mt: 3}} spacing={2}>
@@ -48,7 +47,7 @@ export default function AnalysisSummary({initialAnalysisId, analysisHistory}: An
                             value={analysis.id.toString()}
                             onChange={handleChange}
                         >
-                            {reverseSortedHistory.map((analysisItem, index) => (
+                            {analysisHistory.map((analysisItem, index) => (
                                 <MenuItem key={index} value={analysisItem.id}>{analysisItem.createdOn.toLocaleString('nl-BE')}</MenuItem>
                             ))}
                         </Select>

@@ -6,8 +6,4 @@ export type Analysis = {
     ruleViolations: RuleViolation[];
 }
 
-export type AnalysisWithViolationCount = {
-    id: number;
-    createdOn: Date;
-    ruleViolationCount: number;
-}
+export type AnalysisHistory = Omit<Analysis, "ruleViolations">

@@ -1,8 +1,11 @@
-import {AnalysisWithViolationCount} from "./Analysis";
+import {AnalysisHistory} from "./Analysis";
 
 export type Project = {
     id: number;
     projectName: string;
     lastAnalysisId: number;
-    analysisHistory: AnalysisWithViolationCount[]
+    ruleViolationCount: number;
+    analysisHistory: AnalysisHistory[];
+    ruleViolationHistory: number[];
+    ruleViolationDifference: number;
 }

@@ -41,8 +41,10 @@ export default function ProjectDetails() {
         <Box sx={{display: 'flex', flexDirection: 'column', alignItems: 'center', mt: 3, mb: 20}}>
             <ProjectDetailCards projectName={project.projectName}
                                 lastAnalysisDate={project.analysisHistory[project.analysisHistory.length - 1].createdOn}
-                                analysisHistory={project.analysisHistory}
-                                ruleViolationCount={project.analysisHistory[project.analysisHistory.length - 1].ruleViolationCount}/>
+                                analysisAmount={project.analysisHistory.length}
+                                ruleViolationCount={project.ruleViolationCount}
+                                ruleViolationHistory={project.ruleViolationHistory}
+                                ruleViolationDifference={project.ruleViolationDifference}/>
             <AnalysisSummary initialAnalysisId={project.lastAnalysisId} analysisHistory={project.analysisHistory}/>
         </Box>
     )

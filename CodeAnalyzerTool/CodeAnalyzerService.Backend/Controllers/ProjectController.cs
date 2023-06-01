@@ -25,7 +25,9 @@ namespace CodeAnalyzerService.Backend.Controllers
         [HttpGet("GetFromName/{projectName}")]
         public async Task<ActionResult<int>> GetProjectIdFromProjectName(string projectName)
         {
-            var project = await _context.Projects.SingleOrDefaultAsync(p => p.ProjectName.ToLower().Equals(projectName.ToLower()));
+            var project =
+                await _context.Projects.SingleOrDefaultAsync(p =>
+                    p.ProjectName.ToLower().Equals(projectName.ToLower()));
             if (project == null)
             {
                 return NotFound();
@@ -37,7 +39,7 @@ namespace CodeAnalyzerService.Backend.Controllers
         [HttpGet("Overview")]
         public ActionResult<IEnumerable<ProjectOverviewResponse>> GetProjectsOverview()
         {
-           var projectOverviewResponses = _context.Projects.Include(p => p.Analyses)
+            var projectOverviewResponses = _context.Projects.Include(p => p.Analyses)
                 .Select(p => new ProjectOverviewResponse
                 {
                     Id = p.Id,
@@ -61,12 +63,17 @@ namespace CodeAnalyzerService.Backend.Controllers
                     Id = p.Id,
                     ProjectName = p.ProjectName,
                     LastAnalysisId = p.Analyses.OrderBy(a => a.CreatedOn).Last().Id,
-                    AnalysisHistory = p.Analyses.Select(a => new AnalysisWithViolationCountResponse
-                    {
-                        Id = a.Id, 
-                        CreatedOn = a.CreatedOn.ToUniversalTime(),
-                        RuleViolationCount = a.RuleViolations.Count()
-                    })
+                    RuleViolationCount = p.Analyses.OrderBy(a => a.CreatedOn).Last().RuleViolations.Count(),
+                    AnalysisHistory = p.Analyses.OrderByDescending(a => a.CreatedOn)
+                        .Select(a => new AnalysisHistoryResponse
+                        {
+                            Id = a.Id,
+                            CreatedOn = a.CreatedOn.ToUniversalTime(),
+                        }),
+                    RuleViolationHistory = p.Analyses.Select(a => a.RuleViolations.Count()).ToArray(),
+                    RuleViolationDifference =
+                        p.Analyses.OrderByDescending(a => a.CreatedOn).Skip(1).First().RuleViolations.Count() -
+                        p.Analyses.OrderBy(a => a.CreatedOn).Last().RuleViolations.Count(),
                 }).SingleOrDefaultAsync();
 
             if (project == null)
