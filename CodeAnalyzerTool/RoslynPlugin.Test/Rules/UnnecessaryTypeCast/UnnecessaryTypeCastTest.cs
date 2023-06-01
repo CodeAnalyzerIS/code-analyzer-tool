@@ -1,32 +1,19 @@
 ﻿
 using RoslynPlugin.rules;
 
-namespace RoslynPlugin.Test.Rules;
+namespace RoslynPlugin.Test.Rules.UnnecessaryTypeCast;
 
 public class UnnecessaryTypeCastTest
 {
-    [Fact]
-    public async Task ShouldReport_WhenUnnecessaryCastToDerivedType()
+    [Theory]
+    [MemberData(nameof(UnnecessaryTypeCastData.UnnecessaryCastToDerivedTypeData), MemberType = typeof(UnnecessaryTypeCastData))]
+    public async Task ShouldReport_WhenUnnecessaryCastToDerivedType(IEnumerable<string> codeScenarios)
     {
-        var code = @"
-class C
-{
-    void Main()
-    {
-        var c = new C();
-
-        var i = ((Derivative)c).I;
-
-    }
-
-    public int I { get; set; }
-}
-
-class Derivative : C
-{
-}
-";
-        await RuleTestRunner.ShouldReport(code, new UnnecessaryTypeCastRule());
+        var rule = new UnnecessaryTypeCastRule();
+        foreach (var code in codeScenarios)
+        {
+            await RuleTestRunner.ShouldReport(code, rule);
+        }
     }
 
     [Fact]
@@ -123,28 +110,6 @@ class B
 
     private protected void PrivateProtected() { }
 
-    protected internal void ProtectedInternal() { }
-}
-";
-        await RuleTestRunner.ShouldReport(code, new UnnecessaryTypeCastRule());
-    }
-
-    [Fact]
-    public async Task ShouldReport_WhenTODO2()
-    {
-        var code = @"
-class C : B
-{
-    public static void M()
-    {
-        var b = default(B);
-
-        ((C)b).ProtectedInternal();
-    }
-}
-
-class B
-{
     protected internal void ProtectedInternal() { }
 }
 ";

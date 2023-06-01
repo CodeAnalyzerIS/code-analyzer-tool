@@ -1,4 +1,5 @@
 ﻿using System.Collections.Immutable;
+using System.Linq.Expressions;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -152,50 +153,49 @@ public class UnnecessaryTypeCastRule : RoslynRule
     }
 
     private static bool CheckAccessibility(
-        ITypeSymbol expressionTypeSymbol,
-        ISymbol accessedSymbol,
+        ITypeSymbol expressionType,
+        ISymbol accessSymbol,
         int position,
         SemanticModel semanticModel,
-        CancellationToken cancellationToken)
+        CancellationToken ct)
     {
-        Accessibility accessibility = accessedSymbol.DeclaredAccessibility;
+        var  accessibility = accessSymbol.DeclaredAccessibility;
 
-        if (accessibility == Accessibility.Protected
-            || accessibility == Accessibility.ProtectedAndInternal)
+        if (accessibility is Accessibility.Protected or Accessibility.ProtectedAndInternal)
         {
-            INamedTypeSymbol containingType = semanticModel.GetEnclosingNamedType(position, cancellationToken);
-
-            while (containingType is not null)
-            {
-                if (SymbolEqualityComparer.Default.Equals(containingType, expressionTypeSymbol))
-                    return true;
-
-                containingType = containingType.ContainingType;
-            }
+            INamedTypeSymbol? containingType = semanticModel.GetEnclosingNamedType(position, ct);
+            if (TypeContainsExpressionType(containingType, expressionType)) return true;
 
             return false;
         }
         else if (accessibility == Accessibility.ProtectedOrInternal)
         {
-            INamedTypeSymbol containingType = semanticModel.GetEnclosingNamedType(position, cancellationToken);
+            INamedTypeSymbol? containingType = semanticModel.GetEnclosingNamedType(position, ct);
 
-            if (SymbolEqualityComparer.Default.Equals(containingType?.ContainingAssembly, expressionTypeSymbol.ContainingAssembly))
+            if (SymbolEqualityComparer.Default.Equals(containingType?.ContainingAssembly, expressionType.ContainingAssembly))
                 return true;
 
-            while (containingType is not null)
-            {
-                if (SymbolEqualityComparer.Default.Equals(containingType, expressionTypeSymbol))
-                    return true;
-
-                containingType = containingType.ContainingType;
-            }
+            if (TypeContainsExpressionType(containingType, expressionType)) return true;
 
             return false;
         }
 
         return true;
     }
-    
+
+    private static bool TypeContainsExpressionType(INamedTypeSymbol? containingType, ITypeSymbol expressionType)
+    {
+        while (containingType is not null)
+        {
+            if (SymbolEqualityComparer.Default.Equals(containingType, expressionType))
+                return true;
+
+            containingType = containingType.ContainingType;
+        }
+
+        return false;
+    }
+
     private static bool IsTypeEqualOrInheritsFrom(ITypeSymbol type, ITypeSymbol baseType)
     {
         return SymbolEqualityComparer.Default.Equals(type, baseType) || DoesTypeInheritFrom(type, baseType);
