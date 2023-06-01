@@ -60,7 +60,7 @@ public class UnnecessaryTypeCastRule : RoslynRule
 
         // check if castType equals or inherits from the type of the expression
         if (castTypeSymbol.TypeKind != TypeKind.Interface && 
-           !castTypeSymbol.EqualsOrInheritsFrom(expressionTypeSymbol)) return;
+           !IsTypeEqualOrInheritsFrom(castTypeSymbol, expressionTypeSymbol)) return;
         
         var gotAccessSymbol = TryGetAccessSymbol(semanticModel, castExpressionSyntax, cancellationToken, out ISymbol? accessSymbol);
         if (!gotAccessSymbol) return;
@@ -73,14 +73,14 @@ public class UnnecessaryTypeCastRule : RoslynRule
             {
                 if (!CheckExplicitImplementation(expressionTypeSymbol, accessSymbol)) return;
             }
-            else return; // when default interface implementation
+            else return; // when accessing default interface implementation
         }
         else
         {
             if (!CheckAccessibility(expressionTypeSymbol.OriginalDefinition, accessSymbol, expression.SpanStart, semanticModel, cancellationToken))
                 return;
 
-            if (!expressionTypeSymbol.EqualsOrInheritsFrom(containingType))
+            if (!IsTypeEqualOrInheritsFrom(expressionTypeSymbol, containingType))
                 return;
         }
 
@@ -194,5 +194,24 @@ public class UnnecessaryTypeCastRule : RoslynRule
         }
 
         return true;
+    }
+    
+    private static bool IsTypeEqualOrInheritsFrom(ITypeSymbol type, ITypeSymbol baseType)
+    {
+        return SymbolEqualityComparer.Default.Equals(type, baseType) || DoesTypeInheritFrom(type, baseType);
+    }
+
+    private static bool DoesTypeInheritFrom(ITypeSymbol type, ITypeSymbol baseType)
+    {
+        INamedTypeSymbol? currentType = type.BaseType;
+
+        while (currentType is not null)
+        {
+            if (SymbolEqualityComparer.Default.Equals(currentType, baseType)) return true;
+
+            currentType = currentType.BaseType;
+        }
+
+        return false;
     }
 }
