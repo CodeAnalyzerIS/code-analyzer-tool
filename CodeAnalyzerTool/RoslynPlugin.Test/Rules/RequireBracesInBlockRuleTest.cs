@@ -15,9 +15,7 @@ class C {
     }
 }
 ";
-        var rule = new RequireBracesInBlockRule();
-        var results = await RuleTestRunner.CompileStringWithRule(code, rule);
-        results.Should().Contain(rv => rv.Rule.RuleName == RuleNames.REQUIRE_BRACES_IN_BLOCK_RULE);
+        await RuleTestRunner.ShouldReport(code, new RequireBracesInBlockRule());
     }
     
     [Fact]
@@ -32,8 +30,6 @@ class C {
     }
 }
 ";
-        var rule = new RequireBracesInBlockRule();
-        var results = await RuleTestRunner.CompileStringWithRule(code, rule);
-        results.Should().BeEmpty();
+        await RuleTestRunner.ShouldNotReport(code, new RequireBracesInBlockRule());
     }
 }

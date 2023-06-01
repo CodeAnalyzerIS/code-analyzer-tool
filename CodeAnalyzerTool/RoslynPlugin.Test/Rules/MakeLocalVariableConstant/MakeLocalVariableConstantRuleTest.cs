@@ -11,8 +11,7 @@ public class MakeLocalVariableConstantRuleTest
         var rule = new MakeLocalVariableConstantRule();
         foreach (var code in codeScenarios)
         {
-            var results = await RuleTestRunner.CompileStringWithRule(code, rule);
-            results.Should().Contain(rv => rv.Rule.RuleName == RuleNames.MAKE_LOCAL_VARIABLE_CONSTANT_RULE);
+            await RuleTestRunner.ShouldReport(code, rule);
         }
     }
 
@@ -27,20 +26,17 @@ class C
         var s = ""This string stays constant"";
     }
 }";
-        var rule = new MakeLocalVariableConstantRule();
-        var results = await RuleTestRunner.CompileStringWithRule(code, rule);
-        results.Should().Contain(rv => rv.Rule.RuleName == RuleNames.MAKE_LOCAL_VARIABLE_CONSTANT_RULE);
+        await RuleTestRunner.ShouldReport(code, new MakeLocalVariableConstantRule());
     }
 
     [Theory]
     [MemberData(nameof(MakeLocalVariableConstantRuleData.LocalVariableAssignedNewValueData), MemberType = typeof(MakeLocalVariableConstantRuleData))]
     public async Task ShouldNotReport_WhenLocalVariableAssignedNewValue(IEnumerable<string> codeScenarios)
     {
+        var rule = new MakeLocalVariableConstantRule();
         foreach (var code in codeScenarios)
         {
-            var rule = new MakeLocalVariableConstantRule();
-            var results = await RuleTestRunner.CompileStringWithRule(code, rule);
-            results.Should().BeEmpty();
+            await RuleTestRunner.ShouldNotReport(code, rule);
         }
     }
 
@@ -61,9 +57,7 @@ class C
         p1 += p2;
     }
 }";
-        var rule = new MakeLocalVariableConstantRule();
-        var results = await RuleTestRunner.CompileStringWithRule(code, rule);
-        results.Should().BeEmpty();
+        await RuleTestRunner.ShouldNotReport(code, new MakeLocalVariableConstantRule());
     }
 
     [Fact]
@@ -82,8 +76,6 @@ public static class C
         return p1 + p2;
     }
 }";
-        var rule = new MakeLocalVariableConstantRule();
-        var results = await RuleTestRunner.CompileStringWithRule(code, rule);
-        results.Should().BeEmpty();
+        await RuleTestRunner.ShouldNotReport(code, new MakeLocalVariableConstantRule());
     }
 }

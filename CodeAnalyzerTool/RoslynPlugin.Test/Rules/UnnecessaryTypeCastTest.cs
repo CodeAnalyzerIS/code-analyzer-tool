@@ -1,23 +1,10 @@
-﻿using RoslynPlugin.rules;
+﻿
+using RoslynPlugin.rules;
 
 namespace RoslynPlugin.Test.Rules;
 
 public class UnnecessaryTypeCastTest
 {
-    private async Task ShouldReport(string code)
-    {
-        var rule = new UnnecessaryTypeCastRule();
-        var results = await RuleTestRunner.CompileStringWithRule(code, rule);
-        results.Should().Contain(rv => rv.Rule.RuleName == RuleNames.UNNECESSARY_TYPE_CAST_RULE);
-    }
-
-    private async Task ShouldNotReport(string code)
-    {
-        var rule = new UnnecessaryTypeCastRule();
-        var results = await RuleTestRunner.CompileStringWithRule(code, rule);
-        results.Should().BeEmpty();
-    }
-
     [Fact]
     public async Task ShouldReport_WhenCastToDerivedType()
     {
@@ -39,7 +26,7 @@ class DerivesFromC : C
 {
 }
 ";
-        await ShouldReport(code);
+        await RuleTestRunner.ShouldReport(code, new UnnecessaryTypeCastRule());
     }
 
     [Fact]
@@ -63,7 +50,7 @@ class D : C
 {
 }
 ";
-        await ShouldReport(code);
+        await RuleTestRunner.ShouldReport(code, new UnnecessaryTypeCastRule());
     }
 
     [Fact]
@@ -82,7 +69,7 @@ class C
     }
 }
 ";
-        await ShouldReport(code);
+        await RuleTestRunner.ShouldReport(code, new UnnecessaryTypeCastRule());
     }
 
     [Fact]
@@ -102,7 +89,7 @@ class C
     }
 }
 ";
-        await ShouldReport(code);
+        await RuleTestRunner.ShouldReport(code, new UnnecessaryTypeCastRule());
     }
 
 
@@ -140,7 +127,7 @@ class B
     protected internal void ProtectedInternal() { }
 }
 ";
-        await ShouldReport(code);
+        await RuleTestRunner.ShouldReport(code, new UnnecessaryTypeCastRule());
     }
 
     [Fact]
@@ -162,7 +149,7 @@ class B
     protected internal void ProtectedInternal() { }
 }
 ";
-        await ShouldReport(code);
+        await RuleTestRunner.ShouldReport(code, new UnnecessaryTypeCastRule());
     }
 
     [Fact]
@@ -182,7 +169,7 @@ class C : B
     }
 }
 ";
-        await ShouldNotReport(code);
+        await RuleTestRunner.ShouldNotReport(code, new UnnecessaryTypeCastRule());
     }
 
     [Fact]
@@ -205,6 +192,6 @@ class B : C
     public string P { get; set; }
 }
 ";
-        await ShouldNotReport(code);
+        await RuleTestRunner.ShouldNotReport(code, new UnnecessaryTypeCastRule());
     }
 }

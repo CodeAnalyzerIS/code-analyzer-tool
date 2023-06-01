@@ -18,8 +18,7 @@ namespace Animals.Mammals.Felines {
 }";
         var rule = new NamespaceContainsRule();
         rule.Options = new Dictionary<string, string> { [NamespaceContainsRule.NAMESPACE_OPTION_KEY] = "InfoSupport" };
-        var results = await RuleTestRunner.CompileStringWithRule(code, rule);
-        results.Should().Contain(rv => rv.Rule.RuleName == RuleNames.NAMESPACE_CONTAINS_RULE);
+        await RuleTestRunner.ShouldReport(code, rule);
     }
 
     [Fact]
@@ -36,8 +35,7 @@ namespace InfoSupport.Animals.Mammals.Felines {
 ";
         var rule = new NamespaceContainsRule();
         rule.Options = new Dictionary<string, string> { [NamespaceContainsRule.NAMESPACE_OPTION_KEY] = "InfoSupport" };
-        var results = await RuleTestRunner.CompileStringWithRule(code, rule);
-        results.Should().BeEmpty();
+        await RuleTestRunner.ShouldNotReport(code, rule);
     }
 
     [Fact]
@@ -53,7 +51,6 @@ namespace InfoSupport.Animals.Mammals.Felines {
 }
 ";
         var rule = new NamespaceContainsRule();
-        var results = await RuleTestRunner.CompileStringWithRule(code, rule);
-        results.Should().BeEmpty();
+        await RuleTestRunner.ShouldNotReport(code, rule);
     }
 }
