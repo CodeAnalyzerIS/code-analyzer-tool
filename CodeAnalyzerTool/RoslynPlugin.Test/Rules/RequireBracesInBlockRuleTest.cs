@@ -3,10 +3,10 @@ using RoslynPlugin.rules;
 
 namespace RoslynPlugin.Test.Rules;
 
-public class RequireBracesInBlockTest
+public class RequireBracesInBlockRuleTest
 {
     [Fact]
-    public async void RequiredBracesInBlockRule_ShouldReportRuleViolation_WhenIfStatementWithoutBracesExist()
+    public async void ShouldReport_WhenIfStatementWithoutBracesExist()
     {
         var code = @"
 class C {
@@ -21,7 +21,7 @@ class C {
     }
     
     [Fact]
-    public async void RequiredBracesInBlockRule_ShouldNotReportRuleViolation_WhenIfStatementWithoutBracesDoesNotExist()
+    public async void ShouldNotReport_WhenIfStatementWithoutBracesDoesNotExist()
     {
         var code = @"
 class C {

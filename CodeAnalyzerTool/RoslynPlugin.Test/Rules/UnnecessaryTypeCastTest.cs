@@ -4,7 +4,6 @@ namespace RoslynPlugin.Test.Rules;
 
 public class UnnecessaryTypeCastTest
 {
-
     private async Task ShouldReport(string code)
     {
         var rule = new UnnecessaryTypeCastRule();
@@ -20,7 +19,7 @@ public class UnnecessaryTypeCastTest
     }
 
     [Fact]
-    public async Task UnnecessaryTypeCastRule_ShouldReportRuleViolation_WhenCastToDerivedType()
+    public async Task ShouldReport_WhenCastToDerivedType()
     {
         var code = @"
 class C
@@ -44,7 +43,7 @@ class DerivesFromC : C
     }
 
     [Fact]
-    public async Task UnnecessaryTypeCastRule_ShouldReportRuleViolation_WhenCastToDerivedTypeWithConditionalAccess()
+    public async Task ShouldReport_WhenCastToDerivedTypeWithConditionalAccess()
     {
         var code = @"
 class C
@@ -68,7 +67,7 @@ class D : C
     }
 
     [Fact]
-    public async Task UnnecessaryTypeCastRule_ShouldReportRuleViolation_WhenCastToImplementedInterface()
+    public async Task ShouldReport_WhenCastToImplementedInterface()
     {
         var code = @"
 using System.Collections.Generic;
@@ -88,7 +87,7 @@ class C
 
     [Fact]
     public async Task
-        UnnecessaryTypeCastRule_ShouldReportRuleViolation_WhenCastToImplementedInterfaceWithConditionalAccess()
+        ShouldReport_WhenCastToImplementedInterfaceWithConditionalAccess()
     {
         var code = @"
 using System.Collections.Generic;
@@ -108,7 +107,7 @@ class C
 
 
     [Fact]
-    public async Task UnnecessaryTypeCastRule_ShouldReportRuleViolation_WhenTODO()
+    public async Task ShouldReport_WhenTODO()
     {
         var code = @"
 class B
@@ -145,7 +144,7 @@ class B
     }
 
     [Fact]
-    public async Task UnnecessaryTypeCastRule_ShouldReportRuleViolation_WhenTODO2()
+    public async Task ShouldReport_WhenTODO2()
     {
         var code = @"
 class C : B
@@ -167,7 +166,7 @@ class B
     }
 
     [Fact]
-    public async Task UnnecessaryTypeCastRule_ShouldNotReportRuleViolation_WhenPrivateProtectedOtherwiseNotAccesible()
+    public async Task ShouldNotReport_WhenPrivateProtectedOtherwiseNotAccesible()
     {
         var code = @"
 class B
@@ -187,7 +186,7 @@ class C : B
     }
 
     [Fact]
-    public async Task UnnecessaryTypeCastRule_ShouldNotReportRuleViolation_WhenCastToDerivedType()
+    public async Task ShouldNotReport_WhenCastToDerivedType()
     {
         var code = @"
 class C
