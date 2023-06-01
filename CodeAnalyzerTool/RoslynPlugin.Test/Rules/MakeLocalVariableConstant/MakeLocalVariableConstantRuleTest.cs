@@ -2,11 +2,11 @@
 
 namespace RoslynPlugin.Test.Rules.MakeLocalVariableConstant;
 
-public class MakeLocalVariableConstantTest
+public class MakeLocalVariableConstantRuleTest
 {
     [Theory]
-    [MemberData(nameof(MakeLocalVariableConstantData.ConstantVariableNotMarkedAsConstData), MemberType = typeof(MakeLocalVariableConstantData))]
-    public async Task MakeLocalVariableConstantRule_ShouldReportRuleViolation_WhenConstantVariableNotMarkedAsConst(IEnumerable<string> codeScenarios)
+    [MemberData(nameof(MakeLocalVariableConstantRuleData.ConstantVariableNotMarkedAsConstData), MemberType = typeof(MakeLocalVariableConstantRuleData))]
+    public async Task ShouldReport_WhenConstantVariableNotMarkedAsConst(IEnumerable<string> codeScenarios)
     {
         var rule = new MakeLocalVariableConstantRule();
         foreach (var code in codeScenarios)
@@ -17,7 +17,7 @@ public class MakeLocalVariableConstantTest
     }
 
     [Fact]
-    public async Task MakeLocalVariableConstantRule_ShouldReportRuleViolation_WhenConstantVariableDeclaredWithVarKeywordNotMarkedAsConst()
+    public async Task ShouldReport_WhenConstantVariableDeclaredWithVarKeywordNotMarkedAsConst()
     {
         var code = @"
 class C
@@ -33,8 +33,8 @@ class C
     }
 
     [Theory]
-    [MemberData(nameof(MakeLocalVariableConstantData.LocalVariableAssignedNewValueData), MemberType = typeof(MakeLocalVariableConstantData))]
-    public async Task MakeLocalVariableConstantRule_ShouldNotReportRuleViolation_WhenLocalVariableAssignedNewValue(IEnumerable<string> codeScenarios)
+    [MemberData(nameof(MakeLocalVariableConstantRuleData.LocalVariableAssignedNewValueData), MemberType = typeof(MakeLocalVariableConstantRuleData))]
+    public async Task ShouldNotReport_WhenLocalVariableAssignedNewValue(IEnumerable<string> codeScenarios)
     {
         foreach (var code in codeScenarios)
         {
@@ -45,7 +45,7 @@ class C
     }
 
     [Fact]
-    public async Task MakeLocalVariableConstantRule_ShouldNotReportRuleViolation_WhenVariablePassedAsRefParameter()
+    public async Task ShouldNotReport_WhenVariablePassedAsRefParameter()
     {
         var code = @"
 class C
@@ -67,7 +67,7 @@ class C
     }
 
     [Fact]
-    public async Task MakeLocalVariableConstantRule_ShouldNotReportRuleViolation_WhenVariablePassedAsRefParameterThroughExtensionMethod()
+    public async Task ShouldNotReport_WhenVariablePassedAsRefParameterThroughExtensionMethod()
     {
         var code = @"
 public static class C

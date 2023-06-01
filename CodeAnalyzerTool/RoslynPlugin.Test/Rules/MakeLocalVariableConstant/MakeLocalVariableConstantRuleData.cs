@@ -1,6 +1,6 @@
 ﻿namespace RoslynPlugin.Test.Rules.MakeLocalVariableConstant;
 
-public class MakeLocalVariableConstantData
+public class MakeLocalVariableConstantRuleData
 {
     public static TheoryData<IEnumerable<string>> ConstantVariableNotMarkedAsConstData => new()
     {
