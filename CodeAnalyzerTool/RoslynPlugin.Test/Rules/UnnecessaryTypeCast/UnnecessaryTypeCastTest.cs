@@ -79,6 +79,7 @@ class C
     }
 
 
+    // todo
     [Fact]
     public async Task ShouldReport_WhenTODO()
     {
@@ -117,7 +118,7 @@ class B
     }
 
     [Fact]
-    public async Task ShouldNotReport_WhenPrivateProtectedOtherwiseNotAccesible()
+    public async Task ShouldNotReport_WhenPrivateProtectedOtherwiseNotAccessible()
     {
         // The private protected access modifier allows access to the member within the class and its derived classes
         // that are defined in the same assembly. However, it does not allow direct access to the member through an
@@ -181,7 +182,7 @@ class C
 class Derivative : C
 {
     public void SayHello() {
-        Console.Writeline(""Hello"");
+        Console.WriteLine(""Hello"");
     }
 
 }
@@ -191,7 +192,7 @@ class Derivative : C
     
     
     
-    // ============================================================================================
+    // =============================== TODO =============================================================
     
 //     [Fact]
 //     public async Task Test_CastToIDisposable()
