@@ -73,7 +73,7 @@ public class UnnecessaryTypeCastRule : RoslynRule
             {
                 if (!CheckExplicitImplementation(expressionTypeSymbol, accessSymbol)) return;
             }
-            else return;
+            else return; // when default interface implementation
         }
         else
         {
@@ -88,7 +88,7 @@ public class UnnecessaryTypeCastRule : RoslynRule
         context.ReportDiagnostic(diagnostic);
     }
 
-    private bool TryGetAccessSymbol(SemanticModel semanticModel, SyntaxNode castExpression, CancellationToken ct, out ISymbol? accessSymbol)
+    private static bool TryGetAccessSymbol(SemanticModel semanticModel, SyntaxNode castExpression, CancellationToken ct, out ISymbol? accessSymbol)
     {
         var accessExpression = castExpression.Parent?.Parent; // castExpression -> parenthesizedExpression -> accessExpression
         if (accessExpression is null)
@@ -117,10 +117,9 @@ public class UnnecessaryTypeCastRule : RoslynRule
     
     private static bool CheckExplicitImplementation(ITypeSymbol typeSymbol, ISymbol symbol)
     {
-        ISymbol implementation = typeSymbol.FindImplementationForInterfaceMember(symbol);
-
-        if (implementation is null)
-            return false;
+        // TODO 
+        var implementation = typeSymbol.FindImplementationForInterfaceMember(symbol);
+        if (implementation is null) return false;
 
         switch (implementation.Kind)
         {
@@ -131,7 +130,6 @@ public class UnnecessaryTypeCastRule : RoslynRule
                         if (SymbolEqualityComparer.Default.Equals(propertySymbol.OriginalDefinition, symbol.OriginalDefinition))
                             return false;
                     }
-
                     break;
                 }
             case SymbolKind.Method:
@@ -196,12 +194,5 @@ public class UnnecessaryTypeCastRule : RoslynRule
         }
 
         return true;
-    }
-
-    private static ExpressionSyntax CastAccessExpressionToConditionalAccessIfIsOfType(SyntaxNode node)
-    {
-        if (node.IsOfSyntaxKind(SyntaxKind.ConditionalAccessExpression)) 
-            return ((ConditionalAccessExpressionSyntax)node).WhenNotNull;
-        return (ExpressionSyntax)node;
     }
 }
