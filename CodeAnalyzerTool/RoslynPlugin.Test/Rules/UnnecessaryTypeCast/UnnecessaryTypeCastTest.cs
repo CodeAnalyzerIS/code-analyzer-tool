@@ -7,8 +7,8 @@ public class UnnecessaryTypeCastTest
 {
     // ------------------------------------ Should report --------------------------------------------------------------
     [Theory]
-    [MemberData(nameof(UnnecessaryTypeCastData.CastToDerivedTypeToAccessAlreadyAccessibleMethod), MemberType = typeof(UnnecessaryTypeCastData))]
-    public async Task ShouldReport_WhenCastToDerivedTypeToAccessAlreadyAccessibleMethod(IEnumerable<string> codeScenarios)
+    [MemberData(nameof(UnnecessaryTypeCastData.CastToDerivedTypeToAccessAlreadyAccessibleMember), MemberType = typeof(UnnecessaryTypeCastData))]
+    public async Task ShouldReport_WhenCastToDerivedTypeToAccessAlreadyAccessibleMember(IEnumerable<string> codeScenarios)
     {
         var rule = new UnnecessaryTypeCastRule();
         foreach (var code in codeScenarios)
@@ -79,7 +79,7 @@ class C
 
     
     [Fact]
-    public async Task ShouldReport_WhenCastToNestedDerivedTypeToAccessAlreadyAccessibleMethod()
+    public async Task ShouldReport_MultipleViolations()
     {
         const string code = @"
 class C
@@ -118,8 +118,8 @@ class C
     // ------------------------------------ Should not report ----------------------------------------------------------
 
     [Theory]
-    [MemberData(nameof(UnnecessaryTypeCastData.AccessingProtectedMethod), MemberType = typeof(UnnecessaryTypeCastData))]
-    public async Task ShouldNotReport_WhenProtectedMethodOtherwiseNotAccessible(IEnumerable<string> codeScenarios)
+    [MemberData(nameof(UnnecessaryTypeCastData.ProtectedMemberOtherwiseNotAccessible), MemberType = typeof(UnnecessaryTypeCastData))]
+    public async Task ShouldNotReport_WhenProtectedMemberOtherwiseNotAccessible(IEnumerable<string> codeScenarios)
     {
         // The (private) protected access modifier allows access to the member within the class and its derived classes
         // (that are defined in the same assembly). However, it does not allow direct access to the member through an
@@ -131,7 +131,7 @@ class C
     }
 
     [Fact]
-    public async Task ShouldNotReport_WhenCastToDerivedTypeToAccessProperty()
+    public async Task ShouldNotReport_WhenCastToDerivedTypeToAccessPropertyOfDerivedType()
     {
         const string code = @"
 class C
@@ -154,7 +154,7 @@ class Derivative : C
     }
     
     [Fact]
-    public async Task ShouldNotReport_WhenCastToDerivedTypeToAccessMethod()
+    public async Task ShouldNotReport_WhenCastToDerivedTypeToAccessMethodOfDerivedType()
     {
         const string code = @"
 class C
@@ -191,7 +191,7 @@ namespace ExampleNamespace;
 
 class C
 {
-    static void M()
+    static void Main()
     {
         var ex = new ExplicitImplementationExample();
         ((IExample) ex).Method();
@@ -225,7 +225,7 @@ namespace ExampleNamespace;
 
 class C
 {
-    static void M()
+    static void Main()
     {
         var ex = new ExplicitImplementationExample();
         var test = ((IExample)ex).PropExample;
