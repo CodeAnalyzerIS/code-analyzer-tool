@@ -6,8 +6,7 @@ on:
       - 'v*.*.*'
 
 env:
-  UI_IMAGE_NAME: code-analyzer-service.ui
-  BACKEND_IMAGE_NAME: code-analyzer-service.backend
+  IMAGE_NAME: code-analyzer-service
 
 jobs:
   create_release:
@@ -57,13 +56,9 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Build UI image
-        working-directory: ./CodeAnalyzerTool/CodeAnalyzerTool.UI/code-analyzer-service.ui/
-        run: docker build . --file Dockerfile --tag $UI_IMAGE_NAME
-
-      - name: Build Backend image
-        working-directory: ./CodeAnalyzerTool/CodeAnalyzerService.backend/
-        run: docker build . --file Dockerfile --tag $BACKEND_IMAGE_NAME
+      - name: Build image
+        working-directory: ./CodeAnalyzerTool/
+        run: docker build . --file Dockerfile --tag $IMAGE_NAME
 
       - name: Log in to registry
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u $ --password-stdin
@@ -71,23 +66,18 @@ jobs:
       - name: Push images
         working-directory: ./CodeAnalyzerTool/
         run: |
-          UI_IMAGE_ID=ghcr.io/${{ github.repository_owner }}/$UI_IMAGE_NAME
-          BACKEND_IMAGE_ID=ghcr.io/${{ github.repository_owner }}/$BACKEND_IMAGE_NAME
+          IMAGE_ID=ghcr.io/${{ github.repository_owner }}/$IMAGE_NAME
           
           # Change all uppercase to lowercase
-          UI_IMAGE_ID=$(echo $UI_IMAGE_ID | tr '[A-Z]' '[a-z]')
-          BACKEND_IMAGE_ID=$(echo $BACKEND_IMAGE_ID | tr '[A-Z]' '[a-z]')
+          IMAGE_ID=$(echo IMAGE_ID | tr '[A-Z]' '[a-z]')
           # Strip git ref prefix from version
           VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
           # Strip "v" prefix from tag name
           [[ "${{ github.ref }}" == "refs/tags/"* ]] && VERSION=$(echo $VERSION | sed -e 's/^v//')
           # Use Docker `latest` tag convention
           [ "$VERSION" == "main" ] && VERSION=latest
-          echo UI_IMAGE_ID=$UI_IMAGE_ID
-          echo BACKEND_IMAGE_ID=$BACKEND_IMAGE_ID
+          echo IMAGE_ID=$IMAGE_ID
           echo VERSION=$VERSION
-          docker tag $UI_IMAGE_NAME $UI_IMAGE_ID:$VERSION
-          docker tag $BACKEND_IMAGE_NAME $BACKEND_IMAGE_ID:$VERSION
-          docker push $UI_IMAGE_ID:$VERSION
-          docker push $BACKEND_IMAGE_ID:$VERSION
+          docker tag $IMAGE_NAME $IMAGE_ID:$VERSION
+          docker push $IMAGE_ID:$VERSION
   

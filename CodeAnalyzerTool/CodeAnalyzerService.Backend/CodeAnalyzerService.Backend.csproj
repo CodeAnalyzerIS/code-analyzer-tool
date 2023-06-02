@@ -1,7 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <EnableDefaultContentItems>false</EnableDefaultContentItems>
     <TargetFramework>net7.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
@@ -10,7 +9,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Include="wwwroot\**" CopyToOutputDirectory="PreserveNewest" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.5" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.5" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.5">
@@ -34,6 +32,31 @@
 
   <ItemGroup>
     <Folder Include="Migrations\" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <None Include="wwwroot\**">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None> 
+  </ItemGroup>
+  
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="wwwroot\asset-manifest.json" />
+    <_ContentIncludedByDefault Remove="wwwroot\azure-devops-logo.png" />
+    <_ContentIncludedByDefault Remove="wwwroot\favicon.png" />
+    <_ContentIncludedByDefault Remove="wwwroot\github-icon.png" />
+    <_ContentIncludedByDefault Remove="wwwroot\gitlab-icon.png" />
+    <_ContentIncludedByDefault Remove="wwwroot\index.html" />
+    <_ContentIncludedByDefault Remove="wwwroot\logo_transparent.png" />
+    <_ContentIncludedByDefault Remove="wwwroot\manifest.json" />
+    <_ContentIncludedByDefault Remove="wwwroot\robots.txt" />
+    <_ContentIncludedByDefault Remove="wwwroot\static\css\main.0f88969d.css" />
+    <_ContentIncludedByDefault Remove="wwwroot\static\css\main.0f88969d.css.map" />
+    <_ContentIncludedByDefault Remove="wwwroot\static\js\787.69b2c30c.chunk.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\static\js\787.69b2c30c.chunk.js.map" />
+    <_ContentIncludedByDefault Remove="wwwroot\static\js\main.cb31f871.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\static\js\main.cb31f871.js.LICENSE.txt" />
+    <_ContentIncludedByDefault Remove="wwwroot\static\js\main.cb31f871.js.map" />
   </ItemGroup>
 
 </Project>

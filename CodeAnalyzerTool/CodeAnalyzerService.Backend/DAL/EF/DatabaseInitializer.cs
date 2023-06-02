@@ -9,6 +9,6 @@ public static class DatabaseInitializer
         //Creating scope to get an instance of context to create database and then dispose of instance
         using var scope = serviceProvider.CreateScope();
         var context = scope.ServiceProvider.GetRequiredService<CodeAnalyzerServiceDbContext>();
-        context.Database.EnsureCreated();
+        context.Database.Migrate();
     }
 }
