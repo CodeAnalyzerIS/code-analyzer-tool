@@ -8,7 +8,7 @@ import ProjectDetails from "./pages/ProjectDetails";
 import BreadcrumbContext, {IBreadcrumbContext} from './context/BreadcrumbContext';
 import BreadcrumbContextProvider from "./context/BreadcrumbContextProvider";
 
-export const BACKEND_URL = 'http://localhost:5082';
+export const BACKEND_URL = ''
 
 const queryClient = new QueryClient()
 

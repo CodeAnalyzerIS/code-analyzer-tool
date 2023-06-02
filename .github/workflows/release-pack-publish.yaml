@@ -4,7 +4,11 @@ on:
   push:
     tags:
       - 'v*.*.*'
-      
+
+env:
+  UI_IMAGE_NAME: code-analyzer-service.ui
+  BACKEND_IMAGE_NAME: code-analyzer-service.backend
+
 jobs:
   create_release:
     runs-on: ubuntu-latest
@@ -43,3 +47,47 @@ jobs:
     - name: Push RoslynPlugin.API to nuget org
       working-directory: ./CodeAnalyzerTool/RoslynPlugin.API/nupkg/
       run: dotnet nuget push CodeAnalyzerTool.RoslynPlugin.API.${{ env.tagVersion }}.nupkg --api-key ${{secrets.NUGET_API_KEY}} --source ${{vars.NUGET_URL}}
+
+  build_publish_images:
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write
+      contents: read
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Build UI image
+        working-directory: ./CodeAnalyzerTool/CodeAnalyzerTool.UI/code-analyzer-service.ui/
+        run: docker build . --file Dockerfile --tag $UI_IMAGE_NAME
+
+      - name: Build Backend image
+        working-directory: ./CodeAnalyzerTool/CodeAnalyzerService.backend/
+        run: docker build . --file Dockerfile --tag $BACKEND_IMAGE_NAME
+
+      - name: Log in to registry
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u $ --password-stdin
+
+      - name: Push images
+        working-directory: ./CodeAnalyzerTool/
+        run: |
+          UI_IMAGE_ID=ghcr.io/${{ github.repository_owner }}/$UI_IMAGE_NAME
+          BACKEND_IMAGE_ID=ghcr.io/${{ github.repository_owner }}/$BACKEND_IMAGE_NAME
+          
+          # Change all uppercase to lowercase
+          UI_IMAGE_ID=$(echo $UI_IMAGE_ID | tr '[A-Z]' '[a-z]')
+          BACKEND_IMAGE_ID=$(echo $BACKEND_IMAGE_ID | tr '[A-Z]' '[a-z]')
+          # Strip git ref prefix from version
+          VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
+          # Strip "v" prefix from tag name
+          [[ "${{ github.ref }}" == "refs/tags/"* ]] && VERSION=$(echo $VERSION | sed -e 's/^v//')
+          # Use Docker `latest` tag convention
+          [ "$VERSION" == "main" ] && VERSION=latest
+          echo UI_IMAGE_ID=$UI_IMAGE_ID
+          echo BACKEND_IMAGE_ID=$BACKEND_IMAGE_ID
+          echo VERSION=$VERSION
+          docker tag $UI_IMAGE_NAME $UI_IMAGE_ID:$VERSION
+          docker tag $BACKEND_IMAGE_NAME $BACKEND_IMAGE_ID:$VERSION
+          docker push $UI_IMAGE_ID:$VERSION
+          docker push $BACKEND_IMAGE_ID:$VERSION
+  
