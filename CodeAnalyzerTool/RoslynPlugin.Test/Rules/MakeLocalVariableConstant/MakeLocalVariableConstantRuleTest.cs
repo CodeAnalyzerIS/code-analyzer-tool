@@ -18,7 +18,7 @@ public class MakeLocalVariableConstantRuleTest
     [Fact]
     public async Task ShouldReport_WhenConstantVariableDeclaredWithVarKeywordNotMarkedAsConst()
     {
-        var code = @"
+        const string code = @"
 class C
 {
     void M()
@@ -43,7 +43,7 @@ class C
     [Fact]
     public async Task ShouldNotReport_WhenVariablePassedAsRefParameter()
     {
-        var code = @"
+        const string code = @"
 class C
 {
     void M(int p)
@@ -63,7 +63,7 @@ class C
     [Fact]
     public async Task ShouldNotReport_WhenVariablePassedAsRefParameterThroughExtensionMethod()
     {
-        var code = @"
+        const string code = @"
 public static class C
 {
     static void M(int p)
