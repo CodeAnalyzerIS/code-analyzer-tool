@@ -6,14 +6,13 @@ namespace RoslynPlugin.Test.Rules.UnnecessaryTypeCast;
 public class UnnecessaryTypeCastTest
 {
     [Theory]
-    [MemberData(nameof(UnnecessaryTypeCastData.UnnecessaryCastToDerivedTypeData), MemberType = typeof(UnnecessaryTypeCastData))]
-    public async Task ShouldReport_WhenCastToDerivedType(IEnumerable<string> codeScenarios)
+    [MemberData(nameof(UnnecessaryTypeCastData.CastToDerivedTypeToAccessAlreadyAccessibleMethod), MemberType = typeof(UnnecessaryTypeCastData))]
+    public async Task ShouldReport_WhenCastToDerivedTypeToAccessAlreadyAccessibleMethod(IEnumerable<string> codeScenarios)
     {
         var rule = new UnnecessaryTypeCastRule();
         foreach (var code in codeScenarios)
-        {
             await RuleTestRunner.ShouldReport(code, rule);
-        }
+        
     }
 
     [Fact]
@@ -77,32 +76,31 @@ class C
         await RuleTestRunner.ShouldReport(code, new UnnecessaryTypeCastRule());
     }
 
-
-    // todo
+    
     [Fact]
-    public async Task ShouldReport_WhenTODO()
+    public async Task ShouldReport_WhenCastToNestedDerivedTypeToAccessAlreadyAccessibleMethod()
     {
         const string code = @"
-class B
+class C
 {
-    private void M(B b)
+    private void Main(C c)
     {
-        ((C)b).Protected();
+        ((NestedDerivedType)c).Protected(); // unnecessary #1
 
-        ((C)b).PrivateProtected();
+        ((NestedDerivedType)c).PrivateProtected(); // unnecessary #2
 
-        ((C)b).ProtectedInternal();
+        ((NestedDerivedType)c).ProtectedInternal(); // unnecessary #3
     }
 
-    private class C : B
+    private class NestedDerivedType : C
     {
-        private void M2(B b)
+        private void Main2(C c)
         {
-            ((C)b).Protected();
+            ((NestedDerivedType)c).Protected(); // unnecessary #4
 
-            ((C)b).PrivateProtected();
+            ((NestedDerivedType)c).PrivateProtected(); // unnecessary #5
 
-            ((C)b).ProtectedInternal();
+            ((NestedDerivedType)c).ProtectedInternal(); // unnecessary #6
         }
     }
 
@@ -113,55 +111,21 @@ class B
     protected internal void ProtectedInternal() { }
 }
 ";
-        await RuleTestRunner.ShouldReport(code, new UnnecessaryTypeCastRule());
+        await RuleTestRunner.ShouldReport(code, new UnnecessaryTypeCastRule(), 6);
     }
-    
-    
-    [Fact]
-    public async Task ShouldReport_WhenAccessibilityProtectedInternal()
-    {
-        const string code = @"
-class C : B
-{
-    public static void M()
-    {
-        var b = default(B);
 
-        ((C)b).ProtectedInternal();
-    }
-}
 
-class B
-{
-    protected internal void ProtectedInternal() { }
-}
-";
-        await RuleTestRunner.ShouldReport(code, new UnnecessaryTypeCastRule());
-    }
-    
-
-    [Fact]
-    public async Task ShouldNotReport_WhenPrivateProtectedOtherwiseNotAccessible()
+    [Theory]
+    [MemberData(nameof(UnnecessaryTypeCastData.AccessingProtectedMethod), MemberType = typeof(UnnecessaryTypeCastData))]
+    public async Task ShouldNotReport_WhenProtectedMethodOtherwiseNotAccessible(IEnumerable<string> codeScenarios)
     {
-        // The private protected access modifier allows access to the member within the class and its derived classes
-        // that are defined in the same assembly. However, it does not allow direct access to the member through an
-        // instance of the class outside of the class hierarchy.
-        // => casting to Derivative is required to be able to access the method 'PrivateProtected'
-        const string code = @"
-class C
-{
-    private protected void PrivateProtected() { }
-}
-
-class Derivative : C
-{
-    void M(C c)
-    {
-        ((Derivative)c).PrivateProtected();
-    }
-}
-";
-        await RuleTestRunner.ShouldNotReport(code, new UnnecessaryTypeCastRule());
+        // The (private) protected access modifier allows access to the member within the class and its derived classes
+        // (that are defined in the same assembly). However, it does not allow direct access to the member through an
+        // instance of the class outside of the class, even if it's inside a derived Type.
+        // => casting to Derivative is required to be able to access the method '(Private)Protected'
+        var rule = new UnnecessaryTypeCastRule();
+        foreach (var code in codeScenarios)
+            await RuleTestRunner.ShouldNotReport(code, rule);
     }
 
     [Fact]

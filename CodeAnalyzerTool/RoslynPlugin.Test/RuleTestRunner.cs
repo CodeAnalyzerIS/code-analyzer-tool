@@ -73,6 +73,13 @@ public static class RuleTestRunner
         var results = await CompileStringWithRule(code, rule);
         results.Should().Contain(rv => rv.Rule.RuleName == rule.RuleName);
     }
+    
+    public static async Task ShouldReport(string code, RoslynRule rule, int times)
+    {
+        var results = await CompileStringWithRule(code, rule);
+        results.Where(rv => rv.Rule.RuleName == rule.RuleName)
+            .Should().HaveCount(times);
+    }
 
     public static async Task ShouldNotReport(string code, RoslynRule rule)
     {
