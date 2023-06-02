@@ -36,7 +36,7 @@ public static class RuleExtensions
         return node.IsOfSyntaxKind(kind1) || node.IsOfSyntaxKind(kind2);
     }
     
-    public static ExpressionSyntax WalkDownParentheses(this ExpressionSyntax expression)
+    public static ExpressionSyntax ExtractExpressionFromParentheses(this ExpressionSyntax expression)
     {
         if (expression is null) throw new ArgumentNullException(nameof(expression));
 
@@ -44,36 +44,5 @@ public static class RuleExtensions
             expression = ((ParenthesizedExpressionSyntax)expression).Expression;
 
         return expression;
-    }
-    
-    // todo refactor 
-    public static TSymbol? GetEnclosingSymbol<TSymbol>(
-        this SemanticModel semanticModel,
-        int position,
-        CancellationToken cancellationToken = default) where TSymbol : ISymbol
-    {
-        if (semanticModel is null)
-            throw new ArgumentNullException(nameof(semanticModel));
-
-        ISymbol symbol = semanticModel.GetEnclosingSymbol(position, cancellationToken);
-
-        while (symbol is not null)
-        {
-            if (symbol is TSymbol tsymbol)
-                return tsymbol;
-
-            symbol = symbol.ContainingSymbol;
-        }
-
-        return default;
-    }
-    
-    // todo refactor 
-    public static INamedTypeSymbol? GetEnclosingNamedType(
-        this SemanticModel semanticModel,
-        int position,
-        CancellationToken cancellationToken = default)
-    {
-        return GetEnclosingSymbol<INamedTypeSymbol>(semanticModel, position, cancellationToken);
     }
 }

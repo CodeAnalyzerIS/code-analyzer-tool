@@ -82,7 +82,7 @@ public class MakeLocalVariableConstantRule : RoslynRule
     {
         var initializer = variableDeclarator.Initializer;
         if (initializer is null) return true;
-        ExpressionSyntax value = initializer.Value.WalkDownParentheses();
+        ExpressionSyntax value = initializer.Value.ExtractExpressionFromParentheses();
         if (value.IsMissing || value.IsOfSyntaxKind(SyntaxKind.InterpolatedStringExpression)) return true;
         
         return false;
