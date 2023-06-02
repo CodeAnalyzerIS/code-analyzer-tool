@@ -4,6 +4,7 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 using RoslynPlugin.API;
+using RoslynPlugin.Exceptions;
 
 namespace RoslynPlugin.rules;
 
@@ -94,7 +95,7 @@ public class MakeLocalVariableConstantRule : RoslynRule
         {
             SyntaxKind.Block => ((BlockSyntax)parent).Statements,
             SyntaxKind.SwitchSection => ((SwitchSectionSyntax)parent).Statements,
-            _ => throw new ArgumentOutOfRangeException() // todo
+            _ => throw new UnexpectedSyntaxKindException("Unexpected SyntaxKind: only type 'Block' or 'SwitchSection' should be possible.")
         };
     }
 

@@ -71,13 +71,13 @@ public class UnnecessaryTypeCastRule : RoslynRule
         {
             if (accessSymbol.IsAbstract)
             {
-                if (!CheckExplicitImplementation(expressionTypeSymbol, accessSymbol)) return;
+                if (!CheckExplicitInterfaceImplementation(expressionTypeSymbol, accessSymbol)) return;
             }
             else return; // when accessing default interface implementation
         }
         else
         {
-            if (!CheckAccessibility(expressionTypeSymbol.OriginalDefinition, accessSymbol, expression.SpanStart, semanticModel, cancellationToken))
+            if (!CheckAccessibleWithoutTypeCast(expressionTypeSymbol.OriginalDefinition, accessSymbol, expression.SpanStart, semanticModel, cancellationToken))
                 return;
 
             if (!IsTypeEqualOrInheritsFrom(expressionTypeSymbol, containingType))
@@ -86,6 +86,11 @@ public class UnnecessaryTypeCastRule : RoslynRule
 
         var diagnostic = Diagnostic.Create(_rule, castExpressionSyntax.GetLocation(), Severity);
         context.ReportDiagnostic(diagnostic);
+    }
+
+    private static bool IsTypeEqualOrInheritsFrom(ITypeSymbol type, ITypeSymbol baseType)
+    {
+        return SymbolEqualityComparer.Default.Equals(type, baseType) || DoesTypeInheritFrom(type, baseType);
     }
 
     private static bool TryGetAccessSymbol(SemanticModel semanticModel, SyntaxNode castExpression, CancellationToken ct, out ISymbol? accessSymbol)
@@ -115,31 +120,31 @@ public class UnnecessaryTypeCastRule : RoslynRule
         }
     }
     
-    private static bool CheckExplicitImplementation(ITypeSymbol typeSymbol, ISymbol symbol)
+    private static bool CheckExplicitInterfaceImplementation(ITypeSymbol typeSymbol, ISymbol symbol)
     {
-        // TODO 
         var implementation = typeSymbol.FindImplementationForInterfaceMember(symbol);
         if (implementation is null) return false;
 
         switch (implementation.Kind)
         {
+            case SymbolKind.Method:
+            {
+                var implAsMethod = (IMethodSymbol)implementation;
+                if (implAsMethod.ExplicitInterfaceImplementations.Length < 1) return true;
+                var methodSymbol = implAsMethod.ExplicitInterfaceImplementations[0];
+                if (SymbolEqualityComparer.Default.Equals(methodSymbol.OriginalDefinition, symbol.OriginalDefinition))
+                    return false;
+
+                break;
+            }
             case SymbolKind.Property:
                 {
-                    foreach (IPropertySymbol propertySymbol in ((IPropertySymbol)implementation).ExplicitInterfaceImplementations)
-                    {
+                    var implAsProp = (IPropertySymbol)implementation;
+                    if (implAsProp.ExplicitInterfaceImplementations.Length < 1) return true;
+                    var propertySymbol = implAsProp.ExplicitInterfaceImplementations[0];
                         if (SymbolEqualityComparer.Default.Equals(propertySymbol.OriginalDefinition, symbol.OriginalDefinition))
                             return false;
-                    }
-                    break;
-                }
-            case SymbolKind.Method:
-                {
-                    foreach (IMethodSymbol methodSymbol in ((IMethodSymbol)implementation).ExplicitInterfaceImplementations)
-                    {
-                        if (SymbolEqualityComparer.Default.Equals(methodSymbol.OriginalDefinition, symbol.OriginalDefinition))
-                            return false;
-                    }
-
+                    
                     break;
                 }
             default:
@@ -151,21 +156,21 @@ public class UnnecessaryTypeCastRule : RoslynRule
         return true;
     }
 
-    private static bool CheckAccessibility(
+    private static bool CheckAccessibleWithoutTypeCast(
         ITypeSymbol expressionType,
         ISymbol accessSymbol,
         int position,
         SemanticModel semanticModel,
         CancellationToken ct)
     {
-        var  accessibility = accessSymbol.DeclaredAccessibility;
+        var  accessLevel = accessSymbol.DeclaredAccessibility;
 
-        if (accessibility is Accessibility.Protected or Accessibility.ProtectedAndInternal)
+        if (accessLevel is Accessibility.Protected or Accessibility.ProtectedAndInternal)
         {
             INamedTypeSymbol? typecastType = GetOuterMostType(semanticModel, position, ct);
             return IsEqualOrNestedInType(typecastType, expressionType);
         }
-        else if (accessibility == Accessibility.ProtectedOrInternal)
+        else if (accessLevel == Accessibility.ProtectedOrInternal)
         {
             INamedTypeSymbol? containingType = GetOuterMostType(semanticModel, position, ct);
 
@@ -204,11 +209,6 @@ public class UnnecessaryTypeCastRule : RoslynRule
         }
 
         return false;
-    }
-
-    private static bool IsTypeEqualOrInheritsFrom(ITypeSymbol type, ITypeSymbol baseType)
-    {
-        return SymbolEqualityComparer.Default.Equals(type, baseType) || DoesTypeInheritFrom(type, baseType);
     }
 
     private static bool DoesTypeInheritFrom(ITypeSymbol type, ITypeSymbol baseType)
