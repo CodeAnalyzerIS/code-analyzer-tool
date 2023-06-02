@@ -2,7 +2,7 @@
 
 public class UnnecessaryTypeCastData
 {
-    public static TheoryData<IEnumerable<string>> CastToDerivedTypeToAccessAlreadyAccessibleMethod => new()
+    public static TheoryData<IEnumerable<string>> CastToDerivedTypeToAccessAlreadyAccessibleMember => new()
     {
         new List<string>
         {
@@ -22,8 +22,7 @@ class C
 
 class DerivedType : C
 {
-}
-",
+}",
             @"
 class DerivedType : C
 {
@@ -38,12 +37,11 @@ class DerivedType : C
 class C
 {
     protected internal void ProtectedInternal() { }
-}
-"
+}"
         }
     };
     
-    public static TheoryData<IEnumerable<string>> AccessingProtectedMethod => new()
+    public static TheoryData<IEnumerable<string>> ProtectedMemberOtherwiseNotAccessible => new()
     {
         new List<string>
         {
@@ -74,7 +72,33 @@ class DerivedType : C
         ((DerivedType)c).PrivateProtected();
     }
 }
-"
+",
+            @"
+class C
+{
+    private protected int PrivateProtectedNumber { get; set; }
+}
+
+class DerivedType : C
+{
+    void M(C c)
+    {
+        var test = ((DerivedType)c).PrivateProtectedNumber;
+    }
+}",
+            @"
+class C
+{
+    protected int ProtectedNumber { get; set; }
+}
+
+class DerivedType : C
+{
+    void M(C c)
+    {
+        var test = ((DerivedType)c).ProtectedNumber;
+    }
+}"
         }
     };
 }
