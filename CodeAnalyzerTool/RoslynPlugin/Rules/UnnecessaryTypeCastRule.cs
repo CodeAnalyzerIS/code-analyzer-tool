@@ -1,5 +1,4 @@
 ﻿using System.Collections.Immutable;
-using System.Linq.Expressions;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -163,34 +162,45 @@ public class UnnecessaryTypeCastRule : RoslynRule
 
         if (accessibility is Accessibility.Protected or Accessibility.ProtectedAndInternal)
         {
-            INamedTypeSymbol? containingType = semanticModel.GetEnclosingNamedType(position, ct);
-            if (TypeContainsExpressionType(containingType, expressionType)) return true;
-
-            return false;
+            INamedTypeSymbol? typecastType = GetOuterMostType(semanticModel, position, ct);
+            return IsEqualOrNestedInType(typecastType, expressionType);
         }
         else if (accessibility == Accessibility.ProtectedOrInternal)
         {
-            INamedTypeSymbol? containingType = semanticModel.GetEnclosingNamedType(position, ct);
+            INamedTypeSymbol? containingType = GetOuterMostType(semanticModel, position, ct);
 
             if (SymbolEqualityComparer.Default.Equals(containingType?.ContainingAssembly, expressionType.ContainingAssembly))
                 return true;
 
-            if (TypeContainsExpressionType(containingType, expressionType)) return true;
-
-            return false;
+            return IsEqualOrNestedInType(containingType, expressionType);
         }
 
         return true;
     }
-
-    private static bool TypeContainsExpressionType(INamedTypeSymbol? containingType, ITypeSymbol expressionType)
+    
+    // if the typecast type is a nested class/ type then get its outer/ enclosing type 
+    // otherwise just gets the type
+    private static INamedTypeSymbol? GetOuterMostType(SemanticModel semanticModel, int position, CancellationToken ct)
     {
-        while (containingType is not null)
-        {
-            if (SymbolEqualityComparer.Default.Equals(containingType, expressionType))
-                return true;
+        var symbol = semanticModel.GetEnclosingSymbol(position, ct);
 
-            containingType = containingType.ContainingType;
+        while (symbol is not null)
+        {
+            if (symbol is INamedTypeSymbol symbolAsNamedType) return symbolAsNamedType;
+
+            symbol = symbol.ContainingSymbol;
+        }
+
+        return null;
+    }
+
+    private static bool IsEqualOrNestedInType(INamedTypeSymbol? type, ITypeSymbol outerMostType)
+    {
+        while (type is not null)
+        {
+            if (SymbolEqualityComparer.Default.Equals(type, outerMostType)) return true;
+
+            type = type.ContainingType;
         }
 
         return false;
