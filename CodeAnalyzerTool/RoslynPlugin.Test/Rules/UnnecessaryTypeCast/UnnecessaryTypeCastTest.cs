@@ -7,7 +7,7 @@ public class UnnecessaryTypeCastTest
 {
     [Theory]
     [MemberData(nameof(UnnecessaryTypeCastData.UnnecessaryCastToDerivedTypeData), MemberType = typeof(UnnecessaryTypeCastData))]
-    public async Task ShouldReport_WhenUnnecessaryCastToDerivedType(IEnumerable<string> codeScenarios)
+    public async Task ShouldReport_WhenCastToDerivedType(IEnumerable<string> codeScenarios)
     {
         var rule = new UnnecessaryTypeCastRule();
         foreach (var code in codeScenarios)
@@ -17,7 +17,7 @@ public class UnnecessaryTypeCastTest
     }
 
     [Fact]
-    public async Task ShouldReport_WhenUnnecessaryCastToDerivedTypeWithConditionalAccess()
+    public async Task ShouldReport_WhenCastToDerivedTypeWithConditionalAccess()
     {
         var code = @"
 class C
@@ -27,7 +27,6 @@ class C
         var c = new C();
 
         var i = ((Derivative)c)?.I;
-
     }
 
     public int I { get; set; }
@@ -41,7 +40,7 @@ class Derivative : C
     }
 
     [Fact]
-    public async Task ShouldReport_WhenUnnecessaryCastToImplementedInterface()
+    public async Task ShouldReport_WhenCastToImplementedInterface()
     {
         var code = @"
 using System.Collections.Generic;
@@ -60,7 +59,7 @@ class C
     }
 
     [Fact]
-    public async Task ShouldReport_WhenUnnecessaryCastToImplementedInterfaceWithConditionalAccess()
+    public async Task ShouldReport_WhenCastToImplementedInterfaceWithConditionalAccess()
     {
         var code = @"
 using System.Collections.Generic;
@@ -192,7 +191,7 @@ class Derivative : C
 
 
     [Fact]
-    public async Task ShouldNotReport_WhenExplicitImplementation()
+    public async Task ShouldNotReport_WhenExplicitImplementationOfMethod()
     {
         // https://learn.microsoft.com/en-us/dotnet/csharp/programming-guide/interfaces/explicit-interface-implementation
         var code = @"
@@ -219,6 +218,37 @@ class ExplicitImplementationExample : IExample
     {
         Console.WriteLine(""nothing"");
     }
+}
+";
+        await RuleTestRunner.ShouldNotReport(code, new UnnecessaryTypeCastRule());
+    }
+
+
+    [Fact]
+    public async Task ShouldNotReport_WhenExplicitImplementationOfProperty()
+    {
+        // https://learn.microsoft.com/en-us/dotnet/csharp/programming-guide/interfaces/explicit-interface-implementation
+        var code = @"
+using System;
+
+namespace ExampleNamespace;
+
+class C
+{
+    static void M()
+    {
+        var ex = new ExplicitImplementationExample();
+        var test = ((IExample)ex).PropExample;
+    }
+}
+
+interface IExample {
+    int PropExample { get; set; }
+}
+
+class ExplicitImplementationExample : IExample
+{
+    int IExample.PropExample { get; set; }
 }
 ";
         
