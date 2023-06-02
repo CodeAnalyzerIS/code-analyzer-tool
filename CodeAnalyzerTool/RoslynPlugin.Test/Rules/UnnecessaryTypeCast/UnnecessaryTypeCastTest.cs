@@ -5,6 +5,7 @@ namespace RoslynPlugin.Test.Rules.UnnecessaryTypeCast;
 
 public class UnnecessaryTypeCastTest
 {
+    // ------------------------------------ Should report --------------------------------------------------------------
     [Theory]
     [MemberData(nameof(UnnecessaryTypeCastData.CastToDerivedTypeToAccessAlreadyAccessibleMethod), MemberType = typeof(UnnecessaryTypeCastData))]
     public async Task ShouldReport_WhenCastToDerivedTypeToAccessAlreadyAccessibleMethod(IEnumerable<string> codeScenarios)
@@ -114,6 +115,7 @@ class C
         await RuleTestRunner.ShouldReport(code, new UnnecessaryTypeCastRule(), 6);
     }
 
+    // ------------------------------------ Should not report ----------------------------------------------------------
 
     [Theory]
     [MemberData(nameof(UnnecessaryTypeCastData.AccessingProtectedMethod), MemberType = typeof(UnnecessaryTypeCastData))]
