@@ -189,79 +189,35 @@ class Derivative : C
 ";
         await RuleTestRunner.ShouldNotReport(code, new UnnecessaryTypeCastRule());
     }
-    
-    
-    
-    // =============================== TODO =============================================================
-    
-//     [Fact]
-//     public async Task Test_CastToIDisposable()
-//     {
-//         var code = @"
-// using System;
-// using System.Collections.Generic;
-//
-// class C
-// {
-//     void M()
-//     {
-//         ((IDisposable)new Disposable()).Dispose();
-//     }
-// }
-//
-// class Disposable : IDisposable
-// {
-//     public void Dispose()
-//     {
-//         throw new NotImplementedException();
-//     }
-// }
-// ";
-//         
-//         await RuleTestRunner.ShouldNotReport(code, new UnnecessaryTypeCastRule());
-//     }
-    
-    
-    
+
+
     [Fact]
-    public async Task TestNoDiagnostic_ExplicitImplementation()
+    public async Task ShouldNotReport_WhenExplicitImplementation()
     {
         // https://learn.microsoft.com/en-us/dotnet/csharp/programming-guide/interfaces/explicit-interface-implementation
         var code = @"
 using System;
-using System.Collections;
-using System.Collections.Generic;
+
+namespace ExampleNamespace;
 
 class C
 {
     static void M()
     {
-        var e1 = ((IEnumerable<string>)new EnumerableOfString()).GetEnumerator();
+        var ex = new ExplicitImplementationExample();
+        ((IExample) ex).Method();
     }
 }
 
-class EnumerableOfString : IEnumerable<string>
-{
-    IEnumerator IEnumerable.GetEnumerator()
-    {
-        throw new NotImplementedException();
-    }
-
-    IEnumerator<string> IEnumerable<string>.GetEnumerator()
-    {
-        throw new NotImplementedException();
-    }
+interface IExample {
+    void Method();
 }
 
-class DerivedEnumerableOfString : EnumerableOfString
+class ExplicitImplementationExample : IExample
 {
-}
-
-class ExplicitDisposable : IDisposable
-{
-    void IDisposable.Dispose()
+    void IExample.Method()
     {
-        throw new NotImplementedException();
+        Console.WriteLine(""nothing"");
     }
 }
 ";
@@ -270,21 +226,31 @@ class ExplicitDisposable : IDisposable
     }
 
     [Fact]
-    public async Task TestNoDiagnostic_ExplicitImplementationOfGenericMethod()
+    public async Task ShouldNotReport_WhenExplicitImplementationOfGenericMethod()
     {
         var code = @"
-interface IC
+using System;
+
+namespace GenericExampleNamespace;
+
+class C
 {
-    void M<T>(T t);
+    static void M()
+    {
+        var ex = new ExplicitImplementationGenericExample();
+        ((IGenericExample) ex).Method();
+    }
 }
 
-class C : IC
-{
-    void M<T>(T t)
-    {
-        var c = new C();
+interface IGenericExample {
+    void Method();
+}
 
-        ((IC)c).M(c);
+class ExplicitImplementationGenericExample : IGenericExample
+{
+    void IGenericExample.Method()
+    {
+        Console.WriteLine(""nothing"");
     }
 }
 ";
@@ -293,7 +259,7 @@ class C : IC
     
     
     [Fact]
-    internal async Task TestNoDiagnostic_DefaultInterfaceImplementation()
+    internal async Task ShouldNotReport_WhenDefaultInterfaceImplementation()
     {
         // https://learn.microsoft.com/en-us/dotnet/csharp/programming-guide/interfaces/explicit-interface-implementation
         var code = @"
