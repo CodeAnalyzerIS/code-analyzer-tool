@@ -8,7 +8,7 @@ public class NamesSpaceContainsRuleTest
     [Fact]
     public async void ShouldReport_WhenNamespaceThatDoesNotContainStringExists()
     {
-        var code = @"
+        const string code = @"
 namespace Animals.Mammals.Felines {
     class Cat {
         void M() { 
@@ -24,7 +24,7 @@ namespace Animals.Mammals.Felines {
     [Fact]
     public async void ShouldNotReport_WhenEveryNamespaceContainsString()
     {
-        var code = @"
+        const string code = @"
 namespace InfoSupport.Animals.Mammals.Felines {
     class Cat {
         void M() { 
@@ -41,7 +41,7 @@ namespace InfoSupport.Animals.Mammals.Felines {
     [Fact]
     public async void ShouldNotReport_WhenNoStringOptionGiven()
     {
-        var code = @"
+        const string code = @"
 namespace InfoSupport.Animals.Mammals.Felines {
     class Cat {
         void M() { 

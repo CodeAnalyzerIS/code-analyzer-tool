@@ -8,7 +8,7 @@ public class RequireBracesInBlockRuleTest
     [Fact]
     public async void ShouldReport_WhenIfStatementWithoutBracesExist()
     {
-        var code = @"
+        const string code = @"
 class C {
     private void M() {
         if (true) Console.WriteLine(""true is indeed true"") 
@@ -21,7 +21,7 @@ class C {
     [Fact]
     public async void ShouldNotReport_WhenIfStatementWithoutBracesDoesNotExist()
     {
-        var code = @"
+        const string code = @"
 class C {
     private void M() {
         if (true) {

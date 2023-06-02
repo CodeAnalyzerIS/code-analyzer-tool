@@ -19,7 +19,7 @@ public class UnnecessaryTypeCastTest
     [Fact]
     public async Task ShouldReport_WhenCastToDerivedTypeWithConditionalAccess()
     {
-        var code = @"
+        const string code = @"
 class C
 {
     void Main()
@@ -42,7 +42,7 @@ class Derivative : C
     [Fact]
     public async Task ShouldReport_WhenCastToImplementedInterface()
     {
-        var code = @"
+        const string code = @"
 using System.Collections.Generic;
 
 class C
@@ -61,7 +61,7 @@ class C
     [Fact]
     public async Task ShouldReport_WhenCastToImplementedInterfaceWithConditionalAccess()
     {
-        var code = @"
+        const string code = @"
 using System.Collections.Generic;
 
 class C
@@ -82,7 +82,7 @@ class C
     [Fact]
     public async Task ShouldReport_WhenTODO()
     {
-        var code = @"
+        const string code = @"
 class B
 {
     private void M(B b)
@@ -115,6 +115,30 @@ class B
 ";
         await RuleTestRunner.ShouldReport(code, new UnnecessaryTypeCastRule());
     }
+    
+    
+    [Fact]
+    public async Task ShouldReport_WhenAccessibilityProtectedInternal()
+    {
+        const string code = @"
+class C : B
+{
+    public static void M()
+    {
+        var b = default(B);
+
+        ((C)b).ProtectedInternal();
+    }
+}
+
+class B
+{
+    protected internal void ProtectedInternal() { }
+}
+";
+        await RuleTestRunner.ShouldReport(code, new UnnecessaryTypeCastRule());
+    }
+    
 
     [Fact]
     public async Task ShouldNotReport_WhenPrivateProtectedOtherwiseNotAccessible()
@@ -123,7 +147,7 @@ class B
         // that are defined in the same assembly. However, it does not allow direct access to the member through an
         // instance of the class outside of the class hierarchy.
         // => casting to Derivative is required to be able to access the method 'PrivateProtected'
-        var code = @"
+        const string code = @"
 class C
 {
     private protected void PrivateProtected() { }
@@ -143,7 +167,7 @@ class Derivative : C
     [Fact]
     public async Task ShouldNotReport_WhenCastToDerivedTypeToAccessProperty()
     {
-        var code = @"
+        const string code = @"
 class C
 {
     void Main()
@@ -166,7 +190,7 @@ class Derivative : C
     [Fact]
     public async Task ShouldNotReport_WhenCastToDerivedTypeToAccessMethod()
     {
-        var code = @"
+        const string code = @"
 class C
 {
     void Main()
@@ -194,7 +218,7 @@ class Derivative : C
     public async Task ShouldNotReport_WhenExplicitImplementationOfMethod()
     {
         // https://learn.microsoft.com/en-us/dotnet/csharp/programming-guide/interfaces/explicit-interface-implementation
-        var code = @"
+        const string code = @"
 using System;
 
 namespace ExampleNamespace;
@@ -228,7 +252,7 @@ class ExplicitImplementationExample : IExample
     public async Task ShouldNotReport_WhenExplicitImplementationOfProperty()
     {
         // https://learn.microsoft.com/en-us/dotnet/csharp/programming-guide/interfaces/explicit-interface-implementation
-        var code = @"
+        const string code = @"
 using System;
 
 namespace ExampleNamespace;
@@ -258,7 +282,7 @@ class ExplicitImplementationExample : IExample
     [Fact]
     public async Task ShouldNotReport_WhenExplicitImplementationOfGenericMethod()
     {
-        var code = @"
+        const string code = @"
 using System;
 
 namespace GenericExampleNamespace;
@@ -292,7 +316,7 @@ class ExplicitImplementationGenericExample : IGenericExample
     internal async Task ShouldNotReport_WhenDefaultInterfaceImplementation()
     {
         // https://learn.microsoft.com/en-us/dotnet/csharp/programming-guide/interfaces/explicit-interface-implementation
-        var code = @"
+        const string code = @"
 public interface IPaintable
 {
     void Paint() => Console.WriteLine(""Default Paint method"");
