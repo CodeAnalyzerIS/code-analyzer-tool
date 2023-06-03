@@ -56,7 +56,7 @@ public static class RuleTestRunner
         return project.Documents.First(x => x.Name == DEFAULT_DOCUMENT_NAME);
     }
     
-    public static async Task<IEnumerable<RuleViolation>> CompileStringWithRule(string sourceCode, RoslynRule rule)
+    private static async Task<IEnumerable<RuleViolation>> CompileStringWithRule(string sourceCode, RoslynRule rule)
     {
         var src = SourceText.From(sourceCode);
         var workspace = src.CreateWorkspace();
@@ -66,5 +66,24 @@ public static class RuleTestRunner
         var diagnosticResults = await compilation.WithAnalyzers(ruleAsAnalyzers)
             .GetAnalyzerDiagnosticsAsync();
         return DiagnosticConverter.ConvertDiagnostics(diagnosticResults);
+    }
+    
+    public static async Task ShouldReport(string code, RoslynRule rule)
+    {
+        var results = await CompileStringWithRule(code, rule);
+        results.Should().Contain(rv => rv.Rule.RuleName == rule.RuleName);
+    }
+    
+    public static async Task ShouldReport(string code, RoslynRule rule, int times)
+    {
+        var results = await CompileStringWithRule(code, rule);
+        results.Where(rv => rv.Rule.RuleName == rule.RuleName)
+            .Should().HaveCount(times);
+    }
+
+    public static async Task ShouldNotReport(string code, RoslynRule rule)
+    {
+        var results = await CompileStringWithRule(code, rule);
+        results.Should().BeEmpty();
     }
 }

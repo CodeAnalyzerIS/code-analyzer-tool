@@ -3,12 +3,12 @@ using RoslynPlugin.rules;
 
 namespace RoslynPlugin.Test.Rules;
 
-public class NamesSpaceContainsTest
+public class NamesSpaceContainsRuleTest
 {
     [Fact]
-    public async void NamespaceContainsRule_ShouldReportRuleViolation_WhenNamespaceThatDoesNotContainStringExists()
+    public async void ShouldReport_WhenNamespaceThatDoesNotContainStringExists()
     {
-        var code = @"
+        const string code = @"
 namespace Animals.Mammals.Felines {
     class Cat {
         void M() { 
@@ -18,14 +18,13 @@ namespace Animals.Mammals.Felines {
 }";
         var rule = new NamespaceContainsRule();
         rule.Options = new Dictionary<string, string> { [NamespaceContainsRule.NAMESPACE_OPTION_KEY] = "InfoSupport" };
-        var results = await RuleTestRunner.CompileStringWithRule(code, rule);
-        results.Should().Contain(rv => rv.Rule.RuleName == RuleNames.NAMESPACE_CONTAINS_RULE);
+        await RuleTestRunner.ShouldReport(code, rule);
     }
 
     [Fact]
-    public async void NamespaceContainsRule_ShouldNotReportRuleViolation_WhenEveryNamespaceContainsString()
+    public async void ShouldNotReport_WhenEveryNamespaceContainsString()
     {
-        var code = @"
+        const string code = @"
 namespace InfoSupport.Animals.Mammals.Felines {
     class Cat {
         void M() { 
@@ -36,14 +35,13 @@ namespace InfoSupport.Animals.Mammals.Felines {
 ";
         var rule = new NamespaceContainsRule();
         rule.Options = new Dictionary<string, string> { [NamespaceContainsRule.NAMESPACE_OPTION_KEY] = "InfoSupport" };
-        var results = await RuleTestRunner.CompileStringWithRule(code, rule);
-        results.Should().BeEmpty();
+        await RuleTestRunner.ShouldNotReport(code, rule);
     }
 
     [Fact]
-    public async void NamespaceContainsRule_ShouldNotReportRuleViolation_WhenNoStringOptionGiven()
+    public async void ShouldNotReport_WhenNoStringOptionGiven()
     {
-        var code = @"
+        const string code = @"
 namespace InfoSupport.Animals.Mammals.Felines {
     class Cat {
         void M() { 
@@ -53,7 +51,6 @@ namespace InfoSupport.Animals.Mammals.Felines {
 }
 ";
         var rule = new NamespaceContainsRule();
-        var results = await RuleTestRunner.CompileStringWithRule(code, rule);
-        results.Should().BeEmpty();
+        await RuleTestRunner.ShouldNotReport(code, rule);
     }
 }

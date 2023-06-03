@@ -36,7 +36,7 @@ public static class RuleExtensions
         return node.IsOfSyntaxKind(kind1) || node.IsOfSyntaxKind(kind2);
     }
     
-    public static ExpressionSyntax WalkDownParentheses(this ExpressionSyntax expression)
+    public static ExpressionSyntax ExtractExpressionFromParentheses(this ExpressionSyntax expression)
     {
         if (expression is null) throw new ArgumentNullException(nameof(expression));
 

@@ -26,4 +26,5 @@ public static class RuleNames
     public const string NAMESPACE_CONTAINS_RULE = "NamespaceContains";
     public const string REQUIRE_BRACES_IN_BLOCK_RULE = "RequireBracesInBlock";
     public const string TEST_METHOD_WITHOUT_ASSERTION_RULE = "TestWithoutAssertion";
+    public const string UNNECESSARY_TYPE_CAST_RULE = "UnnecessaryTypeCast";
 }

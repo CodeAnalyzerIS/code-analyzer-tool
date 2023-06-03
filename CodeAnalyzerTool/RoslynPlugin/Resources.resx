@@ -54,4 +54,13 @@
     <data name="MakeLocalVariableConstantMessageFormat" xml:space="preserve">
         <value>Local variable should be made constant</value>
     </data>
+    <data name="UnnecessaryTypeCastTitle" xml:space="preserve">
+        <value>Remove unnecessary typecast</value>
+    </data>
+    <data name="UnnecessaryTypeCastMessageFormat" xml:space="preserve">
+        <value>Remove unnecessary typecast</value>
+    </data>
+    <data name="UnnecessaryTypeCastDescription" xml:space="preserve">
+        <value>Detects whether a unnecessary typecast has been made to access a property, method, etc. The casting can be removed without any repercussions, and should be removed for maintainability sake.</value>
+    </data>
 </root>

@@ -38,10 +38,9 @@ public class RuleLoader
         var rulePaths = new List<string>();
         var ruleConfigs = _pluginConfig.Rules.Where(r => GetNamesOfEnabledRulesFromConfig().Contains(r.RuleName));
         
-        //todo: Do this higher up (in CodeAnalyzerTool)
+        //todo: Do this higher up (in CodeAnalyzerTool) => Refactor: make a Rule Resolver
         foreach (var ruleConfig in ruleConfigs)
         {
-            // todo maybe change ruleName to rulePath in config?
             var externalRules =
                 Path.Combine(_workingDir, _pluginsPath, _pluginConfig.PluginName, StringResources.RULES_FOLDER_NAME, ruleConfig.RuleName);
 
