@@ -60,24 +60,31 @@ jobs:
         working-directory: ./CodeAnalyzerTool/
         run: docker build . --file Dockerfile --tag $IMAGE_NAME
 
-      - name: Log in to registry
-        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u $ --password-stdin
+      - name: Log in to registry and dockerhub
+        run: |
+            echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u $ --password-stdin
+            echo "{{ secrets.DOCKERHUB_TOKEN  }}" | docker login --username alexanderwuytsis --password-stdin
 
       - name: Push images
         working-directory: ./CodeAnalyzerTool/
         run: |
-          IMAGE_ID=ghcr.io/${{ github.repository_owner }}/$IMAGE_NAME
+          GH_IMAGE_ID=ghcr.io/${{ github.repository_owner }}/$IMAGE_NAME
+          DH_IMAGE_ID=alexanderwuytsis/$IMAGE_NAME
           
           # Change all uppercase to lowercase
-          IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
+          GH_IMAGE_ID=$(echo $GH_IMAGE_ID | tr '[A-Z]' '[a-z]')
+          DH_IMAGE_ID=$(echo $DH_IMAGE_ID | tr '[A-Z]' '[a-z]')
           # Strip git ref prefix from version
           VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
           # Strip "v" prefix from tag name
           [[ "${{ github.ref }}" == "refs/tags/"* ]] && VERSION=$(echo $VERSION | sed -e 's/^v//')
           # Use Docker `latest` tag convention
           [ "$VERSION" == "main" ] && VERSION=latest
-          echo IMAGE_ID=$IMAGE_ID
+          echo GH_IMAGE_ID=$GH_IMAGE_ID
+          echo DH_IMAGE_ID=$DH_IMAGE_ID
           echo VERSION=$VERSION
-          docker tag $IMAGE_NAME $IMAGE_ID:$VERSION
-          docker push $IMAGE_ID:$VERSION
+          docker tag $IMAGE_NAME $GH_IMAGE_ID:$VERSION
+          docker push $GH_IMAGE_ID:$VERSION
+          docker tag $IMAGE_NAME $DH_IMAGE_ID:$VERSION
+          docker push $DH_IMAGE_ID:$VERSION
   
