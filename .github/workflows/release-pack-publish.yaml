@@ -60,11 +60,13 @@ jobs:
         working-directory: ./CodeAnalyzerTool/
         run: docker build . --file Dockerfile --tag $IMAGE_NAME
 
-      - name: Log in to registry and dockerhub
-        run: |
-            echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u $ --password-stdin
-            echo "{{ secrets.DOCKERHUB_TOKEN  }}" | docker login --username alexanderwuytsis --password-stdin
+      - name: Log in to registry
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u $ --password-stdin
+        
+      - name: Log in to dockerhub
+        run: echo "{{ secrets.DOCKERHUB_TOKEN  }}" | docker login --username alexanderwuytsis --password-stdin
 
+        
       - name: Push images
         working-directory: ./CodeAnalyzerTool/
         run: |
