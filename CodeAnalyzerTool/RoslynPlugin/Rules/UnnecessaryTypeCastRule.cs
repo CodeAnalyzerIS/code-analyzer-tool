@@ -13,6 +13,8 @@ public class UnnecessaryTypeCastRule : RoslynRule
     public sealed override string RuleName => RuleNames.UNNECESSARY_TYPE_CAST_RULE;
     public sealed override DiagnosticSeverity Severity { get; set; }
     public sealed override Dictionary<string, string> Options { get; set; }
+    public sealed override string? CodeExample => null;
+    public sealed override string? CodeExampleFix => null;
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get; }
     private const string CATEGORY = RuleCategories.PERFORMANCE;
     private readonly DiagnosticDescriptor _rule;

@@ -10,6 +10,8 @@ public static class StringResources
     public const string SOLUTION_SEARCH_PATTERN = "*.sln";
     public const string NULL_COMPILATION_MSG = "Compilation was null";
     public const string NO_NAME_SPACE_OPTION_MSG = "No namespace option has been provided";
+    public const string CODE_EXAMPLE_KEY = "CodeExample";
+    public const string CODE_EXAMPLE_FIX_KEY = "CodeExampleFix";
 }
 
 public static class RuleCategories

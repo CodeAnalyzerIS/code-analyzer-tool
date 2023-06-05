@@ -14,6 +14,16 @@ public static class DiagnosticConverter
 
     private static RuleViolation ConvertDiagnostic(Diagnostic diagnostic)
     {
+        var rule = ConvertDiagnosticToRule(diagnostic);
+        var location = ConvertDiagnosticToLocation(diagnostic);
+        var severity = ConvertDiagnosticSeverity(diagnostic.Severity);
+        var result = ConvertDiagnosticToRuleViolation(diagnostic, rule, location, severity);
+
+        return result;
+    }
+
+    private static Rule ConvertDiagnosticToRule(Diagnostic diagnostic)
+    {
         var rule = new Rule(
             ruleName: diagnostic.Descriptor.Id,
             title: diagnostic.Descriptor.Title.ToString(),
@@ -24,22 +34,26 @@ public static class DiagnosticConverter
             pluginName: StringResources.PLUGIN_NAME,
             targetLanguage: StringResources.TARGET_LANGUAGE
         );
-
-        var location = new Location(
+        var properties = diagnostic.Properties;
+        // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract => doesn't make sense because type is 'ImmutableDictionary<string,string?>?'
+        if (properties is not null)
+        {
+            properties.TryGetValue(StringResources.CODE_EXAMPLE_KEY, out string? codeExample);
+            rule.CodeExample = codeExample;
+            properties.TryGetValue(StringResources.CODE_EXAMPLE_FIX_KEY, out string? codeExampleFix);
+            rule.CodeExampleFix = codeExampleFix;
+        }
+        return rule;
+    }
+    
+    private static Location ConvertDiagnosticToLocation(Diagnostic diagnostic)
+    {
+        return new Location(
             path: diagnostic.Location.GetLineSpan().Path,
             startLine: diagnostic.Location.GetLineSpan().StartLinePosition.Line + 1,
             endLine: diagnostic.Location.GetLineSpan().EndLinePosition.Line + 1,
             fileExtension: StringResources.FILE_EXTENSION
         );
-
-        var sev = ConvertDiagnosticSeverity(diagnostic.Severity);
-        var result = new RuleViolation(
-            rule: rule, 
-            message: diagnostic.GetMessage(), 
-            location: location, 
-            severity: sev);
-
-        return result;
     }
 
     private static Severity ConvertDiagnosticSeverity(DiagnosticSeverity diagnosticSeverity)
@@ -52,6 +66,15 @@ public static class DiagnosticConverter
             DiagnosticSeverity.Error => Severity.Error,
             _ => throw new ArgumentOutOfRangeException(nameof(diagnosticSeverity), diagnosticSeverity, null)
         };
+    }
+
+    private static RuleViolation ConvertDiagnosticToRuleViolation(Diagnostic diagnostic, Rule rule, Location location, Severity sev)
+    {
+        return new RuleViolation(
+            rule: rule, 
+            message: diagnostic.GetMessage(), 
+            location: location, 
+            severity: sev);
     }
     
     public static DiagnosticSeverity ConvertSeverity(Severity severity)
