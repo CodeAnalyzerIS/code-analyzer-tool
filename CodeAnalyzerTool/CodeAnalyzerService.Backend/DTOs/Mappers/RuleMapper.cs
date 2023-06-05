@@ -15,6 +15,6 @@ public class RuleMapper
     public static Rule MapToModel(RuleRequest ruleRequest)
     {
         return new Rule(ruleRequest.RuleName, ruleRequest.Title, ruleRequest.Description, ruleRequest.Category, ruleRequest.PluginName,
-            ruleRequest.TargetLanguage, ruleRequest.IsEnabledByDefault, ruleRequest.DefaultSeverity);
+            ruleRequest.TargetLanguage, ruleRequest.IsEnabledByDefault, ruleRequest.DefaultSeverity, ruleRequest.CodeExample, ruleRequest.CodeExampleFix);
     }
 }

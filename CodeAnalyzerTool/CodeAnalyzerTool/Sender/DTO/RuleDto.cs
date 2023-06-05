@@ -10,11 +10,13 @@ public class RuleDto
     [Required] public string Category { get; set; }
     [Required] public string PluginName { get; set; }
     [Required] public string TargetLanguage { get; set; }
+    public string? CodeExample { get; set; }
+    public string? CodeExampleFix { get; set; }
     public bool IsEnabledByDefault { get; set; }
     public string DefaultSeverity { get; set; }
 
     public RuleDto(string ruleName, string title, string description, string category, string pluginName,
-        string targetLanguage, bool isEnabledByDefault, string defaultSeverity)
+        string targetLanguage, bool isEnabledByDefault, string defaultSeverity, string? codeExample, string? codeExampleFix)
     {
         RuleName = ruleName;
         Title = title;
@@ -24,5 +26,7 @@ public class RuleDto
         DefaultSeverity = defaultSeverity;
         PluginName = pluginName;
         TargetLanguage = targetLanguage;
+        CodeExample = codeExample;
+        CodeExampleFix = codeExampleFix;
     }
 }

@@ -31,6 +31,9 @@ export default function RuleDetails() {
     }
 
     return(
-        <p>{rule.ruleName} {rule.category}</p>
+        <div>
+            <p>{rule.ruleName} {rule.category}</p>
+            <pre>{rule?.codeExample}</pre>
+        </div>
     )
 }

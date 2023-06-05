@@ -34,7 +34,9 @@ internal static class Mapper
             pluginName: rule.PluginName,
             targetLanguage: rule.TargetLanguage,
             isEnabledByDefault: rule.IsEnabledByDefault,
-            defaultSeverity: rule.DefaultSeverity.ToString()
+            defaultSeverity: rule.DefaultSeverity.ToString(),
+            codeExample: rule.CodeExample,
+            codeExampleFix: rule.CodeExampleFix
         );
     }
 

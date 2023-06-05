@@ -5,6 +5,7 @@ import {BrowserRouter, Link, Route, Routes} from "react-router-dom";
 import Home from "./pages/Home";
 import {AppBar, Avatar, Breadcrumbs, Stack, Toolbar, Typography} from "@mui/material";
 import ProjectDetails from "./pages/ProjectDetails";
+import RuleDetails from "./pages/RuleDetails";
 import BreadcrumbContext, {IBreadcrumbContext} from './context/BreadcrumbContext';
 import BreadcrumbContextProvider from "./context/BreadcrumbContextProvider";
 
@@ -48,6 +49,7 @@ function App() {
                     <Routes>
                         <Route path="/" element={<Home/>}/>
                         <Route path="/project/:id" element={<ProjectDetails/>}/>
+                        <Route path="/rule/:id" element={<RuleDetails/>}/>
                     </Routes>
                 </BrowserRouter>
             </BreadcrumbContextProvider>
