@@ -84,7 +84,8 @@ public class UnnecessaryTypeCastRule : RoslynRule
                 return;
         }
 
-        var diagnostic = Diagnostic.Create(_rule, castExpressionSyntax.GetLocation(), Severity);
+        var diagnostic = Diagnostic.Create(_rule, castExpressionSyntax.GetLocation(), effectiveSeverity: Severity, 
+            null, null);
         context.ReportDiagnostic(diagnostic);
     }
 

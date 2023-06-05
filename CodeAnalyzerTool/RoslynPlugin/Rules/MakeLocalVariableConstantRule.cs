@@ -68,7 +68,7 @@ public class MakeLocalVariableConstantRule : RoslynRule
 
         var diagnostic = Diagnostic.Create(_rule,
             localDeclarationStatement.GetLocation(),
-            Severity);
+            effectiveSeverity: Severity, null, null);
         context.ReportDiagnostic(diagnostic);
     }
 
