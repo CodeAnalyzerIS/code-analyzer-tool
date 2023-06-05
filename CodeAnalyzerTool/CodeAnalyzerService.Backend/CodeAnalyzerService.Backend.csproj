@@ -29,13 +29,13 @@
   <ItemGroup>
     <Folder Include="Migrations\" />
   </ItemGroup>
-  
+
   <ItemGroup>
     <None Include="wwwroot\**">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None> 
+    </None>
   </ItemGroup>
-  
+
   <ItemGroup>
     <_ContentIncludedByDefault Remove="wwwroot\asset-manifest.json" />
     <_ContentIncludedByDefault Remove="wwwroot\azure-devops-logo.png" />
