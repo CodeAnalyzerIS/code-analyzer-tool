@@ -1,6 +1,6 @@
 import React, {useCallback, useContext, useEffect, useState} from "react";
 import Loading from "../components/Loading";
-import {Alert, Box, Card, CardContent, CardHeader, Stack, Typography} from "@mui/material";
+import {Alert, Box, Card, CardContent, CardHeader, Stack, Typography, useTheme} from "@mui/material";
 import {useProjectOverview} from "../hooks/useProjectOverview";
 import TroubleshootIcon from '@mui/icons-material/Troubleshoot';
 import {ProjectOverview} from "../model/ProjectOverview";
@@ -20,6 +20,7 @@ export default function Home() {
     const {isLoading, isError, projectOverviews} = useProjectOverview()
     const {setBreadcrumbData} = useContext<IBreadcrumbContext>(BreadcrumbContext)
     const navigate = useNavigate()
+    const palette = useTheme().palette
 
     //use useCallback to update the state and to be able to provide the dependency array with the set state
     //without triggering infinite re-renders, because the callback function will only be called when the setter changes
@@ -64,7 +65,7 @@ export default function Home() {
                     />
                     <CardContent>
                         <Box sx={{display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly',
-                            alignItems: 'center', color: '#15B7B9'}}>
+                            alignItems: 'center', color: palette.primary.main}}>
                             <Stack direction='row' spacing={1}>
                                 <TroubleshootIcon/>
                                 <Typography>Last Analysis: {po.lastAnalysisDate.toLocaleString('nl-BE')}</Typography>
