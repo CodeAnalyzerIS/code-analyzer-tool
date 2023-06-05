@@ -11,29 +11,30 @@ namespace CodeAnalyzerTool;
 
 public class Program
 {
-    public static async Task Main(string[] args)
+    public static async Task<int> Main(string[] args)
     {
         try
         {
             if (args.Contains("--generate-schema"))
             {
                 await SchemaGenerator.GenerateSchema();
-                return;
+                return 0;
             }
 
             if (args.Contains("--init"))
             {
                 await ConfigTemplateGenerator.GenerateConfigTemplate();
-                return;
+                return 0;
             }
 
             LogHelper.InitLogging(); // todo replace with DI injected loggers
             var serviceProvider = await CreateServiceProvider();
-            await Run(serviceProvider);
+            return await Run(serviceProvider);
         }
         catch (Exception ex)
         {
             Log.Fatal(ex, "Application has encountered a fatal error: {ErrorMessage}", ex.Message);
+            return -1;
         }
     }
 
@@ -53,7 +54,7 @@ public class Program
         return services.BuildServiceProvider();
     }
 
-    private static async Task Run(IServiceProvider serviceProvider)
+    private static async Task<int> Run(IServiceProvider serviceProvider)
     {
         var pluginRunner = serviceProvider.GetRequiredService<PluginRunner>();
         var ruleViolations = await pluginRunner.Run();
@@ -61,5 +62,11 @@ public class Program
             
         var analysisSender = serviceProvider.GetRequiredService<AnalysisSender>();
         await analysisSender.Send(ruleViolations);
+        if (ruleViolations.Any(rv => rv.Severity == Severity.Error))
+        {
+            return -1;
+        }
+
+        return 0;
     }
 }
