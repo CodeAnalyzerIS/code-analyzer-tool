@@ -14,6 +14,8 @@ public class NamespaceContainsRule : RoslynRule
     public sealed override string RuleName => RuleNames.NAMESPACE_CONTAINS_RULE;
     public sealed override DiagnosticSeverity Severity { get; set; }
     public sealed override Dictionary<string, string> Options { get; set; }
+    public sealed override string? CodeExample => null;
+    public sealed override string? CodeExampleFix => null;
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get; }
     private const string CATEGORY = RuleCategories.NAMING;
     private readonly DiagnosticDescriptor _rule;

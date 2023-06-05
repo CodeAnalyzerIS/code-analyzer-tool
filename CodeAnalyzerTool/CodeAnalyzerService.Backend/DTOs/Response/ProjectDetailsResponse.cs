@@ -17,16 +17,4 @@ public class ProjectDetailsResponse
     {
         AnalysisHistory = new List<AnalysisHistoryResponse>();
     }
-
-    public ProjectDetailsResponse(int id, string projectName, IEnumerable<AnalysisHistoryResponse> analysisHistory, 
-        int analysisId, int[] ruleViolationHistory, int ruleViolationCount, int ruleViolationDifference)
-    {
-        Id = id;
-        ProjectName = projectName;
-        AnalysisHistory = analysisHistory;
-        LastAnalysisId = analysisId;
-        RuleViolationHistory = ruleViolationHistory;
-        RuleViolationCount = ruleViolationCount;
-        RuleViolationDifference = ruleViolationDifference;
-    }
 }

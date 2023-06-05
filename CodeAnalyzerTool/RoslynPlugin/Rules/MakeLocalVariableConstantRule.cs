@@ -14,6 +14,24 @@ public class MakeLocalVariableConstantRule : RoslynRule
     public sealed override string RuleName => RuleNames.MAKE_LOCAL_VARIABLE_CONSTANT_RULE;
     public sealed override DiagnosticSeverity Severity { get; set; }
     public sealed override Dictionary<string, string> Options { get; set; }
+
+    public sealed override string? CodeExample => @"
+class C
+{
+    void M()
+    {
+        var s = ""This string stays constant"";
+    }
+}";
+
+    public sealed override string? CodeExampleFix => @"
+class C
+{
+    void M()
+    {
+        const string s = ""This string stays constant"";
+    }
+}";
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get; }
     private const string CATEGORY = RuleCategories.PERFORMANCE;
     private readonly DiagnosticDescriptor _rule;
@@ -66,9 +84,16 @@ public class MakeLocalVariableConstantRule : RoslynRule
         if (!CanBeMadeConst(context, variableDeclarator, statements))
             return;
 
+        var props = new Dictionary<string, string?>
+        {
+            {StringResources.CODE_EXAMPLE_KEY, CodeExample},
+            {StringResources.CODE_EXAMPLE_FIX_KEY, CodeExampleFix }
+        };
+
         var diagnostic = Diagnostic.Create(_rule,
             localDeclarationStatement.GetLocation(),
-            effectiveSeverity: Severity, null, null);
+            effectiveSeverity: Severity, null, props.ToImmutableDictionary()
+            );
         context.ReportDiagnostic(diagnostic);
     }
 
