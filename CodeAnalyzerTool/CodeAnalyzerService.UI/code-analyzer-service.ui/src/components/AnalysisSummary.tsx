@@ -56,8 +56,8 @@ export default function AnalysisSummary({initialAnalysisId, analysisHistory}: An
                     <Typography sx={{textAlign: 'end'}}><strong>{analysis.ruleViolations.length}</strong> Rule Violations</Typography>
                 </Grid>
             </Grid>
-            {Object.entries(groupedAnalysis).map(([path, violations]) => (
-                <FileViolations path={path} violations={violations}/>
+            {Object.entries(groupedAnalysis).map(([path, violations], index) => (
+                <FileViolations key={index} path={path} violations={violations}/>
             ))}
         </Stack>
     )
