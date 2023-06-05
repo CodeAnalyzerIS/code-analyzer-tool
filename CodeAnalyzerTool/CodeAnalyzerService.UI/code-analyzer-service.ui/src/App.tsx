@@ -8,7 +8,11 @@ import ProjectDetails from "./pages/ProjectDetails";
 import BreadcrumbContext, {IBreadcrumbContext} from './context/BreadcrumbContext';
 import BreadcrumbContextProvider from "./context/BreadcrumbContextProvider";
 
-export const BACKEND_URL = ''
+export let BACKEND_URL = ''
+
+if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
+    BACKEND_URL = 'http://localhost:5082'
+}
 
 const queryClient = new QueryClient()
 
