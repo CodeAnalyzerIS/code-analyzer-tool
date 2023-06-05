@@ -67,6 +67,12 @@ namespace CodeAnalyzerService.Backend.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("CodeExample")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("CodeExampleFix")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("DefaultSeverity")
                         .IsRequired()
                         .HasColumnType("TEXT");
