@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CodeAnalyzerService.Backend.Migrations
 {
     [DbContext(typeof(CodeAnalyzerServiceDbContext))]
-    [Migration("20230605165456_initialCreate")]
+    [Migration("20230605201606_initialCreate")]
     partial class initialCreate
     {
         /// <inheritdoc />

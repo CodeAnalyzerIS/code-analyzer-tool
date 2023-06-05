@@ -9,6 +9,7 @@ import {Searchbar} from "../components/Searchbar";
 import {useNavigate} from "react-router-dom";
 import {getProjectIdFromName} from "../services/projectService";
 import BreadcrumbContext, {Breadcrumb, IBreadcrumbContext} from "../context/BreadcrumbContext";
+import WelcomePlaceholder from "../components/placeholders/WelcomePlaceholder";
 
 export type SearchString = {
     searchValue: string;
@@ -47,6 +48,8 @@ export default function Home() {
                 return <Alert severity="error">Error getting project with name: {searchString}</Alert>
             })
     }
+
+    if (projectOverviews.length < 1) return <WelcomePlaceholder/>;
 
     return(
         <Box sx={{display: 'flex', flexDirection: 'column', alignItems: 'center', mt: 5}}>

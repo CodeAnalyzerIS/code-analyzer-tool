@@ -8,6 +8,7 @@ import ProjectDetails from "./pages/ProjectDetails";
 import RuleDetails from "./pages/RuleDetails";
 import BreadcrumbContext, {IBreadcrumbContext} from './context/BreadcrumbContext';
 import BreadcrumbContextProvider from "./context/BreadcrumbContextProvider";
+import NotFound from "./pages/NotFound";
 
 export let BACKEND_URL = ''
 
@@ -50,6 +51,7 @@ function App() {
                         <Route path="/" element={<Home/>}/>
                         <Route path="/project/:id" element={<ProjectDetails/>}/>
                         <Route path="/rule/:id" element={<RuleDetails/>}/>
+                        <Route path="*" element={<NotFound/>}/>
                     </Routes>
                 </BrowserRouter>
             </BreadcrumbContextProvider>
