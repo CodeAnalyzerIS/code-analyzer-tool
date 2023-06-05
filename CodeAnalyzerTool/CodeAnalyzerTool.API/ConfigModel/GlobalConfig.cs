@@ -11,6 +11,8 @@ public class GlobalConfig
     public Uri ApiUrl { get; set; }
     [JsonProperty("repoUrl", Required = Required.Default)]
     public string RepoUrl { get; set; }
+    [JsonProperty("failSeverityThreshold", Required = Required.Default)]
+    public Severity FailSeverityThreshold { get; set; }
     [JsonProperty("pluginsPath", Required = Required.Default)]
     public string PluginsPath { get; set; }
     [JsonProperty("plugins", Required = Required.Always)]

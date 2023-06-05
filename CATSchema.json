@@ -50,9 +50,9 @@
         "severity": {
           "type": "string",
           "enum": [
-            "Info",
+            "Error",
             "Warning",
-            "Error"
+            "Info"
           ]
         },
         "options": {
@@ -91,6 +91,14 @@
       "type": [
         "string",
         "null"
+      ]
+    },
+    "failSeverityThreshold": {
+      "type": "string",
+      "enum": [
+        "Error",
+        "Warning",
+        "Info"
       ]
     },
     "pluginsPath": {

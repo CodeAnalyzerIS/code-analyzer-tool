@@ -18,23 +18,23 @@ public class Program
             if (args.Contains("--generate-schema"))
             {
                 await SchemaGenerator.GenerateSchema();
-                return 0;
+                return (int)StatusCode.Success;
             }
 
             if (args.Contains("--init"))
             {
                 await ConfigTemplateGenerator.GenerateConfigTemplate();
-                return 0;
+                return (int)StatusCode.Success;
             }
 
             LogHelper.InitLogging(); // todo replace with DI injected loggers
             var serviceProvider = await CreateServiceProvider();
-            return await Run(serviceProvider);
+            return (int)await Run(serviceProvider);
         }
         catch (Exception ex)
         {
             Log.Fatal(ex, "Application has encountered a fatal error: {ErrorMessage}", ex.Message);
-            return -1;
+            return (int)StatusCode.FatalError;
         }
     }
 
@@ -47,26 +47,21 @@ public class Program
         services.AddSingleton<PluginRunner, PluginRunner>();
         services.AddSingleton(new HttpClient());
         services.AddSingleton<AnalysisSender, AnalysisSender>();
-        
+
         var configReader = new ConfigReader();
         var globalConfig = await configReader.ReadAsync();
         services.AddSingleton(globalConfig);
         return services.BuildServiceProvider();
     }
 
-    private static async Task<int> Run(IServiceProvider serviceProvider)
+    private static async Task<StatusCode> Run(IServiceProvider serviceProvider)
     {
         var pluginRunner = serviceProvider.GetRequiredService<PluginRunner>();
-        var ruleViolations = await pluginRunner.Run();
-        LogHelper.LogAnalysisResults(ruleViolations);
-            
-        var analysisSender = serviceProvider.GetRequiredService<AnalysisSender>();
-        await analysisSender.Send(ruleViolations);
-        if (ruleViolations.Any(rv => rv.Severity == Severity.Error))
-        {
-            return -1;
-        }
+        var analysisResult = await pluginRunner.Run();
+        LogHelper.LogAnalysisResults(analysisResult.RuleViolations);
 
-        return 0;
+        var analysisSender = serviceProvider.GetRequiredService<AnalysisSender>();
+        await analysisSender.Send(analysisResult.RuleViolations);
+        return analysisResult.StatusCode;
     }
 }
