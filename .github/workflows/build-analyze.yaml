@@ -1,0 +1,37 @@
+name: Build the code, run the code analyzer tool
+
+on: push
+
+jobs:
+  build-test:
+    name: Build and Test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: '7.0'
+
+      - name: Restore packages
+        run: dotnet restore
+
+      - name: Build project
+        run: dotnet build --configuration Release
+
+      - name: Run tests
+        run: dotnet test --configuration Release --no-build
+
+  run-code-analyzer-tool:
+    name: Run Code Analyzer Tool
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Run Code Analyzer Tool
+        uses: CodeAnalyzerIS/code-analyzer-tool-action@v3.0.0
