@@ -17,12 +17,15 @@ jobs:
           dotnet-version: '7.0'
 
       - name: Restore packages
+        working-directory: ./CodeAnalyzerTool/
         run: dotnet restore
 
       - name: Build project
+        working-directory: ./CodeAnalyzerTool/
         run: dotnet build --configuration Release
 
       - name: Run tests
+        working-directory: ./CodeAnalyzerTool/
         run: dotnet test --configuration Release --no-build
 
   run-code-analyzer-tool:

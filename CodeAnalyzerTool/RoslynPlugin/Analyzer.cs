@@ -16,7 +16,7 @@ public class Analyzer
     private readonly string _workingDirectory;
     private readonly ImmutableArray<DiagnosticAnalyzer> _rules;
 
-    public Analyzer(MSBuildWorkspace workspace, PluginConfig pluginConfig, string pluginsPath)
+    public Analyzer(MSBuildWorkspace workspace, PluginConfig pluginConfig, string? pluginsPath)
     {
         _workspace = workspace;
         _pluginConfig = pluginConfig;

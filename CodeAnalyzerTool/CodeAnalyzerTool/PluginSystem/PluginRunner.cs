@@ -29,7 +29,7 @@ internal class PluginRunner
     }
 
     private async Task<IEnumerable<RuleViolation>> RunPlugins(
-        Dictionary<PluginConfig, IPlugin> loadedPluginsWithConfigs, string pluginsPath)
+        Dictionary<PluginConfig, IPlugin> loadedPluginsWithConfigs, string? pluginsPath)
     {
         var analysisResults = new List<RuleViolation>();
         foreach (var (config, plugin) in loadedPluginsWithConfigs)
