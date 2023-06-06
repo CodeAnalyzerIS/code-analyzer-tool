@@ -27,7 +27,3 @@ export const getMUISeverity = (severity: string) => {
             return 'error';
     }
 }
-
-export const copyArray = (array: any[]) => {
-    return [...array];
-}

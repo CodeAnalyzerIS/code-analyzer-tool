@@ -60,7 +60,7 @@ namespace RoslynPlugin {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Detects whether a local variable can be made a constant..
+        ///   Looks up a localized string similar to Detects whether a local variable can be made a constant. This rule shows for which local variables the &apos;const&apos; keyword can be utilized. It is recommended to change all unchanging variable to constants for code readability and maintanability..
         /// </summary>
         internal static string MakeLocalVariableConstantDescription {
             get {
@@ -87,7 +87,7 @@ namespace RoslynPlugin {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Detects whether a namespace contains the configured substring..
+        ///   Looks up a localized string similar to Detects whether a namespace contains the configured substring. This rule is used for enforcing that all namespaces in your project contain for a certain string (configurable in options)..
         /// </summary>
         internal static string NamespaceContains_Description {
             get {
@@ -114,7 +114,7 @@ namespace RoslynPlugin {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Detects whether a code block uses a single line statement format without curly braces..
+        ///   Looks up a localized string similar to Detects whether a code block uses a single line statement format without curly braces. This rule purely checks formatting of code, it does not indicate any code smell or mistake. This rule is meant for enforcing a certain code style (requiring braces for all code blocks)..
         /// </summary>
         internal static string RequireBracesInBlock_Description {
             get {
@@ -141,7 +141,7 @@ namespace RoslynPlugin {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Detects whether a test method contains a assertion.
+        ///   Looks up a localized string similar to Detects whether a test method contains any assertion statements like Assert.Equals(), Assert.True(), etc. Supports only NUnit tests marked with a [Test] attribute..
         /// </summary>
         internal static string TestMethodWithoutAssertion_Description {
             get {
@@ -168,7 +168,7 @@ namespace RoslynPlugin {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Detects whether a unnecessary typecast has been made to access a property, method, etc. The casting can be removed without any repercussions, and should be removed for maintainability sake..
+        ///   Looks up a localized string similar to Detects whether an unnecessary typecast has been made to access a member (property, method, etc.). The type cast can be removed without any repercussions, and should be removed for maintainability sake..
         /// </summary>
         internal static string UnnecessaryTypeCastDescription {
             get {

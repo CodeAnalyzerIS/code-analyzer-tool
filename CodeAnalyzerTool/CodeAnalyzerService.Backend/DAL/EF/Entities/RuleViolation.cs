@@ -11,6 +11,7 @@ public class RuleViolation
     public string Severity { get; set; } = null!;
     public Analysis Analysis { get; set; } = null!;
 
+    // ReSharper disable once UnusedMember.Local => Used by Entity Framework
     private RuleViolation()
     {
     }

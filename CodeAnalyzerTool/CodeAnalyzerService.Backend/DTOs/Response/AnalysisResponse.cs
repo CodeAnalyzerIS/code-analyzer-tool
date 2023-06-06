@@ -7,12 +7,6 @@ public class AnalysisResponse
     public string CreatedOn { get; set; }
     public IEnumerable<RuleViolationResponse> RuleViolations { get; set; }
 
-    public AnalysisResponse(int id, string createdOn)
-    {
-        CreatedOn = createdOn;
-        RuleViolations = new List<RuleViolationResponse>();
-    }
-    
     public AnalysisResponse(int id, string createdOn, IEnumerable<RuleViolationResponse> ruleViolations)
     {
         Id = id;

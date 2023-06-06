@@ -6,12 +6,6 @@ public class ProjectResponse
     public string ProjectName { get; set; }
     public IEnumerable<AnalysisResponse> Analyses { get; set; }
 
-    public ProjectResponse(int id, string projectName)
-    {
-        ProjectName = projectName;
-        Analyses = new List<AnalysisResponse>();
-    }
-    
     public ProjectResponse(int id, string projectName, IEnumerable<AnalysisResponse> analyses)
     {
         Id = id;

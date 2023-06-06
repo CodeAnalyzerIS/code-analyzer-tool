@@ -1,5 +1,5 @@
 import {getMUISeverity} from "../util/HelperFunctions";
-import {Alert, AlertTitle, Button, Stack} from "@mui/material";
+import {Alert, AlertTitle} from "@mui/material";
 import React from "react";
 import {RuleViolation} from "../model/RuleViolation";
 import {useNavigate} from "react-router-dom";

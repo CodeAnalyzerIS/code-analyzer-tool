@@ -13,8 +13,37 @@ public class UnnecessaryTypeCastRule : RoslynRule
     public sealed override string RuleName => RuleNames.UNNECESSARY_TYPE_CAST_RULE;
     public sealed override DiagnosticSeverity Severity { get; set; }
     public sealed override Dictionary<string, string> Options { get; set; }
-    public sealed override string? CodeExample => null;
-    public sealed override string? CodeExampleFix => null;
+    public sealed override string CodeExample => @"class ExampleBaseClass
+{
+    void Main()
+    {
+        var a = new ExampleBaseClass();
+
+        var i = ((ExampleClass) a).ExampleProperty;
+    }
+
+    public int ExampleProperty { get; set; }
+}
+
+class ExampleClass : ExampleBaseClass
+{
+}";
+
+    public sealed override string CodeExampleFix => @"class ExampleBaseClass
+{
+    void Main()
+    {
+        var a = new ExampleBaseClass();
+
+        var i = a.ExampleProperty;
+    }
+
+    public int ExampleProperty { get; set; }
+}
+
+class ExampleClass : ExampleBaseClass
+{
+}";
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get; }
     private const string CATEGORY = RuleCategories.PERFORMANCE;
     private readonly DiagnosticDescriptor _rule;
@@ -85,9 +114,15 @@ public class UnnecessaryTypeCastRule : RoslynRule
             if (!IsTypeEqualOrInheritsFrom(expressionTypeSymbol, containingType))
                 return;
         }
+        
+        var props = new Dictionary<string, string?>
+        {
+            {StringResources.CODE_EXAMPLE_KEY, CodeExample},
+            {StringResources.CODE_EXAMPLE_FIX_KEY, CodeExampleFix }
+        };
 
         var diagnostic = Diagnostic.Create(_rule, castExpressionSyntax.GetLocation(), effectiveSeverity: Severity, 
-            null, null);
+            null, props.ToImmutableDictionary());
         context.ReportDiagnostic(diagnostic);
     }
 

@@ -1,4 +1,4 @@
-export const Severity = {
+export const SEVERITY = {
     INFO : 'Info',
     WARNING: 'Warning',
     ERROR: 'Error'
