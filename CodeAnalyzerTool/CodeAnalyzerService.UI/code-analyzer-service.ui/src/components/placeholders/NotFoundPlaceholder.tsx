@@ -5,7 +5,7 @@ export default function NotFoundPlaceholder() {
     return <div style={{display: 'flex', justifyContent: 'center'}}>
         <Container maxWidth="sm">
             <NotFoundIllustration/>
-            <Typography textAlign="center">The page you're looking for does not exist it seems.</Typography>
+            <Typography textAlign="center" variant="subtitle1">The page you're looking for does not exist it seems.</Typography>
         </Container>
     </div>;
 }

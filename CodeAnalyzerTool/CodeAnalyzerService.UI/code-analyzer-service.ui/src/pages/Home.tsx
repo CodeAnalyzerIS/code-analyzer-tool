@@ -35,12 +35,10 @@ export default function Home() {
         updateBreadcrumbData();
     }, [updateBreadcrumbData]);
 
-    if (isLoading) {
-        return <Loading/>
-    }
-    if (isError || !projectOverviews){
-        return <Alert severity="error">Error loading the projects</Alert>
-    }
+    if (isLoading) return <Loading/>
+
+    if (isError || !projectOverviews) return <Alert severity="error">Error loading the projects</Alert>
+
 
     if (searchString !== ""){
         getProjectIdFromName(searchString)

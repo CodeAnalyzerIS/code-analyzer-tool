@@ -29,12 +29,8 @@ export default function ProjectDetails() {
         updateBreadcrumbData();
     }, [updateBreadcrumbData]);
 
-    if (isLoading) {
-        return <Loading/>
-    }
-    if (isError || !project){
-        return <Alert severity="error">Error loading the project</Alert>
-    }
+    if (isLoading) return <Loading/>;
+    if (isError || !project) return <Alert severity="error">Error loading the project</Alert>;
 
 
     return(
