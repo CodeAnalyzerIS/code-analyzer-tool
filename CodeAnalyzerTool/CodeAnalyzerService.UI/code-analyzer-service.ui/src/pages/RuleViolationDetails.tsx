@@ -10,8 +10,6 @@ import WarningIcon from '@mui/icons-material/Warning';
 import InfoIcon from '@mui/icons-material/Info';
 import PluginIcon from '@mui/icons-material/Extension';
 import LanguageIcon from '@mui/icons-material/Terminal';
-import PathIcon from '@mui/icons-material/LocationOn';
-import LineNumberIcon from '@mui/icons-material/FormatListNumbered';
 import {SEVERITY} from "../model/Severity";
 import {RuleViolation} from "../model/RuleViolation";
 
@@ -37,14 +35,21 @@ export default function RuleViolationDetails() {
         }
         const ICON_COLOR = palette.secondary.main;
 
-        return <Grid container my={1}>
-            <RuleInfo label="Name:" text={rule.ruleName} Icon={<RuleNameIcon htmlColor={ICON_COLOR}/>}/>
-            <RuleInfo label="Category:" text={rule.category} Icon={<CategoryIcon htmlColor={ICON_COLOR}/>}/>
-            <RuleInfo label="Severity:" text={violation.severity ?? rule.defaultSeverity}
-                      Icon={<SeverityIcon severity={violation.severity ?? rule.defaultSeverity}/>}/>
-            <RuleInfo label="Plugin:" text={violation.rule.pluginName} Icon={<PluginIcon htmlColor={ICON_COLOR}/>}/>
-            <RuleInfo label="Target language:" text={violation.rule.targetLanguage} Icon={<LanguageIcon htmlColor={ICON_COLOR}/>}/>
-        </Grid>;
+        return <>
+            <Grid container my={1}>
+                <RuleInfo label="Name:" text={rule.ruleName} Icon={<RuleNameIcon htmlColor={ICON_COLOR}/>}/>
+                <RuleInfo label="Category:" text={rule.category} Icon={<CategoryIcon htmlColor={ICON_COLOR}/>}/>
+                <RuleInfo label="Severity:" text={violation.severity ?? rule.defaultSeverity}
+                          Icon={<SeverityIcon severity={violation.severity ?? rule.defaultSeverity}/>}/>
+                <RuleInfo label="Plugin:" text={violation.rule.pluginName} Icon={<PluginIcon htmlColor={ICON_COLOR}/>}/>
+                <RuleInfo label="Target language:" text={violation.rule.targetLanguage} Icon={<LanguageIcon htmlColor={ICON_COLOR}/>}/>
+            </Grid>
+            <Stack direction="row" justifyContent="space-between" mt={2}>
+                <Typography variant="body2" fontWeight={300}>{violation.location.path}</Typography>
+                <Typography variant="body2" fontWeight={300}>{violation.analysisDate.toLocaleString()}</Typography>
+            </Stack>
+            <Divider sx={{mb: 2}}/>
+        </>;
     }
 
     function SeverityIcon({severity} : {severity: string}) {
@@ -75,24 +80,7 @@ export default function RuleViolationDetails() {
             <Typography variant="h3">{violation.message}</Typography>
             <Typography variant="subtitle2" mt={1} color={palette.primary.dark}>{rule.title}</Typography>
             <RuleViolationInfoBar violation={violation}/>
-            <Typography variant="body2" textAlign="end">{violation.analysisDate.toLocaleString()}</Typography>
-            <Divider sx={{mb: 2}}/>
             <Typography>{rule.description}</Typography>
-
-            <Box mt={2} component="section">
-                <Typography variant="h4" mb={1}>Where is the rule violation?</Typography>
-                <Stack direction="row" spacing='4px'>
-                    <PathIcon htmlColor={palette.primary.main}/>
-                    <Typography fontWeight={300}>{violation.location.path}</Typography>
-                </Stack>
-                <Stack direction="row" spacing='4px'>
-                    <LineNumberIcon htmlColor={palette.primary.main}/>
-                    <Typography fontWeight={300}>{violation.location.startLine} - {violation.location.endLine}</Typography>
-                </Stack>
-
-            </Box>
-
-
             {rule.codeExample && <CodeExample title={"Non-compliant code example"} code={rule.codeExample}/>}
             {rule.codeExampleFix && <CodeExample title={"Compliant solution example"} code={rule.codeExampleFix}/>}
         </Container>
