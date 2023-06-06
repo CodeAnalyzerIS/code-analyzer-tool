@@ -89,6 +89,12 @@ public class MakeLocalVariableConstantRule : RoslynRule
             {StringResources.CODE_EXAMPLE_FIX_KEY, CodeExampleFix }
         };
 
+        var props = new Dictionary<string, string?>
+        {
+            {StringResources.CODE_EXAMPLE_KEY, CodeExample},
+            {StringResources.CODE_EXAMPLE_FIX_KEY, CodeExampleFix }
+        };
+
         var diagnostic = Diagnostic.Create(_rule,
             localDeclarationStatement.GetLocation(),
             effectiveSeverity: Severity, null, props.ToImmutableDictionary()
