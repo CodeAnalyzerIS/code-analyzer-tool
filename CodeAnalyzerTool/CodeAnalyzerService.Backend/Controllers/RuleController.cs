@@ -28,6 +28,7 @@ public class RuleController : ControllerBase
                     r.Category,
                     r.PluginName,
                     r.TargetLanguage,
+                    r.DefaultSeverity,
                     r.CodeExample,
                     r.CodeExampleFix
                     )
