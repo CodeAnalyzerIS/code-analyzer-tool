@@ -31,6 +31,10 @@ const theme = createTheme({
         },
         h4: {
             fontSize: '1.875rem'
+        },
+        subtitle2: {
+            fontSize: '1.125rem',
+            fontWeight: 300
         }
     }
 });
