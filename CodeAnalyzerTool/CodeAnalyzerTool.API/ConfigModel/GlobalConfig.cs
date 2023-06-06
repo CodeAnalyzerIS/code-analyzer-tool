@@ -8,7 +8,7 @@ public class GlobalConfig
     [JsonProperty("projectName", Required = Required.Always)]
     public string ProjectName { get; set; }
     [JsonProperty("apiUrl", Required = Required.Default)]
-    public Uri ApiUrl { get; set; }
+    public Uri? ApiUrl { get; set; }
     [JsonProperty("repoUrl", Required = Required.Default)]
     public string RepoUrl { get; set; }
     [JsonProperty("failSeverityThreshold", Required = Required.Default)]

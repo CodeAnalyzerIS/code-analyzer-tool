@@ -1,0 +1,41 @@
+{
+  "projectName": "CodeAnalyzerTool",
+  "repoUrl": "https://github.com/CodeAnalyzerIS/code-analyzer-tool",
+  "plugins": [
+    {
+      "pluginName": "Roslyn",
+      "folderName": "Roslyn",
+      "enabled": true,
+      "rules": [
+        {
+          "ruleName": "RequireBracesInBlock",
+          "enabled": true,
+          "severity": "Info"
+        },
+        {
+          "ruleName": "TestWithoutAssertion",
+          "enabled": true,
+          "severity": "Warning"
+        },
+        {
+          "ruleName": "NamespaceContains",
+          "enabled": false,
+          "severity": "Info",
+          "options": {
+            "namespace": "com.infosupport"
+          }
+        },
+        {
+          "ruleName": "UnnecessaryTypeCast",
+          "enabled": true,
+          "severity": "Warning"
+        },
+        {
+          "ruleName": "MakeLocalVariableConstant",
+          "enabled": true,
+          "severity": "Error"
+        }
+      ]
+    }
+  ]
+}

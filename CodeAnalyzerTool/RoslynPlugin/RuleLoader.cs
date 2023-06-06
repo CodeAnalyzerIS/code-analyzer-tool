@@ -8,9 +8,9 @@ public class RuleLoader
 {
     private readonly string _workingDir;
     private readonly PluginConfig _pluginConfig;
-    private readonly string _pluginsPath;
+    private readonly string? _pluginsPath;
 
-    public RuleLoader(string workingDir, PluginConfig pluginConfig, string pluginsPath)
+    public RuleLoader(string workingDir, PluginConfig pluginConfig, string? pluginsPath)
     {
         _workingDir = workingDir;
         _pluginConfig = pluginConfig;
@@ -36,6 +36,9 @@ public class RuleLoader
     private IEnumerable<RoslynRule> LoadExternalRules(RuleActivator ruleActivator)
     {
         var rulePaths = new List<string>();
+        if (_pluginsPath is null)
+            return new List<RoslynRule>();
+        
         var ruleConfigs = _pluginConfig.Rules.Where(r => GetNamesOfEnabledRulesFromConfig().Contains(r.RuleName));
         
         //todo: Do this higher up (in CodeAnalyzerTool) => Refactor: make a Rule Resolver

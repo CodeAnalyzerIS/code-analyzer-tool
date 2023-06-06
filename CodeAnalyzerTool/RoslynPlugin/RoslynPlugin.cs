@@ -11,7 +11,7 @@ public class RoslynPlugin : IPlugin
     //This main method will be called in the analyzerToolProgram
     public string PluginName => StringResources.PLUGIN_NAME;
 
-    public async Task<IEnumerable<RuleViolation>> Analyze(PluginConfig pluginConfig, string pluginsPath) {
+    public async Task<IEnumerable<RuleViolation>> Analyze(PluginConfig pluginConfig, string? pluginsPath) {
         Log.Information("========================== Roslyn Plugin Start ==========================");
         MSBuildLocator.RegisterDefaults();
 
