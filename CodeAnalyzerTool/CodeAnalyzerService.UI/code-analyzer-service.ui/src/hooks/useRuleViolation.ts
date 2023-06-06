@@ -12,6 +12,6 @@ export function useRuleViolation(id: string) {
     return {
         isLoading,
         isError,
-        ruleViolation
+        violation: ruleViolation
     }
 }

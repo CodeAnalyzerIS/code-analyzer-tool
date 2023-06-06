@@ -7,5 +7,5 @@ export type RuleViolation = {
     message: string;
     location: Location;
     severity: string;
-    analysisDate: string;
+    analysisDate: Date;
 }
