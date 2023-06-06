@@ -1,4 +1,5 @@
 ﻿using CodeAnalyzerTool.API;
+using CodeAnalyzerTool.API.ConfigModel;
 using CodeAnalyzerTool.Config;
 using CodeAnalyzerTool.PluginSystem;
 using CodeAnalyzerTool.PluginSystem.Loaders;
@@ -60,8 +61,11 @@ public class Program
         var analysisResult = await pluginRunner.Run();
         LogHelper.LogAnalysisResults(analysisResult.RuleViolations);
 
-        var analysisSender = serviceProvider.GetRequiredService<AnalysisSender>();
-        await analysisSender.Send(analysisResult.RuleViolations);
+        if (serviceProvider.GetRequiredService<GlobalConfig>().ApiUrl is not null)
+        {
+            var analysisSender = serviceProvider.GetRequiredService<AnalysisSender>();
+            await analysisSender.Send(analysisResult.RuleViolations);
+        }
         return analysisResult.StatusCode;
     }
 }
