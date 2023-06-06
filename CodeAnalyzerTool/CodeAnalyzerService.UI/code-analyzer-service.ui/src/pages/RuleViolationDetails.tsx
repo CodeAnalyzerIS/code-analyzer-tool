@@ -44,10 +44,14 @@ export default function RuleViolationDetails() {
                 <RuleInfo label="Plugin:" text={violation.rule.pluginName} Icon={<PluginIcon htmlColor={ICON_COLOR}/>}/>
                 <RuleInfo label="Target language:" text={violation.rule.targetLanguage} Icon={<LanguageIcon htmlColor={ICON_COLOR}/>}/>
             </Grid>
-            <Stack direction="row" justifyContent="space-between" mt={2}>
-                <Typography variant="body2" fontWeight={300}>{violation.location.path}</Typography>
-                <Typography variant="body2" fontWeight={300}>{violation.analysisDate.toLocaleString()}</Typography>
-            </Stack>
+            <Grid container mt={2}>
+                <Grid item xs={12} lg={10}>
+                    <Typography variant="body2" fontWeight={300}>{violation.location.path}</Typography>
+                </Grid>
+                <Grid item xs={12} lg={2}>
+                    <Typography variant="body2" fontWeight={300} textAlign="end" minWidth="100%">{violation.analysisDate.toLocaleString()}</Typography>
+                </Grid>
+            </Grid>
             <Divider sx={{mb: 2}}/>
         </>;
     }
