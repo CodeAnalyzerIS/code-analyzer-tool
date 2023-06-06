@@ -1,5 +1,5 @@
 import {useParams} from "react-router-dom";
-import {useRule} from "../hooks/useRule";
+import {useRuleViolation} from "../hooks/useRuleViolation";
 import Loading from "../components/Loading";
 import {Alert, Box, Container, Divider, Grid, Paper, Stack, Typography, useTheme} from "@mui/material";
 import React, {ReactElement} from "react";
@@ -11,23 +11,11 @@ import InfoIcon from '@mui/icons-material/Info';
 import {SEVERITY} from "../model/Severity";
 import {Rule} from "../model/Rule";
 
-export default function RuleDetails() {
-    const {id, severity} = useParams<{ id: string, severity: string }>();
-    const {isLoading, isError, rule} = useRule(id!);
+export default function RuleViolationDetails() {
+    const {id} = useParams<{ id: string}>();
+    const {isLoading, isError, ruleViolation} = useRuleViolation(id!);
     const palette = useTheme().palette;
-
-    // const updateBreadcrumbData = useCallback(() => {
-    //     const newBreadcrumbData: Breadcrumb[] = [
-    //         {label: 'ᓚᘏᗢ', path:'/'},
-    //         {label: project ? project.projectName : '', path:`/project/${id}`}
-    //     ];
-    //     setBreadcrumbData(newBreadcrumbData);
-    // }, [id, project, setBreadcrumbData]);
-    //
-    // useEffect(() => {
-    //     updateBreadcrumbData();
-    // }, [updateBreadcrumbData]);
-
+    const severity = "Info"; // todo
 
     function RuleInfoBar({rule} : {rule: Rule}) {
         const palette = useTheme().palette;
@@ -72,7 +60,8 @@ export default function RuleDetails() {
     }
 
     if (isLoading) return <Loading/>;
-    if (isError || !rule)return <Alert severity="error">Error loading the rule</Alert>;
+    if (isError || !ruleViolation)return <Alert severity="error">Error loading the rule</Alert>;
+    const rule = ruleViolation.rule;
 
     return(
         <Container maxWidth="lg" sx={{my: 2}}>
