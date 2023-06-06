@@ -13,7 +13,7 @@ export default function RuleViolationAlert({violation}: RuleViolationAlertProps)
 
     return (
         <Alert severity={getMUISeverity(violation.severity)} sx={{paddingY: 'unset', borderRadius: 'unset', cursor: 'pointer'}}
-               onClick={() => navigate(`/rule/${violation.rule.id}?severity=${violation.severity}`)}>
+               onClick={() => navigate(`/rule/${violation.rule.id}/${violation.severity}`)}>
             <AlertTitle sx={{fontWeight: 400}}>{violation.message}</AlertTitle>
             <small>Line {violation.location.startLine}</small>
         </Alert>

@@ -21,10 +21,18 @@ const theme = createTheme({
     palette: {
         primary: {
             main: '#15B7B9',
-            dark: '#15B7B9',
+            dark: '#0e8586',
             light: '#15B7B9'
         },
     },
+    typography: {
+        h3: {
+            fontSize: '2.5rem'
+        },
+        h4: {
+            fontSize: '1.875rem'
+        }
+    }
 });
 
 function App() {
@@ -37,7 +45,10 @@ function App() {
                         <Routes>
                             <Route path="/" element={<Home/>}/>
                             <Route path="/project/:id" element={<ProjectDetails/>}/>
-                            <Route path="/rule/:id" element={<RuleDetails/>}/>
+                            <Route path="/rule/:id" >
+                                <Route path=":severity" element={<RuleDetails/>} />
+                                <Route path="" element={<RuleDetails/>} />
+                            </Route>
                             <Route path="*" element={<NotFound/>}/>
                         </Routes>
                     </BrowserRouter>
