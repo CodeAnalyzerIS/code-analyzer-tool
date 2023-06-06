@@ -33,7 +33,7 @@
         {
           "ruleName": "MakeLocalVariableConstant",
           "enabled": true,
-          "severity": "Error"
+          "severity": "Warning"
         }
       ]
     }
