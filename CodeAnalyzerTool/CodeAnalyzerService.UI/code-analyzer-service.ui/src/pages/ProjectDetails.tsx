@@ -38,7 +38,7 @@ export default function ProjectDetails() {
 
 
     return(
-        <Box sx={{display: 'flex', flexDirection: 'column', alignItems: 'center', mt: 3, mb: 20}}>
+        <Box sx={{display: 'flex', flexDirection: 'column', alignItems: 'center', mt: 3, mb: 5}}>
             <ProjectDetailCards projectName={project.projectName}
                                 repoUrl={project.repoUrl}
                                 lastAnalysisDate={project.lastAnalysisDate}
