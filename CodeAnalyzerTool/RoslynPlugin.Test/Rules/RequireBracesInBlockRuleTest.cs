@@ -1,5 +1,4 @@
-﻿using Microsoft.CodeAnalysis;
-using RoslynPlugin.rules;
+﻿using RoslynPlugin.rules;
 
 namespace RoslynPlugin.Test.Rules;
 

@@ -2,7 +2,6 @@ using CodeAnalyzerService.Backend.BL.Managers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using CodeAnalyzerService.Backend.DAL.EF;
-using CodeAnalyzerService.Backend.DAL.EF.Entities;
 using CodeAnalyzerService.Backend.Dtos.Mappers;
 using CodeAnalyzerService.Backend.DTOs.Request;
 using CodeAnalyzerService.Backend.DTOs.Response;

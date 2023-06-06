@@ -15,19 +15,17 @@ public class MakeLocalVariableConstantRule : RoslynRule
     public sealed override DiagnosticSeverity Severity { get; set; }
     public sealed override Dictionary<string, string> Options { get; set; }
 
-    public sealed override string? CodeExample => @"
-class C
+    public sealed override string CodeExample => @"class ExampleClass
 {
-    void M()
+    void ExampleMethod()
     {
         var s = ""This string stays constant"";
     }
 }";
 
-    public sealed override string? CodeExampleFix => @"
-class C
+    public sealed override string CodeExampleFix => @"class ExampleClass
 {
-    void M()
+    void ExampleMethod()
     {
         const string s = ""This string stays constant"";
     }

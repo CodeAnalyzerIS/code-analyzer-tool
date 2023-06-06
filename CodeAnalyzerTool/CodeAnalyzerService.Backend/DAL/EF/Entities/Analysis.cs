@@ -6,7 +6,8 @@ public class Analysis
     public DateTime CreatedOn { get; set; }
     public IEnumerable<RuleViolation> RuleViolations { get; set; }
     public Project Project { get; set; } = null!;
-
+    
+    // ReSharper disable once UnusedMember.Local => Used by Entity Framework
     private Analysis()
     {
         RuleViolations = new List<RuleViolation>();

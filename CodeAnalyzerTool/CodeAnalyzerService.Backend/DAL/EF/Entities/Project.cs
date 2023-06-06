@@ -9,6 +9,7 @@ public class Project
     public string? RepoUrl { get; set; }
     [Required] public ICollection<Analysis> Analyses { get; set; }
 
+    // ReSharper disable once UnusedMember.Local => Used by Entity Framework
     private Project()
     {
         Analyses = new List<Analysis>();

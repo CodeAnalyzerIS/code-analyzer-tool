@@ -13,8 +13,24 @@ public class TestMethodWithoutAssertionRule : RoslynRule
     public sealed override string RuleName => RuleNames.TEST_METHOD_WITHOUT_ASSERTION_RULE;
     public sealed override DiagnosticSeverity Severity { get; set; }
     public sealed override Dictionary<string, string> Options { get; set; }
-    public sealed override string? CodeExample => null;
-    public sealed override string? CodeExampleFix => null;
+    public sealed override string CodeExample => @"class ExampleClass
+{
+    [Test]
+    void ExampleTest()
+    {
+        // ... (No assertions present)
+    }
+}";
+
+    public sealed override string CodeExampleFix => @"class ExampleClass
+{
+    [Test]
+    void ExampleTest()
+    {
+        // ...
+        Assert.True(exampleExpression); // (any other asserts like Assert.Equals, etc are also valid)
+    }
+}";
     private const string CATEGORY = RuleCategories.MAINTAINABILITY;
     private readonly DiagnosticDescriptor _rule;
 
@@ -52,12 +68,18 @@ public class TestMethodWithoutAssertionRule : RoslynRule
 
         if (!IsTestMethod(methodDeclaration)) return;
         if (ContainsAssertion(methodDeclaration)) return;
+        
+        var props = new Dictionary<string, string?>
+        {
+            {StringResources.CODE_EXAMPLE_KEY, CodeExample},
+            {StringResources.CODE_EXAMPLE_FIX_KEY, CodeExampleFix }
+        };
 
         var diagnostic = Diagnostic.Create(_rule,
             methodDeclaration.GetFirstToken().GetLocation(),
             effectiveSeverity: Severity,
             null,
-            null,
+            props.ToImmutableDictionary(),
             methodDeclaration.Identifier.ValueText);
         ctx.ReportDiagnostic(diagnostic);
     }

@@ -2,16 +2,16 @@ import {useParams} from "react-router-dom";
 import {useRule} from "../hooks/useRule";
 import Loading from "../components/Loading";
 import {Alert, Box, Container, Divider, Grid, Paper, Stack, Typography, useTheme} from "@mui/material";
-import React, {ComponentType, ReactElement} from "react";
+import React, {ReactElement} from "react";
 import CategoryIcon from '@mui/icons-material/Category';
 import RuleNameIcon from '@mui/icons-material/Fingerprint';
 import ErrorIcon from '@mui/icons-material/Error';
 import WarningIcon from '@mui/icons-material/Warning';
 import InfoIcon from '@mui/icons-material/Info';
-import {SEVERITY} from "../constants";
+import {SEVERITY} from "../model/Severity";
 import {Rule} from "../model/Rule";
 
-export default function RuleDetails(props: any) {
+export default function RuleDetails() {
     const {id, severity} = useParams<{ id: string, severity: string }>();
     const {isLoading, isError, rule} = useRule(id!);
     const palette = useTheme().palette;
@@ -55,9 +55,9 @@ export default function RuleDetails(props: any) {
     function SeverityIcon({severity} : {severity: string}) {
         const palette = useTheme().palette;
         switch (severity) {
-            case SEVERITY.Info: return <InfoIcon htmlColor={palette.info.main}/>;
-            case SEVERITY.Warning: return <WarningIcon htmlColor={palette.warning.main}/>;
-            case SEVERITY.Error: return <ErrorIcon  htmlColor={palette.error.main}/>;
+            case SEVERITY.INFO: return <InfoIcon htmlColor={palette.info.main}/>;
+            case SEVERITY.WARNING: return <WarningIcon htmlColor={palette.warning.main}/>;
+            case SEVERITY.ERROR: return <ErrorIcon  htmlColor={palette.error.main}/>;
             default: return <ErrorIcon/>;
         }
     }
