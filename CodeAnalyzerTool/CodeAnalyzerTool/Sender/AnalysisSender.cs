@@ -17,7 +17,7 @@ public class AnalysisSender
         _httpClient = httpClient;
         _projectName = globalConfig.ProjectName;
         _repoUrl = globalConfig.RepoUrl;
-        var url = globalConfig.ApiUrl;
+        var url = globalConfig.ApiUrl!;
         // todo make clear in documentation that including /api causes full URL to be used, and excluding it adds the default endpoint path to the url
         _endpointUrl = url.AbsoluteUri.ToLower().Contains("/api")
             ? url
