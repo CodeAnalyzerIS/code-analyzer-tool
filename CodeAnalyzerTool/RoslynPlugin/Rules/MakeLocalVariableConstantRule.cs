@@ -62,9 +62,10 @@ public class MakeLocalVariableConstantRule : RoslynRule
         var parent = localDeclarationStatement.Parent;
         if (parent is null) return;
         var statements = GetStatements(parent);
-        
-        if (!CanBeMadeConst(context, variableDeclarator, statements))
-            return;
+
+        if (!statements.Any()) return;
+
+        if (!CanBeMadeConst(context, variableDeclarator, statements)) return;
 
         var diagnostic = Diagnostic.Create(_rule,
             localDeclarationStatement.GetLocation(),
@@ -95,7 +96,7 @@ public class MakeLocalVariableConstantRule : RoslynRule
         {
             SyntaxKind.Block => ((BlockSyntax)parent).Statements,
             SyntaxKind.SwitchSection => ((SwitchSectionSyntax)parent).Statements,
-            _ => throw new UnexpectedSyntaxKindException("Unexpected SyntaxKind: only type 'Block' or 'SwitchSection' should be possible.")
+            _ => new SyntaxList<StatementSyntax>()
         };
     }
 
