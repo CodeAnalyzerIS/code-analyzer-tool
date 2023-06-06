@@ -56,8 +56,9 @@ export default function AnalysisSummary({initialAnalysisId, analysisHistory}: An
                 <Typography sx={{textAlign: 'center'}}>Analysis Results</Typography>
             </Grid>
             <Grid item xs={6} sm={4} md={3} lg={2} pt={1}>
-                <Typography sx={{textAlign: 'center'}}><strong>{ruleViolationCount}</strong> Rule
-                    Violations</Typography>
+                <Typography sx={{textAlign: 'center'}}>
+                    <strong>{ruleViolationCount}</strong> Rule Violations
+                </Typography>
             </Grid>
         </Grid>;
     }

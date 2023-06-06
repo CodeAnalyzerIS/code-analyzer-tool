@@ -6,7 +6,7 @@ export default function DonePlaceholder() {
     return <div style={{display: 'flex', justifyContent: 'center'}}>
         <Container maxWidth="sm">
             <DoneIllustration/>
-            <Typography textAlign="center">Relax, there are no rule violations left!</Typography>
+            <Typography textAlign="center" variant="subtitle1">Relax, there are no rule violations left!</Typography>
         </Container>
     </div>;
 }
