@@ -7,13 +7,14 @@ import RuleViolationAlert from "./RuleViolationAlert";
 interface FileViolationsProps {
     path: string;
     violations: RuleViolation[];
+    id: string;
 }
 
-export default function FileViolations({path, violations}: FileViolationsProps) {
+export default function FileViolations({path, violations, id}: FileViolationsProps) {
     // replace hyphens with non-breaking hyphen symbols
     const pathWithoutBreakingHyphens = path.replaceAll("-", "‑");
     return (
-        <Accordion defaultExpanded={true} key={path}>
+        <Accordion id={id} defaultExpanded={true} key={path}>
             <AccordionSummary expandIcon={<ExpandMoreIcon/>}>
                 <Typography fontWeight={300} sx={{overflowWrap: "anywhere"}}>{pathWithoutBreakingHyphens}</Typography>
             </AccordionSummary>

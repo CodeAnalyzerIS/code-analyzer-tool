@@ -1,7 +1,7 @@
 {
   "projectName": "CodeAnalyzerTool",
   "repoUrl": "https://github.com/CodeAnalyzerIS/code-analyzer-tool",
-  "apiUrl": "https://code-analyzer-service.azurewebsites.net",
+  "apiUrl": "http://localhost:5082",
   "failSeverityThreshold": "Error",
   "plugins": [
     {
