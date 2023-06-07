@@ -19,7 +19,7 @@
         <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
     </resheader>
     <data name="TestMethodWithoutAssertion_Description" xml:space="preserve">
-        <value>Detects whether a test method contains a assertion</value>
+        <value>Detects whether a test method contains any assertion statements like Assert.Equals(), Assert.True(), etc. Supports only NUnit tests marked with a [Test] attribute.</value>
     </data>
     <data name="TestMethodWithoutAssertion_MessageFormat" xml:space="preserve">
         <value>Test method '{0}' does not contain any assertions</value>
@@ -28,7 +28,7 @@
         <value>Test method should contain at least one assertion</value>
     </data>
     <data name="NamespaceContains_Description" xml:space="preserve">
-        <value>Detects whether a namespace contains the configured substring.</value>
+        <value>Detects whether a namespace contains the configured substring. This rule is used for enforcing that all namespaces in your project contain for a certain string (configurable in options).</value>
     </data>
     <data name="NamespaceContains_Title" xml:space="preserve">
         <value>Namespaces should contain the configured substring</value>
@@ -37,7 +37,7 @@
         <value>Namespace should contain '{0}'</value>
     </data>
     <data name="RequireBracesInBlock_Description" xml:space="preserve">
-        <value>Detects whether a code block uses a single line statement format without curly braces.</value>
+        <value>Detects whether a code block uses a single line statement format without curly braces. This rule purely checks formatting of code, it does not indicate any code smell or mistake. This rule is meant for enforcing a certain code style (requiring braces for all code blocks).</value>
     </data>
     <data name="RequireBracesInBlock_MessageFormat" xml:space="preserve">
         <value>'{' brace expected</value>
@@ -49,7 +49,7 @@
         <value>Local variable should be made constant</value>
     </data>
     <data name="MakeLocalVariableConstantDescription" xml:space="preserve">
-        <value>Detects whether a local variable can be made a constant.</value>
+        <value>Detects whether a local variable can be made a constant. This rule shows for which local variables the 'const' keyword can be utilized. It is recommended to change all unchanging variable to constants for code readability and maintanability.</value>
     </data>
     <data name="MakeLocalVariableConstantMessageFormat" xml:space="preserve">
         <value>Local variable should be made constant</value>
@@ -61,6 +61,6 @@
         <value>Remove unnecessary typecast</value>
     </data>
     <data name="UnnecessaryTypeCastDescription" xml:space="preserve">
-        <value>Detects whether a unnecessary typecast has been made to access a property, method, etc. The casting can be removed without any repercussions, and should be removed for maintainability sake.</value>
+        <value>Detects whether an unnecessary typecast has been made to access a member (property, method, etc.). The type cast can be removed without any repercussions, and should be removed for maintainability sake.</value>
     </data>
 </root>

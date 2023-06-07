@@ -14,6 +14,10 @@ public class NamespaceContainsRule : RoslynRule
     public sealed override string RuleName => RuleNames.NAMESPACE_CONTAINS_RULE;
     public sealed override DiagnosticSeverity Severity { get; set; }
     public sealed override Dictionary<string, string> Options { get; set; }
+    public sealed override string CodeExample => @"namespace ExampleNamespace.ExampleSubNamespace;";
+
+    public sealed override string CodeExampleFix => @"(example with namespace option configured with 'Com.ExampleDomain')
+namespace Com.ExampleDomain.ExampleNamespace.ExampleSubNamespace;";
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get; }
     private const string CATEGORY = RuleCategories.NAMING;
     private readonly DiagnosticDescriptor _rule;
@@ -58,12 +62,18 @@ public class NamespaceContainsRule : RoslynRule
     {
         var nameSpaceDeclaration = (NamespaceDeclarationSyntax)ctx.Node;
         if (ContainsGivenNameSpace(nameSpaceDeclaration)) return;
+        
+        var props = new Dictionary<string, string?>
+        {
+            {StringResources.CODE_EXAMPLE_KEY, CodeExample},
+            {StringResources.CODE_EXAMPLE_FIX_KEY, CodeExampleFix }
+        };
 
         var diagnostic = Diagnostic.Create(_rule,
             nameSpaceDeclaration.GetFirstToken().GetLocation(),
             effectiveSeverity: Severity,
             null,
-            null,
+            props.ToImmutableDictionary(),
             Options[NAMESPACE_OPTION_KEY]);
         ctx.ReportDiagnostic(diagnostic);
     }

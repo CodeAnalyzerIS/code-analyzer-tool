@@ -4,14 +4,14 @@ using CodeAnalyzerService.Backend.DTOs.Response;
 
 namespace CodeAnalyzerService.Backend.Dtos.Mappers;
 
-public class LocationMapper
+public static class LocationMapper
 {
-    public static LocationResponse MapToDto(Location location)
+    public static LocationResponse MapToDto(this Location location)
     {
         return new LocationResponse(location.Path, location.StartLine, location.EndLine, location.FileExtension);
     }
     
-    public static Location MapToModel(LocationRequest locationRequest)
+    public static Location MapToModel(this LocationRequest locationRequest)
     {
         return new Location(locationRequest.Path, locationRequest.StartLine, locationRequest.EndLine, locationRequest.FileExtension);
     }

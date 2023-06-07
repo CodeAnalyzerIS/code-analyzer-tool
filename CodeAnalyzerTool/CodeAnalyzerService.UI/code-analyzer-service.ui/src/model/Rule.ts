@@ -8,4 +8,6 @@ export type Rule = {
     targetLanguage: string;
     isEnabledByDefault: string;
     defaultSeverity: string;
+    codeExample: string | null;
+    codeExampleFix: string | null;
 }

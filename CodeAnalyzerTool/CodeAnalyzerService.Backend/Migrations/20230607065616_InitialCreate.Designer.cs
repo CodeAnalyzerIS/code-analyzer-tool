@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CodeAnalyzerService.Backend.Migrations
 {
     [DbContext(typeof(CodeAnalyzerServiceDbContext))]
-    [Migration("20230601112732_InitialCreate")]
+    [Migration("20230607065616_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -68,6 +68,12 @@ namespace CodeAnalyzerService.Backend.Migrations
 
                     b.Property<string>("Category")
                         .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("CodeExample")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("CodeExampleFix")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("DefaultSeverity")

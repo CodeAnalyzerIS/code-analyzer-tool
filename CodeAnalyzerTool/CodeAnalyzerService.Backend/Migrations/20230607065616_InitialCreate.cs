@@ -38,7 +38,9 @@ namespace CodeAnalyzerService.Backend.Migrations
                     PluginName = table.Column<string>(type: "TEXT", nullable: false),
                     TargetLanguage = table.Column<string>(type: "TEXT", nullable: false),
                     IsEnabledByDefault = table.Column<bool>(type: "INTEGER", nullable: false),
-                    DefaultSeverity = table.Column<string>(type: "TEXT", nullable: false)
+                    DefaultSeverity = table.Column<string>(type: "TEXT", nullable: false),
+                    CodeExample = table.Column<string>(type: "TEXT", nullable: true),
+                    CodeExampleFix = table.Column<string>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {

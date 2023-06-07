@@ -12,6 +12,24 @@ public class RequireBracesInBlockRule : RoslynRule
     public sealed override string RuleName => RuleNames.REQUIRE_BRACES_IN_BLOCK_RULE;
     public sealed override DiagnosticSeverity Severity { get; set; }
     public sealed override Dictionary<string, string> Options { get; set; }
+    public sealed override string CodeExample => @"class ExampleClass
+{
+    void ExampleMethod(bool b)
+    {
+        if (b) 
+            return;
+    }
+}";
+
+    public sealed override string CodeExampleFix => @"class ExampleClass
+{
+    void ExampleMethod(bool b)
+    {
+        if (b) {
+            return;
+        }
+    }
+}";
     private const string CATEGORY = RuleCategories.STYLE;
     private readonly DiagnosticDescriptor _rule;
     
@@ -47,6 +65,11 @@ public class RequireBracesInBlockRule : RoslynRule
     private void AnalyzeBlockStatements(SyntaxTreeAnalysisContext ctx)
     {
         var root = ctx.Tree.GetRoot(ctx.CancellationToken);
+        var props = new Dictionary<string, string?>
+        {
+            {StringResources.CODE_EXAMPLE_KEY, CodeExample},
+            {StringResources.CODE_EXAMPLE_FIX_KEY, CodeExampleFix }
+        };
         foreach (var statement in root.DescendantNodes().OfType<StatementSyntax>())
         {
             if (statement is BlockSyntax) continue;
@@ -56,7 +79,7 @@ public class RequireBracesInBlockRule : RoslynRule
                 statement.GetFirstToken().GetLocation(),
                 effectiveSeverity: Severity,
                 null,
-                null);
+                props.ToImmutableDictionary());
             ctx.ReportDiagnostic(diagnostic);
         }
     }

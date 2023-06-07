@@ -1,6 +1,6 @@
 import React, {useCallback, useContext, useEffect, useState} from "react";
 import Loading from "../components/Loading";
-import {Alert, Box, Card, CardContent, CardHeader, Stack, Typography} from "@mui/material";
+import {Alert, Box, Card, CardContent, CardHeader, Stack, Typography, useTheme} from "@mui/material";
 import {useProjectOverview} from "../hooks/useProjectOverview";
 import TroubleshootIcon from '@mui/icons-material/Troubleshoot';
 import {ProjectOverview} from "../model/ProjectOverview";
@@ -9,6 +9,7 @@ import {Searchbar} from "../components/Searchbar";
 import {useNavigate} from "react-router-dom";
 import {getProjectIdFromName} from "../services/projectService";
 import BreadcrumbContext, {Breadcrumb, IBreadcrumbContext} from "../context/BreadcrumbContext";
+import WelcomePlaceholder from "../components/placeholders/WelcomePlaceholder";
 
 export type SearchString = {
     searchValue: string;
@@ -19,6 +20,7 @@ export default function Home() {
     const {isLoading, isError, projectOverviews} = useProjectOverview()
     const {setBreadcrumbData} = useContext<IBreadcrumbContext>(BreadcrumbContext)
     const navigate = useNavigate()
+    const palette = useTheme().palette
 
     //use useCallback to update the state and to be able to provide the dependency array with the set state
     //without triggering infinite re-renders, because the callback function will only be called when the setter changes
@@ -33,12 +35,10 @@ export default function Home() {
         updateBreadcrumbData();
     }, [updateBreadcrumbData]);
 
-    if (isLoading) {
-        return <Loading/>
-    }
-    if (isError || !projectOverviews){
-        return <Alert severity="error">Error loading the projects</Alert>
-    }
+    if (isLoading) return <Loading/>
+
+    if (isError || !projectOverviews) return <Alert severity="error">Error loading the projects</Alert>
+
 
     if (searchString !== ""){
         getProjectIdFromName(searchString)
@@ -47,6 +47,8 @@ export default function Home() {
                 return <Alert severity="error">Error getting project with name: {searchString}</Alert>
             })
     }
+
+    if (projectOverviews.length < 1) return <WelcomePlaceholder/>;
 
     return(
         <Box sx={{display: 'flex', flexDirection: 'column', alignItems: 'center', mt: 5}}>
@@ -61,7 +63,7 @@ export default function Home() {
                     />
                     <CardContent>
                         <Box sx={{display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly',
-                            alignItems: 'center', color: '#15B7B9'}}>
+                            alignItems: 'center', color: palette.primary.main}}>
                             <Stack direction='row' spacing={1}>
                                 <TroubleshootIcon/>
                                 <Typography>Last Analysis: {po.lastAnalysisDate.toLocaleString('nl-BE')}</Typography>

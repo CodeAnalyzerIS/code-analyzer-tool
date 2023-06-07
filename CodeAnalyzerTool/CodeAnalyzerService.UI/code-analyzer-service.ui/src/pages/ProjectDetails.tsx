@@ -29,16 +29,12 @@ export default function ProjectDetails() {
         updateBreadcrumbData();
     }, [updateBreadcrumbData]);
 
-    if (isLoading) {
-        return <Loading/>
-    }
-    if (isError || !project){
-        return <Alert severity="error">Error loading the project</Alert>
-    }
+    if (isLoading) return <Loading/>;
+    if (isError || !project) return <Alert severity="error">Error loading the project</Alert>;
 
 
     return(
-        <Box sx={{display: 'flex', flexDirection: 'column', alignItems: 'center', mt: 3, mb: 20}}>
+        <Box sx={{display: 'flex', flexDirection: 'column', alignItems: 'center', mt: 3, mb: 5}}>
             <ProjectDetailCards projectName={project.projectName}
                                 repoUrl={project.repoUrl}
                                 lastAnalysisDate={project.lastAnalysisDate}

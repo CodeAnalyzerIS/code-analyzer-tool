@@ -12,9 +12,12 @@ public class Rule
     [Required] public string TargetLanguage { get; set; }
     public bool IsEnabledByDefault { get; set; }
     public Severity DefaultSeverity { get; set; }
+    public string? CodeExample { get; set; }
+    public string? CodeExampleFix { get; set; }
 
     public Rule(string ruleName, string title, string description, string category, string pluginName,
-        string targetLanguage, bool isEnabledByDefault, Severity defaultSeverity)
+        string targetLanguage, bool isEnabledByDefault, Severity defaultSeverity, 
+        string? codeExample = null, string? codeExampleFix = null)
     {
         RuleName = ruleName;
         Title = title;
@@ -24,5 +27,7 @@ public class Rule
         DefaultSeverity = defaultSeverity;
         PluginName = pluginName;
         TargetLanguage = targetLanguage;
+        CodeExample = codeExample;
+        CodeExampleFix = codeExampleFix;
     }
 }
