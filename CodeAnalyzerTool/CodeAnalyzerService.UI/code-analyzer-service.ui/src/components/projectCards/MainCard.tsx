@@ -1,4 +1,4 @@
-import {Card, CardContent, CardHeader, Stack, useTheme} from "@mui/material";
+import {Card, CardContent, CardHeader, Stack, Typography, useTheme} from "@mui/material";
 import {Link} from "react-router-dom";
 import React from "react";
 import RepoIcon from "./RepoIcon";
@@ -23,23 +23,19 @@ const getRepoIcon = (repoUrl: string) => {
 export default function MainCard({projectName, repoUrl}: MainCardProps) {
     const palette = useTheme().palette;
 
-    return(
-        <Card sx={{
-            width: '30%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center',
-            flexDirection: 'column'
-        }}>
-            <CardHeader sx={{color: palette.primary.main}} title={projectName}/>
-            <CardContent>
+    return (<>
+            <CardContent sx={{maxWidth: '80%', overflow: "hidden"}}>
+                <Typography variant="h4" color={palette.primary.main} sx={{mb: 2}}>{projectName}</Typography>
                 {repoUrl !== null ?
                     <Stack direction="row" alignItems='center' spacing={1}>
                         {getRepoIcon(repoUrl)}
-                        <Link style={{color: palette.secondary.dark}} to={repoUrl}>
+                        <Link style={{color: palette.secondary.dark, overflow: "hidden"}} to={repoUrl}>
                             {repoUrl}
                         </Link>
                     </Stack> :
                     "No repo url provided"
                 }
             </CardContent>
-        </Card>
+        </>
     )
 }
