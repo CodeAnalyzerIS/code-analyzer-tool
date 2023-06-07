@@ -50,7 +50,7 @@ function RuleViolationInfoBar({violation} : {violation: RuleViolation}) {
     const palette = useTheme().palette;
     const rule = violation.rule;
 
-    const ICON_COLOR = palette.secondary.main;
+    const ICON_COLOR = palette.secondary.light;
 
     return <>
         <Grid container my={1}>

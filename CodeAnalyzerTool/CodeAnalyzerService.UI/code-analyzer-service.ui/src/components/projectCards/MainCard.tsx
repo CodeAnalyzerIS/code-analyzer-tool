@@ -33,7 +33,7 @@ export default function MainCard({projectName, repoUrl}: MainCardProps) {
                 {repoUrl !== null ?
                     <Stack direction="row" alignItems='center' spacing={1}>
                         {getRepoIcon(repoUrl)}
-                        <Link style={{color: "#6574FC"}} to={repoUrl}>
+                        <Link style={{color: palette.secondary.dark}} to={repoUrl}>
                             {repoUrl}
                         </Link>
                     </Stack> :

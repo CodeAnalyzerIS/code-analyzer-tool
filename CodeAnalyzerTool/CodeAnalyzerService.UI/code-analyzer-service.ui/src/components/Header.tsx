@@ -14,8 +14,7 @@ export default function Header() {
                     <Avatar src={'/logo_transparent.png'}/>
                     <Breadcrumbs aria-label='breadcrumb'>
                         {breadcrumbData.map((breadcrumb, index) => (
-                            // todo color
-                            <Link key={index} style={{color: "#6574FC"}} to={breadcrumb.path}>
+                            <Link key={index} style={{color: palette.secondary.dark}} to={breadcrumb.path}>
                                 {breadcrumb.label}
                             </Link>
                         ))}

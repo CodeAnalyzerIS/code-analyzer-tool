@@ -20,9 +20,14 @@ const queryClient = new QueryClient()
 const theme = createTheme({
     palette: {
         primary: {
-            main: '#15B7B9',
-            dark: '#0e8586',
-            light: '#15B7B9'
+            main: '#12B1B4',
+            dark: '#12B1B4',
+            light: '#12B1B4'
+        },
+        secondary: {
+            main: '#E27E65',
+            light: '#e89b88',
+            dark: '#DB6143',
         },
     },
     typography: {
@@ -33,7 +38,7 @@ const theme = createTheme({
             fontSize: '1.875rem'
         },
         subtitle2: {
-            fontSize: '1.125rem',
+            fontSize: '1.375rem',
             fontWeight: 300
         }
     }
