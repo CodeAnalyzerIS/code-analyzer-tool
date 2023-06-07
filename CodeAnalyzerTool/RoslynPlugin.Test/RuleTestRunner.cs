@@ -56,7 +56,7 @@ public static class RuleTestRunner
         return project.Documents.First(x => x.Name == DEFAULT_DOCUMENT_NAME);
     }
     
-    private static async Task<IEnumerable<RuleViolation>> CompileStringWithRule(string sourceCode, RoslynRule rule)
+    public static async Task<IEnumerable<RuleViolation>> CompileStringWithRule(string sourceCode, RoslynRule rule)
     {
         var src = SourceText.From(sourceCode);
         var workspace = src.CreateWorkspace();

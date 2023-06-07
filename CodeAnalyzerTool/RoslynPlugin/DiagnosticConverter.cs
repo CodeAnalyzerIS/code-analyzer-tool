@@ -49,7 +49,7 @@ public static class DiagnosticConverter
     private static Location ConvertDiagnosticToLocation(Diagnostic diagnostic)
     {
         return new Location(
-            path: diagnostic.Location.GetLineSpan().Path,
+            path: GetRelativePath(diagnostic.Location.GetLineSpan().Path),
             startLine: diagnostic.Location.GetLineSpan().StartLinePosition.Line + 1,
             endLine: diagnostic.Location.GetLineSpan().EndLinePosition.Line + 1,
             fileExtension: StringResources.FILE_EXTENSION
@@ -86,5 +86,11 @@ public static class DiagnosticConverter
             Severity.Error => DiagnosticSeverity.Error,
             _ => throw new ArgumentOutOfRangeException(nameof(severity), severity, null)
         };
+    }
+
+    private static string GetRelativePath(string path)
+    {
+        var parentPath = Path.GetDirectoryName(Directory.GetCurrentDirectory())!;
+        return Path.GetRelativePath(parentPath, path);
     }
 }

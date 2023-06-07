@@ -30,6 +30,7 @@ public class Program
 
             LogHelper.InitLogging(); // todo replace with DI injected loggers
             var serviceProvider = await CreateServiceProvider();
+            Console.WriteLine(GetRelativePath());
             return (int)await Run(serviceProvider);
         }
         catch (Exception ex)
@@ -67,5 +68,35 @@ public class Program
             await analysisSender.Send(analysisResult.RuleViolations);
         }
         return analysisResult.StatusCode;
+    }
+    
+    private static string? GetRelativePath()
+    {
+        Console.WriteLine(Path.GetDirectoryName(Directory.GetCurrentDirectory()));
+        return FindGitFolder(Directory.GetCurrentDirectory());
+    }
+
+    private static string? FindGitFolder(string startPath)
+    {
+        var currentPath = startPath;
+        while (true)
+        {
+            var gitPath = Path.Combine(currentPath, ".git");
+            if (Directory.Exists(gitPath))
+            {
+                return gitPath;
+            }
+
+            // Move one level up in the directory hierarchy
+            var parentPath = Directory.GetParent(currentPath)?.FullName;
+            if (parentPath == null || parentPath == currentPath)
+            {
+                break;  // Reached the root directory
+            }
+            
+            currentPath = parentPath;
+        }
+        
+        return null; // No .git folder found
     }
 }
