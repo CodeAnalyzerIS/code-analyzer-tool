@@ -11,17 +11,13 @@ export default function AnalysesCard({analysisAmount, lastAnalysisDate}: Analyse
     const palette = useTheme().palette;
 
     return (
-        <Card sx={{width: '20%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
-            <CardContent>
-                <Box sx={{color: palette.primary.main}}>
-                    <TroubleshootIcon fontSize={'large'}/>
-                </Box>
-                <Typography
-                    sx={{color: palette.primary.main, mt: 1, fontSize: '1.2em'}}><strong>{analysisAmount}</strong> Analyses</Typography>
-                <Typography sx={{color: palette.primary.main, mt: 1, fontSize: '1.2em'}}>
-                    Last Analysis: {lastAnalysisDate.toLocaleString('nl-BE')}
-                </Typography>
-            </CardContent>
-        </Card>
+        <CardContent>
+            <TroubleshootIcon fontSize={'large'} htmlColor={palette.primary.main}/>
+            <Typography
+                sx={{color: palette.primary.main, mt: 1, fontSize: '1.2em'}}><strong>{analysisAmount}</strong> Analyses</Typography>
+            <Typography sx={{color: palette.primary.main, mt: 1, fontSize: '1.2em'}}>
+                Last Analysis: {lastAnalysisDate.toLocaleString('nl-BE')}
+            </Typography>
+        </CardContent>
     )
 }
