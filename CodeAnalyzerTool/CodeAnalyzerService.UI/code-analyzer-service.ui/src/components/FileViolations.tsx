@@ -7,11 +7,12 @@ import RuleViolationAlert from "./RuleViolationAlert";
 interface FileViolationsProps {
     path: string;
     violations: RuleViolation[];
+    id: string;
 }
 
-export default function FileViolations({path, violations}: FileViolationsProps) {
+export default function FileViolations({path, violations, id}: FileViolationsProps) {
     return (
-        <Accordion defaultExpanded={true} key={path}>
+        <Accordion id={id} defaultExpanded={true} key={path}>
             <AccordionSummary expandIcon={<ExpandMoreIcon/>}>
                 <Typography fontWeight={300}>{path}</Typography>
             </AccordionSummary>
