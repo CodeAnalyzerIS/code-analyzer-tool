@@ -3,13 +3,12 @@ import Loading from "../components/Loading";
 import {Alert, Box, Card, CardContent, CardHeader, Stack, Typography, useTheme} from "@mui/material";
 import {useProjectOverview} from "../hooks/useProjectOverview";
 import TroubleshootIcon from '@mui/icons-material/Troubleshoot';
-import {ProjectOverview} from "../model/ProjectOverview";
 import ReportIcon from '@mui/icons-material/Report';
 import {Searchbar} from "../components/Searchbar";
 import {useNavigate} from "react-router-dom";
-import {getProjectIdFromName} from "../services/projectService";
 import BreadcrumbContext, {Breadcrumb, IBreadcrumbContext} from "../context/BreadcrumbContext";
 import WelcomePlaceholder from "../components/placeholders/WelcomePlaceholder";
+import EmptySearchPlaceholder from "../components/placeholders/EmptySearchPlaceholder";
 
 export type SearchString = {
     searchValue: string;
@@ -39,21 +38,16 @@ export default function Home() {
 
     if (isError || !projectOverviews) return <Alert severity="error">Error loading the projects</Alert>
 
-
-    if (searchString !== ""){
-        getProjectIdFromName(searchString)
-            .then((id) => navigate(`/project/${id}`))
-            .catch(() => {
-                return <Alert severity="error">Error getting project with name: {searchString}</Alert>
-            })
-    }
-
     if (projectOverviews.length < 1) return <WelcomePlaceholder/>;
+
+    const filteredOverviews = projectOverviews.filter(po => po.projectName.toLowerCase().includes(searchString.toLowerCase()));
 
     return(
         <Box sx={{display: 'flex', flexDirection: 'column', alignItems: 'center', mt: 5}}>
             <Searchbar setSearchString={setSearchString}/>
-            {projectOverviews.map((po:ProjectOverview)  => (
+            {filteredOverviews.length < 1 ? <EmptySearchPlaceholder/>
+            :
+            filteredOverviews.map(po  => (
                 <Card sx={{width: "50%", border: 'solid', borderColor: palette.grey["300"], borderWidth: 'thin', mt: 3, cursor: 'pointer'}}
                       key={po.id} onClick={() => {navigate(`/project/${po.id}`)}}>
                     <CardHeader

@@ -15,11 +15,6 @@ export async function getProjectOverviews() {
     return mapProjectOverviewDates(projectOverviewResponse);
 }
 
-export async function getProjectIdFromName(projectName: string) : Promise<number> {
-    const response = await fetch(`${BACKEND_URL}/api/Project/GetFromName/${projectName}`);
-    return await response.json();
-}
-
 function mapProjectOverviewDates(projectOverviews: ProjectOverview[]) : ProjectOverview[] {
     return projectOverviews.map((overview: ProjectOverview) => {
         const parsedDate = new Date(overview.lastAnalysisDate)
