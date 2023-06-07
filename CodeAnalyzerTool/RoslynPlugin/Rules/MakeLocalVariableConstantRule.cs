@@ -4,7 +4,6 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 using RoslynPlugin.API;
-using RoslynPlugin.Exceptions;
 
 namespace RoslynPlugin.rules;
 
@@ -82,12 +81,6 @@ public class MakeLocalVariableConstantRule : RoslynRule
         if (!statements.Any()) return;
 
         if (!CanBeMadeConst(context, variableDeclarator, statements)) return;
-
-        var props = new Dictionary<string, string?>
-        {
-            {StringResources.CODE_EXAMPLE_KEY, CodeExample},
-            {StringResources.CODE_EXAMPLE_FIX_KEY, CodeExampleFix }
-        };
 
         var props = new Dictionary<string, string?>
         {

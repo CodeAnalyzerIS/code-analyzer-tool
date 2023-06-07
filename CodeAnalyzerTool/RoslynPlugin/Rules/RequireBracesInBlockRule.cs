@@ -16,7 +16,8 @@ public class RequireBracesInBlockRule : RoslynRule
 {
     void ExampleMethod(bool b)
     {
-        if (b) return;
+        if (b) 
+            return;
     }
 }";
 
