@@ -54,16 +54,16 @@ function RuleViolationInfoBar({violation} : {violation: RuleViolation}) {
 
     return <>
         <Grid container my={1}>
-            <RuleInfo label="Name:" text={rule.ruleName} Icon={<RuleNameIcon htmlColor={ICON_COLOR}/>}/>
-            <RuleInfo label="Category:" text={rule.category} Icon={<CategoryIcon htmlColor={ICON_COLOR}/>}/>
             <RuleInfo label="Severity:" text={violation.severity ?? rule.defaultSeverity}
                       Icon={<SeverityIcon severity={violation.severity ?? rule.defaultSeverity}/>}/>
+            <RuleInfo label="Name:" text={rule.ruleName} Icon={<RuleNameIcon htmlColor={ICON_COLOR}/>}/>
+            <RuleInfo label="Category:" text={rule.category} Icon={<CategoryIcon htmlColor={ICON_COLOR}/>}/>
             <RuleInfo label="Plugin:" text={violation.rule.pluginName} Icon={<PluginIcon htmlColor={ICON_COLOR}/>}/>
             <RuleInfo label="Target language:" text={violation.rule.targetLanguage} Icon={<LanguageIcon htmlColor={ICON_COLOR}/>}/>
         </Grid>
         <Grid container mt={2}>
             <Grid item xs={12} lg={10}>
-                <Typography variant="body2" fontWeight={300}>{violation.location.path}</Typography>
+                <Typography variant="body2" fontWeight={300} sx={{overflow: "auto", whiteSpace: "nowrap"}}>{violation.location.path}</Typography>
             </Grid>
             <Grid item xs={12} lg={2}>
                 <Typography variant="body2" fontWeight={300} textAlign="end" minWidth="100%">{violation.analysisDate.toLocaleString()}</Typography>
