@@ -12,6 +12,7 @@ import PluginIcon from '@mui/icons-material/Extension';
 import LanguageIcon from '@mui/icons-material/Terminal';
 import {SEVERITY} from "../model/Severity";
 import {RuleViolation} from "../model/RuleViolation";
+import {IconAndText} from "../components/IconAndText";
 
 export default function RuleViolationDetails() {
     const {id} = useParams<{ id: string}>();
@@ -78,10 +79,7 @@ function RuleViolationInfoBar({violation} : {violation: RuleViolation}) {
     function RuleInfo({label, text, Icon} : {label: string, text: string, Icon: ReactElement}) {
         return <Grid item xs={12} sm={6} md={4}>
             <Stack direction="row" spacing={1}>
-                <Stack direction="row" spacing='4px'>
-                    {Icon}
-                    <Typography fontWeight={500}>{label}</Typography>
-                </Stack>
+                <IconAndText icon={Icon} text={<Typography fontWeight={500}>{label}</Typography>}/>
                 <Typography>{text}</Typography>
             </Stack>
         </Grid>;

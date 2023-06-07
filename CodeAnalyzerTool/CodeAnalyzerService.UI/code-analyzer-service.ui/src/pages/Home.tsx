@@ -1,6 +1,6 @@
 import React, {useCallback, useContext, useEffect, useState} from "react";
 import Loading from "../components/Loading";
-import {Alert, Box, Card, CardContent, CardHeader, Container, Stack, Typography, useTheme} from "@mui/material";
+import {Alert, Box, Card, CardContent, CardHeader, Container, Grid, Stack, Typography, useTheme} from "@mui/material";
 import {useProjectOverview} from "../hooks/useProjectOverview";
 import TroubleshootIcon from '@mui/icons-material/Troubleshoot';
 import ReportIcon from '@mui/icons-material/Report';
@@ -9,6 +9,7 @@ import {useNavigate} from "react-router-dom";
 import BreadcrumbContext, {Breadcrumb, IBreadcrumbContext} from "../context/BreadcrumbContext";
 import WelcomePlaceholder from "../components/placeholders/WelcomePlaceholder";
 import EmptySearchPlaceholder from "../components/placeholders/EmptySearchPlaceholder";
+import {IconAndText} from "../components/IconAndText";
 
 export default function Home() {
     const [searchString, setSearchString] = useState("")
@@ -52,18 +53,18 @@ export default function Home() {
                         title={po.projectName}
                     />
                     <CardContent>
-                        <Box sx={{display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly',
-                            alignItems: 'center', color: palette.secondary.main}}>
-                            <Stack direction='row' spacing={1}>
-                                <TroubleshootIcon/>
-                                <Typography>Last Analysis: {po.lastAnalysisDate.toLocaleString('nl-BE')}</Typography>
-                            </Stack>
-
-                            <Stack direction='row' spacing={1}>
-                                <ReportIcon/>
-                                <Typography>Rule Violations: {po.ruleViolationCount}</Typography>
-                            </Stack>
-                        </Box>
+                        {/*<Box sx={{display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly',*/}
+                        {/*    alignItems: 'center', color: palette.secondary.main}}>*/}
+                        <Grid container sx={{color: palette.secondary.main}}>
+                            <Grid item xs={12} sm={6} display="flex" justifyContent="center">
+                                <IconAndText icon={<TroubleshootIcon/>}
+                                         text={<Typography>Last Analysis: {po.lastAnalysisDate.toLocaleString('nl-BE')}</Typography>}/>
+                            </Grid>
+                            <Grid item xs={12} sm={6} display="flex" justifyContent="center">
+                                <IconAndText icon={<ReportIcon/>} text={<Typography>Rule Violations: {po.ruleViolationCount}</Typography>}/>
+                            </Grid>
+                        </Grid>
+                        {/*</Box>*/}
                     </CardContent>
                 </Card>
             ))}
