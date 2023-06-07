@@ -6,7 +6,7 @@ export default function WelcomePlaceholder() {
     return <div style={{display: 'flex', justifyContent: 'center'}}>
         <Container maxWidth="sm">
             <WelcomeIllustration/>
-            <Typography textAlign="center" variant="subtitle1">Projects will automatically appear here when you run the Code Analyzer Tool for the first time.</Typography>
+            <Typography textAlign="center" variant="subtitle2">Projects will automatically appear here when you run the Code Analyzer Tool for the first time.</Typography>
         </Container>
     </div>;
 }
