@@ -1,15 +1,18 @@
 import {
     Alert, Container, Divider,
-    FormControl, Grid, MenuItem, Select, SelectChangeEvent,
+    FormControl, Grid, List, ListItem, ListItemButton, ListItemText, MenuItem, Select, SelectChangeEvent,
     Typography
 } from "@mui/material";
-import {groupRuleViolationsByPath} from "../util/HelperFunctions";
+import TreeView from '@mui/lab/TreeView';
+import {groupRuleViolationsByPath, splitPathsIntoStringArray} from "../util/HelperFunctions";
 import React, {useState} from "react";
 import {useAnalysis} from "../hooks/useAnalysis";
 import Loading from "./Loading";
 import {AnalysisHistory} from "../model/Analysis";
 import FileViolations from "./FileViolations";
 import DonePlaceholder from "./placeholders/DonePlaceholder";
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 
 interface AnalysisSummaryProps {
     initialAnalysisId: number;
@@ -27,6 +30,8 @@ export default function AnalysisSummary({initialAnalysisId, analysisHistory}: An
         return <Alert severity="error">Error loading the analysis</Alert>
     }
     const groupedAnalysis = groupRuleViolationsByPath(analysis)
+    splitPathsIntoStringArray(groupedAnalysis)
+    // console.log(groupedAnalysis[path])
     const handleChange = (event: SelectChangeEvent) => {
         const newAnalysisId = Number(event.target.value)
         setAnalysisId(newAnalysisId);
@@ -69,9 +74,21 @@ export default function AnalysisSummary({initialAnalysisId, analysisHistory}: An
             <Divider sx={{mt: 2}}/>
             {analysis.ruleViolations.length < 1 ? <DonePlaceholder/>
                 :
-                Object.entries(groupedAnalysis).map(([path, violations], index) => (
-                    <FileViolations key={index} path={path} violations={violations}/>
-                ))}
+                <>
+                    {Object.entries(groupedAnalysis).map(([path, violations], index) => (
+                        <FileViolations id={`path-${index}`} key={index} path={path} violations={violations}/>
+                    ))}
+                    {/*<List>*/}
+                    {/*    {Object.entries(groupedAnalysis).map(([path, violations], index) => (*/}
+                    {/*        <ListItem key={index}>*/}
+                    {/*            <ListItemButton component="a" href={`#path-${index}`}>*/}
+                    {/*                <ListItemText primary={path}/>*/}
+                    {/*            </ListItemButton>*/}
+                    {/*        </ListItem>*/}
+                    {/*    ))}*/}
+                    {/*</List>*/}
+                </>
+            }
         </Container>
     )
 }
