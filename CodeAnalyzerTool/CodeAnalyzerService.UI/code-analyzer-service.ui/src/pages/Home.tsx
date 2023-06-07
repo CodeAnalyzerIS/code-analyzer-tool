@@ -54,16 +54,16 @@ export default function Home() {
         <Box sx={{display: 'flex', flexDirection: 'column', alignItems: 'center', mt: 5}}>
             <Searchbar setSearchString={setSearchString}/>
             {projectOverviews.map((po:ProjectOverview)  => (
-                <Card sx={{width: "50%", border: 'solid', borderColor: '#c4c4c4', borderWidth: 'thin', mt: 3, cursor: 'pointer'}}
+                <Card sx={{width: "50%", border: 'solid', borderColor: palette.grey["300"], borderWidth: 'thin', mt: 3, cursor: 'pointer'}}
                       key={po.id} onClick={() => {navigate(`/project/${po.id}`)}}>
                     <CardHeader
-                        style={{ textAlign: 'center', color: '#6574FC', borderBottom: 'solid', borderColor: '#c4c4c4',
+                        style={{ textAlign: 'center', color: palette.primary.main, borderBottom: 'solid', borderColor: palette.grey["300"],
                             borderWidth: 'thin' }}
                         title={po.projectName}
                     />
                     <CardContent>
                         <Box sx={{display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly',
-                            alignItems: 'center', color: palette.primary.main}}>
+                            alignItems: 'center', color: palette.secondary.main}}>
                             <Stack direction='row' spacing={1}>
                                 <TroubleshootIcon/>
                                 <Typography>Last Analysis: {po.lastAnalysisDate.toLocaleString('nl-BE')}</Typography>
