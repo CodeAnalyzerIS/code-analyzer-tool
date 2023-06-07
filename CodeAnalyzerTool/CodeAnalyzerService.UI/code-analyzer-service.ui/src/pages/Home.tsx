@@ -1,6 +1,6 @@
 import React, {useCallback, useContext, useEffect, useState} from "react";
 import Loading from "../components/Loading";
-import {Alert, Box, Card, CardContent, CardHeader, Stack, Typography, useTheme} from "@mui/material";
+import {Alert, Box, Card, CardContent, CardHeader, Container, Stack, Typography, useTheme} from "@mui/material";
 import {useProjectOverview} from "../hooks/useProjectOverview";
 import TroubleshootIcon from '@mui/icons-material/Troubleshoot';
 import ReportIcon from '@mui/icons-material/Report';
@@ -9,10 +9,6 @@ import {useNavigate} from "react-router-dom";
 import BreadcrumbContext, {Breadcrumb, IBreadcrumbContext} from "../context/BreadcrumbContext";
 import WelcomePlaceholder from "../components/placeholders/WelcomePlaceholder";
 import EmptySearchPlaceholder from "../components/placeholders/EmptySearchPlaceholder";
-
-export type SearchString = {
-    searchValue: string;
-}
 
 export default function Home() {
     const [searchString, setSearchString] = useState("")
@@ -43,12 +39,12 @@ export default function Home() {
     const filteredOverviews = projectOverviews.filter(po => po.projectName.toLowerCase().includes(searchString.toLowerCase()));
 
     return(
-        <Box sx={{display: 'flex', flexDirection: 'column', alignItems: 'center', mt: 5}}>
+        <Container maxWidth="lg" sx={{display: 'flex', flexDirection: 'column', alignItems: 'center', mt: 5}}>
             <Searchbar setSearchString={setSearchString}/>
             {filteredOverviews.length < 1 ? <EmptySearchPlaceholder/>
             :
             filteredOverviews.map(po  => (
-                <Card sx={{width: "50%", border: 'solid', borderColor: palette.grey["300"], borderWidth: 'thin', mt: 3, cursor: 'pointer'}}
+                <Card sx={{width: "100%", border: 'solid', borderColor: palette.grey["300"], borderWidth: 'thin', mt: 3, cursor: 'pointer'}}
                       key={po.id} onClick={() => {navigate(`/project/${po.id}`)}}>
                     <CardHeader
                         style={{ textAlign: 'center', color: palette.primary.main, borderBottom: 'solid', borderColor: palette.grey["300"],
@@ -71,6 +67,6 @@ export default function Home() {
                     </CardContent>
                 </Card>
             ))}
-        </Box>
+        </Container>
     )
 }

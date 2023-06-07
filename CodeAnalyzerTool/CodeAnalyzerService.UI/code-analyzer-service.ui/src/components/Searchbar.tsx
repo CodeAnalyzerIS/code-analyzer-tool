@@ -1,4 +1,4 @@
-import {Container, InputBase, Paper, Stack} from "@mui/material";
+import {InputAdornment, TextField} from "@mui/material";
 import SearchIcon from '@mui/icons-material/Search';
 import React from "react";
 
@@ -7,14 +7,9 @@ interface SearchbarProps {
 }
 
 export function Searchbar({setSearchString}: SearchbarProps) {
-    return (
-        <Container maxWidth="lg">
-            <Paper sx={{p: 2}}>
-                <Stack display="flex" direction="row" justifyContent="space-between" alignItems="center" width="100%">
-                    <InputBase onChange={(e) => setSearchString(e.target.value)} placeholder="Search for a project"/>
-                    <SearchIcon/>
-                </Stack>
-            </Paper>
-        </Container>
-    );
+    return <TextField sx={{backgroundColor: 'white'}}
+                      variant="outlined"
+                      fullWidth
+                      InputProps={{endAdornment: <InputAdornment position="start"><SearchIcon/></InputAdornment>}}
+                      onChange={(e) => setSearchString(e.target.value)} placeholder="Search for a project"/>;
 }
