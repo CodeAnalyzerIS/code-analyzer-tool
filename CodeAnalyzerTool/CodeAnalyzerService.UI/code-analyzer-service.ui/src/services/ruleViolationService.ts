@@ -37,12 +37,13 @@ export function groupRuleViolationsByPath(analysis: Analysis): Record<string, Ru
 export interface Folder {
     name: string;
     id: string;
+    pathLink?: string;
     children?: Folder[];
 }
 
 export function createFolderHierarchy(paths: string[]): Folder[] {
     const root: Folder = { name: "root", id: "root" };
-    let index = 0
+    let index = 0;
 
     for (const path of paths) {
         const folders = path.split("\\");
@@ -52,7 +53,7 @@ export function createFolderHierarchy(paths: string[]): Folder[] {
             let folder = currentFolder.children?.find((child) => child.name === folderName);
 
             if (!folder) {
-                folder = { name: folderName, id: (index++).toString() };
+                folder = { name: folderName, id: (index++).toString(), pathLink: path };
                 currentFolder.children = currentFolder.children || [];
                 currentFolder.children.push(folder);
             }
