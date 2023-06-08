@@ -1,4 +1,4 @@
-import {Card, CardContent, CardHeader, Stack, Typography, useTheme} from "@mui/material";
+import {CardContent, Stack, Typography, useTheme} from "@mui/material";
 import {Link} from "react-router-dom";
 import React from "react";
 import RepoIcon from "./RepoIcon";
@@ -27,9 +27,9 @@ export default function MainCard({projectName, repoUrl}: MainCardProps) {
             <CardContent sx={{maxWidth: '80%', overflow: "hidden"}}>
                 <Typography variant="h4" color={palette.primary.main} sx={{mb: 2}}>{projectName}</Typography>
                 {repoUrl !== null ?
-                    <Stack direction="row" alignItems='center' spacing={1}>
+                    <Stack direction="row" alignItems='center' spacing={1} sx={{overflowWrap: 'anywhere'}}>
                         {getRepoIcon(repoUrl)}
-                        <Link style={{color: palette.secondary.dark, overflow: "hidden"}} to={repoUrl}>
+                        <Link style={{color: palette.secondary.dark}} to={repoUrl}>
                             {repoUrl}
                         </Link>
                     </Stack> :

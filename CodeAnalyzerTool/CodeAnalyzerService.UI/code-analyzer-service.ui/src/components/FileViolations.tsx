@@ -10,10 +10,12 @@ interface FileViolationsProps {
 }
 
 export default function FileViolations({path, violations}: FileViolationsProps) {
+    // replace hyphens with non-breaking hyphen symbols
+    const pathWithoutBreakingHyphens = path.replaceAll("-", "‑");
     return (
         <Accordion defaultExpanded={true} key={path}>
             <AccordionSummary expandIcon={<ExpandMoreIcon/>}>
-                <Typography fontWeight={300} sx={{overflowWrap: 'anywhere'}}>{path}</Typography>
+                <Typography fontWeight={300} sx={{overflowWrap: "anywhere"}}>{pathWithoutBreakingHyphens}</Typography>
             </AccordionSummary>
             <AccordionDetails sx={{padding: 'unset'}}>
                 <Stack>
