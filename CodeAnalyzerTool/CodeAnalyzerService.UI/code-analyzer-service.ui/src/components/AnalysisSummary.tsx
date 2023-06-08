@@ -79,7 +79,7 @@ export default function AnalysisSummary({initialAnalysisId, analysisHistory}: An
                 :
                 <>
                     {Object.entries(groupedAnalysis).map(([path, violations], index) => (
-                        <FileViolations id={`path-${index}`} key={index} path={path} violations={violations}/>
+                        <FileViolations id={path} key={index} path={path} violations={violations}/>
                     ))}
                     {folderHierarchy && folderHierarchy.length > 0 && <FolderTree folders={folderHierarchy}/>}
                 </>
