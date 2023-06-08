@@ -1,5 +1,5 @@
-import {Box} from "@mui/material";
-import React from "react";
+import {Box, Card, Container, Grid} from "@mui/material";
+import React, {ReactNode} from "react";
 import AnalysesCard from "./projectCards/AnalysesCard";
 import MainCard from "./projectCards/MainCard";
 import RuleViolationsCard from "./projectCards/RuleViolationsCard";
@@ -25,19 +25,24 @@ export default function ProjectDetailCards({
                                            }: ProjectDetailCardsProps) {
 
     return (
-        <Box sx={{
-            display: 'flex',
-            flexDirection: 'row',
-            justifyContent: 'space-around',
-            textAlign: 'center',
-            width: '100%',
-            height: '175px'
-        }}>
-            <AnalysesCard analysisAmount={analysisAmount} lastAnalysisDate={lastAnalysisDate}/>
-            <MainCard projectName={projectName} repoUrl={repoUrl}/>
-            <RuleViolationsCard ruleViolationCount={ruleViolationCount}
-                                ruleViolationHistory={ruleViolationHistory}
-                                ruleViolationDifference={ruleViolationDifference}/>
-        </Box>
+
+        <Grid container justifyContent="space-evenly">
+            <GridItemCard children={<AnalysesCard analysisAmount={analysisAmount} lastAnalysisDate={lastAnalysisDate}/>}/>
+            <GridItemCard children={<MainCard projectName={projectName} repoUrl={repoUrl}/>}/>
+            <GridItemCard children={<RuleViolationsCard ruleViolationCount={ruleViolationCount}
+                                                        ruleViolationHistory={ruleViolationHistory}
+                                                        ruleViolationDifference={ruleViolationDifference}/>}/>
+        </Grid>
     )
+
+
+    function GridItemCard({children}: {children: ReactNode}) {
+        return <Grid item xs={12} md={5} lg={3}>
+            <Container maxWidth="lg" sx={{height: '175px', textAlign: 'center', display:'flex', justifyContent: 'center', mt: 1}}>
+                <Card sx={{width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', maxWidth: '550px'}}>
+                    {children}
+                </Card>
+            </Container>
+        </Grid>
+    }
 }

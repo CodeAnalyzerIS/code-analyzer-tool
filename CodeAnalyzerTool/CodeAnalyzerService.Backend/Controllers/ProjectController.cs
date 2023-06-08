@@ -21,20 +21,6 @@ namespace CodeAnalyzerService.Backend.Controllers
             _projectAnalysisManager = new AddProjectAnalysisManager(_context);
         }
 
-        [HttpGet("GetFromName/{projectName}")]
-        public async Task<ActionResult<int>> GetProjectIdFromProjectName(string projectName)
-        {
-            var project =
-                await _context.Projects.SingleOrDefaultAsync(p =>
-                    p.ProjectName.ToLower().Equals(projectName.ToLower()));
-            if (project == null)
-            {
-                return NotFound();
-            }
-
-            return project.Id;
-        }
-
         [HttpGet("Overview")]
         public ActionResult<IEnumerable<ProjectOverviewResponse>> GetProjectsOverview()
         {

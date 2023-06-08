@@ -1,19 +1,15 @@
 import React, {useCallback, useContext, useEffect, useState} from "react";
 import Loading from "../components/Loading";
-import {Alert, Box, Card, CardContent, CardHeader, Stack, Typography, useTheme} from "@mui/material";
+import {Alert, Box, Card, CardContent, CardHeader, Container, Grid, Stack, Typography, useTheme} from "@mui/material";
 import {useProjectOverview} from "../hooks/useProjectOverview";
 import TroubleshootIcon from '@mui/icons-material/Troubleshoot';
-import {ProjectOverview} from "../model/ProjectOverview";
 import ReportIcon from '@mui/icons-material/Report';
 import {Searchbar} from "../components/Searchbar";
 import {useNavigate} from "react-router-dom";
-import {getProjectIdFromName} from "../services/projectService";
 import BreadcrumbContext, {Breadcrumb, IBreadcrumbContext} from "../context/BreadcrumbContext";
 import WelcomePlaceholder from "../components/placeholders/WelcomePlaceholder";
-
-export type SearchString = {
-    searchValue: string;
-}
+import EmptySearchPlaceholder from "../components/placeholders/EmptySearchPlaceholder";
+import {IconAndText} from "../components/IconAndText";
 
 export default function Home() {
     const [searchString, setSearchString] = useState("")
@@ -39,22 +35,17 @@ export default function Home() {
 
     if (isError || !projectOverviews) return <Alert severity="error">Error loading the projects</Alert>
 
-
-    if (searchString !== ""){
-        getProjectIdFromName(searchString)
-            .then((id) => navigate(`/project/${id}`))
-            .catch(() => {
-                return <Alert severity="error">Error getting project with name: {searchString}</Alert>
-            })
-    }
-
     if (projectOverviews.length < 1) return <WelcomePlaceholder/>;
 
+    const filteredOverviews = projectOverviews.filter(po => po.projectName.toLowerCase().includes(searchString.toLowerCase()));
+
     return(
-        <Box sx={{display: 'flex', flexDirection: 'column', alignItems: 'center', mt: 5}}>
+        <Container maxWidth="lg" sx={{display: 'flex', flexDirection: 'column', alignItems: 'center', mt: 5}}>
             <Searchbar setSearchString={setSearchString}/>
-            {projectOverviews.map((po:ProjectOverview)  => (
-                <Card sx={{width: "50%", border: 'solid', borderColor: palette.grey["300"], borderWidth: 'thin', mt: 3, cursor: 'pointer'}}
+            {filteredOverviews.length < 1 ? <EmptySearchPlaceholder/>
+            :
+            filteredOverviews.map(po  => (
+                <Card sx={{width: "100%", border: 'solid', borderColor: palette.grey["300"], borderWidth: 'thin', mt: 3, cursor: 'pointer'}}
                       key={po.id} onClick={() => {navigate(`/project/${po.id}`)}}>
                     <CardHeader
                         style={{ textAlign: 'center', color: palette.primary.main, borderBottom: 'solid', borderColor: palette.grey["300"],
@@ -62,21 +53,21 @@ export default function Home() {
                         title={po.projectName}
                     />
                     <CardContent>
-                        <Box sx={{display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly',
-                            alignItems: 'center', color: palette.secondary.main}}>
-                            <Stack direction='row' spacing={1}>
-                                <TroubleshootIcon/>
-                                <Typography>Last Analysis: {po.lastAnalysisDate.toLocaleString('nl-BE')}</Typography>
-                            </Stack>
-
-                            <Stack direction='row' spacing={1}>
-                                <ReportIcon/>
-                                <Typography>Rule Violations: {po.ruleViolationCount}</Typography>
-                            </Stack>
-                        </Box>
+                        {/*<Box sx={{display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly',*/}
+                        {/*    alignItems: 'center', color: palette.secondary.main}}>*/}
+                        <Grid container sx={{color: palette.secondary.main}}>
+                            <Grid item xs={12} sm={6} display="flex" justifyContent="center">
+                                <IconAndText icon={<TroubleshootIcon/>}
+                                         text={<Typography>Last Analysis: {po.lastAnalysisDate.toLocaleString('nl-BE')}</Typography>}/>
+                            </Grid>
+                            <Grid item xs={12} sm={6} display="flex" justifyContent="center">
+                                <IconAndText icon={<ReportIcon/>} text={<Typography>Rule Violations: {po.ruleViolationCount}</Typography>}/>
+                            </Grid>
+                        </Grid>
+                        {/*</Box>*/}
                     </CardContent>
                 </Card>
             ))}
-        </Box>
+        </Container>
     )
 }
