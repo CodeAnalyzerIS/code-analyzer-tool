@@ -19,8 +19,8 @@ export default function ProjectDetails() {
     //without triggering infinite re-renders, because the callback function will only be called when the setter changes
     const updateBreadcrumbData = useCallback(() => {
         const newBreadcrumbData: Breadcrumb[] = [
-            {label: 'ᓚᘏᗢ', path:'/'},
-            {label: project ? project.projectName : '', path:`/project/${id}`}
+            {label: 'ᓚᘏᗢ', path: '/'},
+            {label: project ? project.projectName : '', path: `/project/${id}`}
         ];
         setBreadcrumbData(newBreadcrumbData);
     }, [id, project, setBreadcrumbData]);
@@ -33,7 +33,7 @@ export default function ProjectDetails() {
     if (isError || !project) return <Alert severity="error">Error loading the project</Alert>;
 
 
-    return(
+    return (
         <Box sx={{display: 'flex', flexDirection: 'column', alignItems: 'center', mt: 3, mb: 5}}>
             <ProjectDetailCards projectName={project.projectName}
                                 repoUrl={project.repoUrl}
@@ -42,7 +42,8 @@ export default function ProjectDetails() {
                                 ruleViolationCount={project.ruleViolationCount}
                                 ruleViolationHistory={project.ruleViolationHistory}
                                 ruleViolationDifference={project.ruleViolationDifference}/>
-            <AnalysisSummary initialAnalysisId={project.lastAnalysisId} analysisHistory={project.analysisHistory}/>
+            <AnalysisSummary initialAnalysisId={project.lastAnalysisId}
+                             analysisHistory={project.analysisHistory}/>
         </Box>
     )
 }
