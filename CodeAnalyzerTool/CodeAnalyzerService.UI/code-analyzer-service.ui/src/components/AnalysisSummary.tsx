@@ -4,7 +4,12 @@ import {
     Typography
 } from "@mui/material";
 import TreeView from '@mui/lab/TreeView';
-import {groupRuleViolationsByPath, splitPathsIntoStringArray} from "../util/HelperFunctions";
+import {
+    createFolderHierarchy,
+    Folder,
+    groupRuleViolationsByPath,
+    splitPathsIntoStringArray
+} from "../util/HelperFunctions";
 import React, {useState} from "react";
 import {useAnalysis} from "../hooks/useAnalysis";
 import Loading from "./Loading";
@@ -13,6 +18,9 @@ import FileViolations from "./FileViolations";
 import DonePlaceholder from "./placeholders/DonePlaceholder";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import {TreeItem} from "@mui/lab";
+import RenderTreeView from "./RenderTreeView";
+import { FolderTree } from "./FolderTree";
 
 interface AnalysisSummaryProps {
     initialAnalysisId: number;
@@ -30,8 +38,11 @@ export default function AnalysisSummary({initialAnalysisId, analysisHistory}: An
         return <Alert severity="error">Error loading the analysis</Alert>
     }
     const groupedAnalysis = groupRuleViolationsByPath(analysis)
-    splitPathsIntoStringArray(groupedAnalysis)
-    // console.log(groupedAnalysis[path])
+    // const folderHierarchy: Folder = createFolderHierarchy(["code-analyzer-tool\\CodeAnalyzerTool\\CodeAnalyzerService.Backend\\BL\\Services\\RuleService.cs", "code-analyzer-tool\\CodeAnalyzerTool\\CodeAnalyzerService.Backend\\Controllers\\RuleViolationController.cs"])
+    const folderHierarchy: Folder = createFolderHierarchy(Object.keys(groupedAnalysis))
+    console.log(folderHierarchy)
+
+
     const handleChange = (event: SelectChangeEvent) => {
         const newAnalysisId = Number(event.target.value)
         setAnalysisId(newAnalysisId);
@@ -78,15 +89,13 @@ export default function AnalysisSummary({initialAnalysisId, analysisHistory}: An
                     {Object.entries(groupedAnalysis).map(([path, violations], index) => (
                         <FileViolations id={`path-${index}`} key={index} path={path} violations={violations}/>
                     ))}
-                    {/*<List>*/}
-                    {/*    {Object.entries(groupedAnalysis).map(([path, violations], index) => (*/}
-                    {/*        <ListItem key={index}>*/}
-                    {/*            <ListItemButton component="a" href={`#path-${index}`}>*/}
-                    {/*                <ListItemText primary={path}/>*/}
-                    {/*            </ListItemButton>*/}
-                    {/*        </ListItem>*/}
-                    {/*    ))}*/}
-                    {/*</List>*/}
+                    {/*<TreeView aria-label="file system navigator"*/}
+                    {/*          defaultCollapseIcon={<ExpandMoreIcon />}*/}
+                    {/*          defaultExpandIcon={<ChevronRightIcon />}*/}
+                    {/*          sx={{ height: 240, flexGrow: 1, maxWidth: 400, overflowY: 'auto' }}>*/}
+                    {/*    {folderHierarchy.children && folderHierarchy.children.map((child) => RenderTreeView(child))}*/}
+                    {/*</TreeView>*/}
+                    <FolderTree folder={folderHierarchy} />
                 </>
             }
         </Container>
