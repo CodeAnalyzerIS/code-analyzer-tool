@@ -23,7 +23,7 @@ interface AnalysisSummaryProps {
 export default function AnalysisSummary({initialAnalysisId, analysisHistory}: AnalysisSummaryProps) {
     const [analysisId, setAnalysisId] = useState(initialAnalysisId)
     const {isLoading, isError, analysis} = useAnalysis(analysisId)
-    const [drawerOpen, setDrawerOpen] = useState(true);
+    const [drawerOpen, setDrawerOpen] = useState(false);
 
     const handleDrawerToggle = () => {
         setDrawerOpen(!drawerOpen);
@@ -35,7 +35,6 @@ export default function AnalysisSummary({initialAnalysisId, analysisHistory}: An
     if (isError || !analysis){
         return <Alert severity="error">Error loading the analysis</Alert>
     }
-
     const groupedAnalysis = groupRuleViolationsByPath(analysis)
     const folderHierarchy = createFolderHierarchy(Object.keys(groupedAnalysis))
 
@@ -86,8 +85,10 @@ export default function AnalysisSummary({initialAnalysisId, analysisHistory}: An
                     {Object.entries(groupedAnalysis).map(([path, violations], index) => (
                         <FileViolations id={path} key={index} path={path} violations={violations}/>
                     ))}
-                    {folderHierarchy && folderHierarchy.length > 0 &&
-                        <ProjectDetailsDrawer isOpen={drawerOpen} onClose={() => setDrawerOpen(false)} folderHierarchy={folderHierarchy}/>}
+                    <ProjectDetailsDrawer isOpen={drawerOpen}
+                                          onClose={() => setDrawerOpen(false)}
+                                          handleDrawerOpen={() => handleDrawerToggle()}
+                                          folderHierarchy={folderHierarchy}/>
                 </>
             }
         </Container>
