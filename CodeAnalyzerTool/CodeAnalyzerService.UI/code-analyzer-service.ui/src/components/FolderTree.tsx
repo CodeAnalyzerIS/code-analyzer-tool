@@ -1,16 +1,16 @@
-import React, {useState} from 'react';
+import React from 'react';
 import TreeView from '@mui/lab/TreeView';
 import TreeItem from '@mui/lab/TreeItem';
-import {Folder} from "../util/HelperFunctions";
+import {Folder} from "../services/ruleViolationService";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 
-export function FolderTree({ folder }: { folder: Folder }) {
+export function FolderTree({ folders }: { folders: Folder[] }) {
     const renderTree = (folder: Folder) => {
-        const { name, children } = folder;
+        const { name, id, children } = folder;
 
         return (
-            <TreeItem key={name} nodeId={name} label={name}>
+            <TreeItem key={name} nodeId={id} label={name}>
                 {children && children.map((child) => renderTree(child))}
             </TreeItem>
         );
@@ -21,7 +21,7 @@ export function FolderTree({ folder }: { folder: Folder }) {
                   defaultCollapseIcon={<ExpandMoreIcon />}
                   defaultExpandIcon={<ChevronRightIcon />}
                   sx={{ height: 240, flexGrow: 1, maxWidth: 400, overflowY: 'auto' }}>
-            {renderTree(folder)}
+            {folders.map((folder) => renderTree(folder))}
         </TreeView>
     );
 }
