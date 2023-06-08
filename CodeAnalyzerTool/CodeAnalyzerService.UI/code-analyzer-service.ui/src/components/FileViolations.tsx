@@ -13,7 +13,7 @@ export default function FileViolations({path, violations}: FileViolationsProps) 
     return (
         <Accordion defaultExpanded={true} key={path}>
             <AccordionSummary expandIcon={<ExpandMoreIcon/>}>
-                <Typography fontWeight={300}>{path}</Typography>
+                <Typography fontWeight={300} sx={{overflowWrap: 'anywhere'}}>{path}</Typography>
             </AccordionSummary>
             <AccordionDetails sx={{padding: 'unset'}}>
                 <Stack>
