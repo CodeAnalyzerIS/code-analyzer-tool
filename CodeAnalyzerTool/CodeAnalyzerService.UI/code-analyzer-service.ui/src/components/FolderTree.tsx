@@ -23,7 +23,7 @@ export function FolderTree({folders}: { folders: Folder[] }) {
         return (
             <div key={folder.id}>
                 {folder.children && folder.children?.length > 0 ?
-                    <StyledTreeItem nodeId={folder.id} labelText={folder.name} labelIcon={FolderIcon}>
+                    <StyledTreeItem nodeId={folder.id} labelText={folder.name} labelIcon={FolderIcon} defaultChecked>
                         {folder.children && folder.children.map((child) => renderTree(child))}
                     </StyledTreeItem> :
                     <a href={`#${folder.pathLink}`} style={{all: 'unset'}}>
@@ -37,7 +37,7 @@ export function FolderTree({folders}: { folders: Folder[] }) {
         <TreeView aria-label="file system navigator"
                   defaultCollapseIcon={<ExpandMoreIcon/>}
                   defaultExpandIcon={<ChevronRightIcon/>}
-                  defaultExpanded={['0', '1']}>
+                  defaultExpanded={['0']}>
             {folders.map((folder) => renderTree(folder))}
         </TreeView>
     );
