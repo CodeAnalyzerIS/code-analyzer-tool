@@ -6,6 +6,8 @@ We have added a built-in plugin that analyzes C# Code based on some built in rul
 
 ![Homepage](Documentation/Screenshots/Home.PNG)
 ![ProjectDetails](Documentation/Screenshots/ProjectDetails.PNG)
+![ProjectDetailsDrawer](Documentation/Screenshots/ProjectDetailsDrawer.png)
+![RuleViolation](Documentation/Screenshots/RuleViolation.png)
 
 ## Features
 
