@@ -9,23 +9,22 @@ export function FolderTree({folders}: { folders: Folder[] }) {
     const renderTree = (folder: Folder) => {
 
         return (
-            <>
+            <div key={folder.id}>
                 {folder.children && folder.children?.length > 0 ?
-                    <TreeItem key={folder.name} nodeId={folder.id} label={folder.name}>
+                    <TreeItem nodeId={folder.id} label={folder.name}>
                         {folder.children && folder.children.map((child) => renderTree(child))}
                     </TreeItem> :
                 <a href={`#${folder.pathLink}`} style={{all: 'unset'}}>
-                    <TreeItem key={folder.name} nodeId={folder.id} label={folder.name}/>
+                    <TreeItem nodeId={folder.id} label={folder.name}/>
                 </a>}
-            </>
+            </div>
         );
     };
 
     return (
         <TreeView aria-label="file system navigator"
                   defaultCollapseIcon={<ExpandMoreIcon/>}
-                  defaultExpandIcon={<ChevronRightIcon/>}
-                  sx={{height: 240, flexGrow: 1, maxWidth: 400, overflowY: 'auto'}}>
+                  defaultExpandIcon={<ChevronRightIcon/>}>
             {folders.map((folder) => renderTree(folder))}
         </TreeView>
     );

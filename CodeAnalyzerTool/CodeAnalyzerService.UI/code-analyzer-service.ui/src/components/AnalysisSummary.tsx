@@ -13,7 +13,7 @@ import Loading from "./Loading";
 import {AnalysisHistory} from "../model/Analysis";
 import FileViolations from "./FileViolations";
 import DonePlaceholder from "./placeholders/DonePlaceholder";
-import { FolderTree } from "./FolderTree";
+import ProjectDetailsDrawer from "./ProjectDetailsDrawer";
 
 interface AnalysisSummaryProps {
     initialAnalysisId: number;
@@ -23,6 +23,11 @@ interface AnalysisSummaryProps {
 export default function AnalysisSummary({initialAnalysisId, analysisHistory}: AnalysisSummaryProps) {
     const [analysisId, setAnalysisId] = useState(initialAnalysisId)
     const {isLoading, isError, analysis} = useAnalysis(analysisId)
+    const [drawerOpen, setDrawerOpen] = useState(true);
+
+    const handleDrawerToggle = () => {
+        setDrawerOpen(!drawerOpen);
+    }
 
     if (isLoading) {
         return <Loading/>
@@ -81,7 +86,8 @@ export default function AnalysisSummary({initialAnalysisId, analysisHistory}: An
                     {Object.entries(groupedAnalysis).map(([path, violations], index) => (
                         <FileViolations id={path} key={index} path={path} violations={violations}/>
                     ))}
-                    {folderHierarchy && folderHierarchy.length > 0 && <FolderTree folders={folderHierarchy}/>}
+                    {folderHierarchy && folderHierarchy.length > 0 &&
+                        <ProjectDetailsDrawer isOpen={drawerOpen} onClose={() => setDrawerOpen(false)} folderHierarchy={folderHierarchy}/>}
                 </>
             }
         </Container>
