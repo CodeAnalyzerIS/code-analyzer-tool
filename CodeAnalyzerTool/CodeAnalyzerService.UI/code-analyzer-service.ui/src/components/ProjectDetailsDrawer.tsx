@@ -1,4 +1,4 @@
-import {Drawer, Fab} from "@mui/material";
+import {Drawer, Fab, styled} from "@mui/material";
 import {FolderTree} from "./FolderTree";
 import React from "react";
 import {Folder} from "../services/ruleViolationService";
@@ -13,10 +13,13 @@ interface ProjectDetailsDrawerProps {
 }
 
 export default function ProjectDetailsDrawer({isOpen, onClose, handleDrawerOpen, folderHierarchy}: ProjectDetailsDrawerProps) {
+    
     return (
         <div className={"project-details-drawer-container"}>
-            <Drawer PaperProps={{sx: {minWidth: 300, overflow: 'hidden', paddingTop: 2}}} open={isOpen}
-                    onClose={onClose} hideBackdrop>
+            <Drawer PaperProps={{sx: {minWidth: 300, overflow: 'hidden', paddingTop: 2}}}
+                    BackdropProps={{sx: {backgroundColor: 'transparent'}}}
+                    open={isOpen}
+                    onClose={onClose}>
                 <FolderTree folders={folderHierarchy}/>
                 {isOpen && (
                     <div style={{position: 'absolute', bottom: 25, right: 16}}>

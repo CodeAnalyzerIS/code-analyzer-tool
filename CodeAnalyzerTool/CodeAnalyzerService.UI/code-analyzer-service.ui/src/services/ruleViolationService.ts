@@ -46,7 +46,7 @@ export function createFolderHierarchy(paths: string[]): Folder[] {
     let index = 0;
 
     for (const path of paths) {
-        const folders = path.split("\\");
+        const folders = path.split("/");
         let currentFolder = root;
 
         for (const folderName of folders) {

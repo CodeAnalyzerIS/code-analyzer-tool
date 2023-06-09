@@ -91,6 +91,6 @@ public static class DiagnosticConverter
     private static string GetRelativePath(string path)
     {
         var parentPath = Path.GetDirectoryName(Directory.GetCurrentDirectory())!;
-        return Path.GetRelativePath(parentPath, path);
+        return Path.GetRelativePath(parentPath, path).Replace('\\', '/');
     }
 }
