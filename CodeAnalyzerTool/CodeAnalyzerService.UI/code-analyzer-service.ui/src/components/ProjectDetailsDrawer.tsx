@@ -16,7 +16,7 @@ export default function ProjectDetailsDrawer({isOpen, onClose, handleDrawerOpen,
     return (
         <div className={"project-details-drawer-container"}>
             <Drawer PaperProps={{sx: {minWidth: 300, overflow: 'hidden', paddingTop: 2}}} open={isOpen}
-                    onClose={onClose}>
+                    onClose={onClose} hideBackdrop>
                 <FolderTree folders={folderHierarchy}/>
                 {isOpen && (
                     <div style={{position: 'absolute', bottom: 25, right: 16}}>
