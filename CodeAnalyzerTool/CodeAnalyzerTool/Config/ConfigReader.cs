@@ -7,8 +7,16 @@ using Serilog;
 
 namespace CodeAnalyzerTool.Config;
 
+/// <summary>
+/// The <c>ConfigReader</c> class is responsible for reading the configuration file for the Code Analyzer Tool.
+/// </summary>
 internal class ConfigReader
 {
+    /// <summary>
+    /// Reads the CAT configuration file asynchronously. 
+    /// </summary>
+    /// <returns>The task result contains the parsed <see cref="GlobalConfig"/>.</returns>
+    /// <exception cref="ConfigException">Thrown when the configuration file is invalid or incorrect.</exception>
     public async Task<GlobalConfig> ReadAsync()
     {
         Log.Information("Reading CAT Config file");

@@ -3,8 +3,16 @@ using Newtonsoft.Json.Schema.Generation;
 
 namespace CodeAnalyzerTool.Config;
 
+
+/// <summary>
+/// The <c>SchemaGenerator</c> class generates a JSON schema for the <c>GlobalConfig</c> class.
+/// </summary>
 internal static class SchemaGenerator
 {
+    /// <summary>
+    /// Generates a JSON schema for the <c>GlobalConfig</c> class.
+    /// </summary>
+    /// <returns>A void <c>Task</c> representing the asynchronous operation.</returns>
     public static async Task GenerateSchema()
     {
         var generator = new JSchemaGenerator();
