@@ -5,6 +5,9 @@ using Serilog;
 
 namespace CodeAnalyzerTool.Sender;
 
+/// <summary>
+/// Class responsible for sending analysis results to the backend API.
+/// </summary>
 public class AnalysisSender
 {
     private readonly HttpClient _httpClient;
@@ -24,6 +27,11 @@ public class AnalysisSender
             : new Uri(url, StringResources.PUT_ENDPOINT_PATH);
     }
 
+    /// <summary>
+    /// Sends the specified rule violations to the backend API.
+    /// </summary>
+    /// <param name="ruleViolations">The collection of rule violations to sent.</param>
+    /// <returns>A void <c>Task</c> representing the asynchronous sending operation.</returns>
     internal async Task Send(IEnumerable<RuleViolation> ruleViolations)
     {
         var projectAnalysis = new ProjectAnalysis(_projectName, _repoUrl, ruleViolations).MapToDto();

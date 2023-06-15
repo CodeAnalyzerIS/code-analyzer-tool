@@ -1,5 +1,8 @@
 ﻿namespace CodeAnalyzerTool; 
 
+/// <summary>
+/// Provides various constant strings used throughout the application for configurability sake.
+/// </summary>
 internal static class StringResources
 {
     public const string ROSLYN_PLUGIN_NAME = "Roslyn";
