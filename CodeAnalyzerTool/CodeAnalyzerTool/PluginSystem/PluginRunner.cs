@@ -3,17 +3,29 @@ using CodeAnalyzerTool.API.ConfigModel;
 
 namespace CodeAnalyzerTool.PluginSystem;
 
+/// <summary>
+/// Internal class responsible for running plugins and generating analysis results.
+/// </summary>
 internal class PluginRunner
 {
     private readonly IEnumerable<IPluginLoader> _pluginLoaders;
     private readonly GlobalConfig _globalConfig;
 
+    /// <summary>
+    /// Initializes a new instance of the <c>PluginRunner</c> class.
+    /// </summary>
+    /// <param name="pluginLoaders">The collection of plugin loaders.</param>
+    /// <param name="globalConfig">The global configuration containing plugin and analysis information.</param>
     public PluginRunner(IEnumerable<IPluginLoader> pluginLoaders, GlobalConfig globalConfig)
     {
         _pluginLoaders = pluginLoaders;
         _globalConfig = globalConfig;
     }
-
+    
+    /// <summary>
+    /// Runs the plugins and generates the analysis result.
+    /// </summary>
+    /// <returns>An asynchronous <c>Task</c> containg a <see cref="AnalysisResult"/>.</returns>
     public async Task<AnalysisResult> Run()
     {
         var loadedPluginsWithConfigs = RunPluginLoaders();

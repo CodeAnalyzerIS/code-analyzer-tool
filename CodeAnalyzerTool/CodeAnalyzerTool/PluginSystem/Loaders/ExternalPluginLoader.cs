@@ -6,15 +6,23 @@ using Serilog;
 
 namespace CodeAnalyzerTool.PluginSystem.Loaders;
 
+/// <summary>
+/// Class for loading external plugins and their configurations.
+/// </summary>
 internal class ExternalPluginLoader : IPluginLoader
 {
     private readonly GlobalConfig _globalConfig;
 
+    /// <summary>
+    /// Initializes a new instance of the <c>ExternalPluginLoader</c> class.
+    /// </summary>
+    /// <param name="globalConfig">The global configuration containing information necessary for loading external plugins.</param>
     public ExternalPluginLoader(GlobalConfig globalConfig)
     {
         _globalConfig = globalConfig;
     }
 
+    /// <inheritdoc cref="IPluginLoader.LoadPlugins"/>
     public Dictionary<PluginConfig, IPlugin> LoadPlugins()
     {
         return GetExternalPluginConfigs()

@@ -15,6 +15,11 @@ public class AnalysisSender
     private readonly Uri _endpointUrl;
     private readonly string _repoUrl;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="AnalysisSender"/> class.
+    /// </summary>
+    /// <param name="httpClient">The HttpClient instance used for sending HTTP requests.</param>
+    /// <param name="globalConfig">The global configuration containing project and API information.</param>
     public AnalysisSender(HttpClient httpClient, GlobalConfig globalConfig)
     {
         _httpClient = httpClient;
