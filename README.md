@@ -4,10 +4,10 @@ This is a custom-made code analyzer tool that can analyze source code and identi
 This tool is created with a plugin architecture to allow the user to add his own plugins which can analyze different languages or files.  
 We have added a built-in plugin that analyzes C# Code based on some built in rules, but you can always add more custom rules yourself.
 
-![Homepage](Documentation/Screenshots/Home.PNG)
-![ProjectDetails](Documentation/Screenshots/ProjectDetails.PNG)
-![ProjectDetailsDrawer](Documentation/Screenshots/ProjectDetailsDrawer.png)
-![RuleViolation](Documentation/Screenshots/RuleViolation.png)
+![Homepage](https://raw.githubusercontent.com/CodeAnalyzerIS/code-analyzer-tool/main/Documentation/Screenshots/Home.PNG)
+![ProjectDetails](https://raw.githubusercontent.com/CodeAnalyzerIS/code-analyzer-tool/main/Documentation/Screenshots/ProjectDetails.PNG)
+![ProjectDetailsDrawer](https://raw.githubusercontent.com/CodeAnalyzerIS/code-analyzer-tool/main/Documentation/Screenshots/ProjectDetailsDrawer.png)
+![RuleViolation](https://raw.githubusercontent.com/CodeAnalyzerIS/code-analyzer-tool/main/Documentation/Screenshots/RuleViolation.png)
 
 ## Features
 
