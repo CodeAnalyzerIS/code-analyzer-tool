@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="14.3.0">
+  <zoom_level>10</zoom_level>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>750</x>
+      <y>700</y>
+      <w>180</w>
+      <h>110</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;enum&gt;&gt;
+Severity
+--
+ Error
+ Warning
+ Info</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>320</x>
+      <y>610</y>
+      <w>260</w>
+      <h>100</h>
+    </coordinates>
+    <panel_attributes>Location
+--
++&lt;&lt;get, set&gt;&gt; Path: string
++&lt;&lt;get, set&gt;&gt; StartLine: int
++&lt;&lt;get, set&gt;&gt; EndLine: int
++&lt;&lt;get, set&gt;&gt; FileExtension: string
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>340</x>
+      <y>230</y>
+      <w>600</w>
+      <h>90</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;interface&gt;&gt;
+IPlugin
+--
+&lt;&lt;get&gt;&gt; PluginName: string
+Analyze(pluginConfig: PluginConfig, pluginsPath: string?): Task&lt;IEnumerable&lt;RuleViolation\&gt;&gt;
+
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>160</x>
+      <y>90</y>
+      <w>300</w>
+      <h>100</h>
+    </coordinates>
+    <panel_attributes>RuleConfig
+--
++&lt;&lt;get, set&gt;&gt; RuleName: string
++&lt;&lt;get, set&gt;&gt; Enabled: bool
++&lt;&lt;get, set&gt;&gt; Severity: Severity
++&lt;&lt;get, set&gt;&gt; Options: Dectionary&lt;string, string&gt;
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>320</x>
+      <y>460</y>
+      <w>260</w>
+      <h>70</h>
+    </coordinates>
+    <panel_attributes>RuleViolation
+--
++&lt;&lt;get, set&gt;&gt; Message: string
++&lt;&lt;get, set&gt;&gt; Severity: Severity
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>750</x>
+      <y>480</y>
+      <w>260</w>
+      <h>200</h>
+    </coordinates>
+    <panel_attributes>Rule
+--
++&lt;&lt;get, set&gt;&gt; RuleName: string
++&lt;&lt;get, set&gt;&gt; Title: string
++&lt;&lt;get, set&gt;&gt; Description: string
++&lt;&lt;get, set&gt;&gt; Category: string
++&lt;&lt;get, set&gt;&gt; PluginName: string
++&lt;&lt;get, set&gt;&gt; TargetLanguage: string
++&lt;&lt;get, set&gt;&gt; IsEnabledByDefault: bool
++&lt;&lt;get, set&gt;&gt; DefaultSeverity: Severity
++&lt;&lt;get, set&gt;&gt; CodeExample: string?
++&lt;&lt;get, set&gt;&gt; CodeExampleFix: string?
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>530</x>
+      <y>90</y>
+      <w>240</w>
+      <h>100</h>
+    </coordinates>
+    <panel_attributes>PluginConfig
+--
++&lt;&lt;get, set&gt;&gt; PluginName: string
++&lt;&lt;get, set&gt;&gt; AssemblyName: string?
++&lt;&lt;get, set&gt;&gt; FolderName: string
++&lt;&lt;get, set&gt;&gt; Enabled: bool
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>430</x>
+      <y>520</y>
+      <w>40</w>
+      <h>110</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;-
+m1=1
+m2=1
+</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;90.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>570</x>
+      <y>480</y>
+      <w>200</w>
+      <h>50</h>
+    </coordinates>
+    <panel_attributes>lt=-
+m1=*
+m2=1
+describes violation of &gt;</panel_attributes>
+    <additional_attributes>10.0;20.0;180.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>640</x>
+      <y>180</y>
+      <w>30</w>
+      <h>70</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;.</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;50.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>450</x>
+      <y>140</y>
+      <w>100</w>
+      <h>40</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;-
+m1=1
+m2=*</panel_attributes>
+    <additional_attributes>80.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>760</x>
+      <y>130</y>
+      <w>100</w>
+      <h>40</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;-
+m1=1
+m2=*</panel_attributes>
+    <additional_attributes>80.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>840</x>
+      <y>70</y>
+      <w>280</w>
+      <h>120</h>
+    </coordinates>
+    <panel_attributes>GlobalConfig
+--
++&lt;&lt;get, set&gt;&gt; ProjectName: string
++&lt;&lt;get, set&gt;&gt; ApiUrl: string?
++&lt;&lt;get, set&gt;&gt; RepoUrl: string
++&lt;&lt;get, set&gt;&gt; FailSeverityThreshold: Severity
++&lt;&lt;get, set&gt;&gt; PluginsPath: string
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>740</x>
+      <y>340</y>
+      <w>270</w>
+      <h>70</h>
+    </coordinates>
+    <panel_attributes>ProjectAnalysis
+--
++&lt;&lt;get, set&gt;&gt; ProjectName: string
++&lt;&lt;get, set&gt;&gt; RepoUrl: string?
+
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>860</x>
+      <y>400</y>
+      <w>40</w>
+      <h>100</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;-
+m1=1
+m2=*</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;80.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>440</x>
+      <y>310</y>
+      <w>200</w>
+      <h>170</h>
+    </coordinates>
+    <panel_attributes>lt=-
+m1=1
+m2=*
+creates analysis result of &gt;</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;150.0</additional_attributes>
+  </element>
+</diagram>
